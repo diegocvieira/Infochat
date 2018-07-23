@@ -1,0 +1,205 @@
+body {
+    background-color: #f7f7f7;
+    font-family: "Open Sans";
+    transition: opacity 0.5s ease-out;
+}
+
+html, body {
+    height: 100%;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    border: none;
+    background: none;
+    background-color: rgb(200, 200, 200);
+}
+::-webkit-scrollbar-thumb {
+    background-color: rgb(200, 200, 200);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: #a6a6a6;
+    cursor: pointer;
+}
+
+ul, li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    outline: none;
+
+    &:hover, &:active, &:focus {
+        text-decoration: none;
+    }
+}
+
+@font-face {
+    font-family: 'KeepCalm';
+    src: url('/fonts/KeepCalm.ttf') format('truetype');
+}
+
+.session-flash {
+    padding: 20px;
+    background-color: rgb(67, 176, 42);
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 17px;
+}
+
+.error {
+    background-color: #fdd !important;
+}
+
+// Todos modais
+.modal {
+    text-align: center;
+
+    &:before {
+        display: inline-block;
+        vertical-align: middle;
+        content: '';
+        height: 100%;
+    }
+
+    .modal-dialog {
+        display: inline-block;
+        text-align: center;
+        vertical-align: middle;
+        width: 800px;
+    }
+}
+
+#modal-cadastro-usuario, #modal-login-usuario {
+    .modal-content {
+        border: 1px solid rgb(237, 237, 237);
+        border-radius: 5px;
+        background-color: rgb(255, 255, 255);
+        width: 538px;
+        position: relative;
+        margin-left: -269px;
+        left: 50%;
+    }
+
+    .modal-header {
+        border: none;
+        text-align: center;
+        padding-top: 30px;
+
+        h1 {
+            font-size: 25px;
+            font-family: "KeepCalm";
+            color: rgb(66, 66, 66);
+        }
+
+        p {
+            font-size: 14.5px;
+            color: rgb(150, 150, 150);
+        }
+    }
+
+    .modal-body {
+        padding: 0 80px 20px 80px;
+
+        input[type=text], input[type=email], input[type=password] {
+            border: 1px solid rgb(189, 189, 189);
+            border-radius: 5px;
+            height: 53px;
+            margin-top: 10px;
+        }
+
+        input[type=submit] {
+            border-radius: 5px;
+            background-color: rgb(122, 162, 244);
+            height: 45px;
+            font-size: 14.5px;
+            color: rgb(255, 255, 255);
+            font-weight: 700;
+            border: none;
+            margin-top: 20px;
+        }
+    }
+
+    .modal-footer {
+        border: none;
+        padding: 0 80px 40px 80px;
+        font-size: 11.6px;
+        text-align: center;
+
+        a {
+            color: rgb(66, 133, 244);
+        }
+
+        p {
+            color: rgb(150, 150, 150);
+            line-height: 1.25;
+        }
+    }
+}
+
+#modal-alert {
+    z-index: 9999;
+
+    .modal-dialog {
+        width: 500px;
+    }
+
+	.modal-content {
+		width: 500px;
+        position: relative;
+        margin-left: -250px;
+        left: 50%;
+		padding: 30px;
+        text-align: left;
+
+		.modal-body {
+			color: #7f7f7f;
+			font-size: 14.5px;
+			line-height: 20px;
+            margin-top: 10px;
+
+            input {
+                margin: 10px 0;
+                font-size: 14.5px;
+                color: rgb(150, 150, 150);
+                border-radius: 5px;
+                background-color: rgb(245, 245, 245);
+                width: 100%;
+                height: 40px;
+                border: none;
+                padding-left: 20px;
+            }
+		}
+
+		.modal-footer {
+			border-top: 0;
+			padding-bottom: 10px;
+
+            .btn {
+				width: 100px;
+				height: 40px;
+				border: 0;
+                font-size: 14.5px;
+				color: #FFF;
+                border-radius: 5px;
+                font-weight: 700;
+                background-color: rgb(122, 162, 244);
+			}
+		}
+	}
+}
+
+@import 'top-nav.scss';
+@import 'aside-categorias.scss';
+@import 'modal-trabalho-config.scss';

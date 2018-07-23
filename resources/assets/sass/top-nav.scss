@@ -1,0 +1,158 @@
+.top-nav {
+    background-color: #3f51b5;
+    height: 70px;
+    padding: 0;
+
+    #logo-infochat {
+        width: 170px;
+        margin: 15px 0 0 10px;
+    }
+
+    .col-xs-3, .col-xs-2, .col-xs-7 {
+        padding: 0;
+    }
+
+    #form-search {
+        width: 100%;
+        float: left;
+        margin-top: 15px;
+
+        input[type=text] {
+            border-radius: 3px 0 0 3px;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 90%;
+            height: 40px;
+            font-size: 13.7px;
+            color: #fff;
+            border: none;
+            float: left;
+            box-shadow: none;
+
+            &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+                color: rgba(255, 255, 255, 0.8);
+                opacity: 1; /* Firefox */
+            }
+
+            &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+            &::-ms-input-placeholder { /* Microsoft Edge */
+                color: rgba(255, 255, 255, 0.8);
+            }
+        }
+
+        input[type=submit] {
+            border-radius: 0 3px 3px 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 10%;
+            height: 40px;
+            border: none;
+            float: left;
+            background-size: 30px;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url('../img/icon-lupa.png');
+        }
+    }
+
+    .nav-menu {
+        text-align: right;
+        margin-right: 29%;
+        float: none;
+        height: 100%;
+
+        .open > a, .open > a:focus, .open > a:hover, .open-nav:hover, .open-nav:active, .open-nav:focus {
+            background-color: transparent;
+            outline: none;
+        }
+
+        .open-nav {
+            font-size: 20.8px;
+            color: rgb(255, 255, 255);
+            font-weight: 700;
+            font-variant: small-caps;
+            line-height: 2.3    ;
+            background-position: right 10px;
+            background-size: 50px;
+            background-repeat: no-repeat;
+            background-image: url('../img/icon-profile2.png');
+            padding-right: 60px;
+        }
+
+        .dropdown-menu {
+            right: 29%;
+            border-radius: 5px;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 2.5px 4.33px 19px 1px rgba(100, 100, 100, 0.118);
+            width: 200px;
+            left: auto;
+            height: auto;
+            padding: 10px 0;
+            top: 60px;
+
+            li {
+                width: 100%;
+                float: left;
+                margin: 0;
+                height: auto;
+
+                a {
+                    font-size: 13.7px;
+                    color: rgb(100, 100, 100);
+                    width: 100%;
+                    float: left;
+                    padding: 10px 0 10px 40px;
+                    background-size: 20px;
+                    background-repeat: no-repeat;
+                    background-position: 7%;
+                    font-variant: normal;
+                    line-height: normal;
+
+                    &.icon-conta {
+                        background-image: url('../img/icon-settings.png');
+                    }
+
+                    &.icon-perfil-trabalho {
+                        background-image: url('../img/icon-work.png');
+                    }
+
+                    &.icon-logout {
+                        background-image: url('../img/icon-logout.png');
+                    }
+                }
+            }
+        }
+
+        ul {
+            li {
+                display: inline-block;
+                margin-left: 20px;
+                height: 70px;
+
+                &.button {
+                    height: 40px;
+
+                    a {
+                        color: #fff;
+                        border-radius: 25px;
+                        background-color: rgba(255, 255, 255, 0.2);
+                        padding: 10px 20px;
+                        line-height: 1.2;
+                    }
+                }
+
+                a {
+                    font-size: 16.6px;
+                    color: rgb(200, 200, 200);
+                    padding: 10px 30px;
+                    text-decoration: none;
+                    font-variant: small-caps;
+                    display: block;
+                    height: 100%;
+                    line-height: 3;
+                }
+            }
+        }
+    }
+}

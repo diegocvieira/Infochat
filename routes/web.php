@@ -11,6 +11,33 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', 'GlobalController@inicial')->name('inicial');
+
+Route::post('cidades/get', 'GlobalController@getCidade');
+Route::get('cidades/set/{id}', 'GlobalController@setCidade');
+
+Route::post('categorias/get', 'GlobalController@getCategoria');
+
+
+
+
+
+
+
+Route::group(['prefix' => 'trabalho'], function() {
+    Route::group(['middleware' => 'auth:web'], function() {
+        Route::get('config', 'TrabalhoController@getConfig');
+        Route::post('config', 'TrabalhoController@setConfig');
+        Route::post('config/status', 'TrabalhoController@setStatus');
+    });
+});
+
+
+Route::group(['prefix' => 'cliente'], function() {
+    Route::post('cadastro', 'UserController@create');
+    Route::post('login', 'UserController@login');
+
+    Route::group(['middleware' => 'auth:web'], function() {
+        Route::get('logout', 'UserController@logout')->name('usuario-logout');
+    });
 });
