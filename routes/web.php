@@ -16,11 +16,14 @@ Route::get('/', 'GlobalController@inicial')->name('inicial');
 Route::post('cidades/get', 'GlobalController@getCidade');
 Route::get('cidades/set/{id}', 'GlobalController@setCidade');
 
-Route::post('categorias/get', 'GlobalController@getCategoria');
+Route::post('categorias/busca', 'GlobalController@buscaCategorias');
+
+Route::get('subcategorias/get/{categoria}', 'GlobalController@getSubcategorias');
+Route::get('categorias/get/{area}', 'GlobalController@getCategorias');
+Route::get('areas/get/{tipo}', 'GlobalController@getAreas');
 
 
-
-
+Route::get('teste/teste', 'TrabalhoController@teste');
 
 
 

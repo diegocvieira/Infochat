@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Categoria;
 use App\Subcategoria;
 use App\Cidade;
+use App\Area;
 use Cookie;
 use DB;
 
@@ -39,7 +40,7 @@ class GlobalController extends Controller
         return redirect()->route('inicial');
     }
 
-    public function getCategoria(Request $request)
+    public function buscaCategorias(Request $request)
     {
         $callback = function($query) use($request) {
             $query->where('titulo', 'LIKE', '%' . $request->nome_categoria . '%');
@@ -49,5 +50,26 @@ class GlobalController extends Controller
         ->orWhereHas('subcategorias', $callback)->with(['subcategorias' => $callback])->get();
 
         return json_encode(['categorias' => $categorias]);
+    }
+
+    public function getAreas($tipo)
+    {
+        $areas = Area::where('tipo', $tipo)->get();
+
+        return json_encode(['areas' => $areas]);
+    }
+
+    public function getCategorias($area)
+    {
+        $categorias = Categoria::where('area_id', $area)->get();
+
+        return json_encode(['categorias' => $categorias]);
+    }
+
+    public function getSubcategorias($categoria)
+    {
+        $subcategorias = Subcategoria::where('categoria_id', $categoria)->get();
+
+        return json_encode(['subcategorias' => $subcategorias]);
     }
 }

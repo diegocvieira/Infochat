@@ -19,7 +19,7 @@
         </li>
 
         <li>
-            <a href="#" class="cor-destaque">EMPRESAS</a>
+            <a href="#" class="cor-destaque">ESTABELECIMENTOS</a>
         </li>
 
         <li>
@@ -29,7 +29,7 @@
         <div class="busca-categorias">
             <a href="#" class="open-hide-busca-categoria open-busca-categoria"></a>
 
-            {!! Form::open(['action' => 'GlobalController@getCategoria', 'method' => 'post', 'id' => 'form-busca-categoria', 'class' => 'open-hide-busca-categoria']) !!}
+            {!! Form::open(['action' => 'GlobalController@buscaCategorias', 'method' => 'post', 'id' => 'form-busca-categoria', 'class' => 'open-hide-busca-categoria']) !!}
                 {!! Form::text('nome_categoria', '', ['placeholder' => 'Digite sua cidade']) !!}
 
                 {!! Form::submit('') !!}

@@ -1,28 +1,33 @@
 {!! Form::model($trabalho, ['method' => 'post', 'action' => 'TrabalhoController@setConfig', 'id' => 'form-trabalho-config', 'files' => 'true']) !!}
-    {!! Form::text('cpf_cnpj', null, ['id' => 'cpf-cnpj']) !!}
+    {!! Form::text('cpf_cnpj', null, ['class' => 'cpf-cnpj']) !!}
 
     <div class="row">
         <div class="col-xs-4 imagem">
             @if(isset($trabalho) && $trabalho->imagem)
-                <div class="bg"></div>
+            <div class="bg" style="background-image: url({{ asset('uploads/perfil/' . $trabalho->imagem) }}); background-size: cover;">
             @else
-                <div class="bg sem-imagem"></div>
+            <div class="bg sem-imagem">
             @endif
+
+                {!! Form::label('imagem', 'trocar imagem', ['class' => 'trocar-imagem']) !!}
+            </div>
+
+            {!! Form::file('img', ['id' => 'imagem']) !!}
         </div>
 
         <div class="col-xs-8 infos">
             <div class="tipo-nome">
-                {!! Form::select('tipo', $tipos, null, ['class' => 'selectpicker tipo', 'title' => 'Tipo']) !!}
+                {!! Form::select('tipo', $tipos, null, ['class' => 'selectpicker tipo', 'title' => 'Tipo', 'required']) !!}
 
-                {!! Form::text('nome', null, ['placeholder' => 'Nome', 'class' => 'nome']) !!}
+                {!! Form::text('nome', null, ['placeholder' => 'Nome', 'class' => 'nome', 'required']) !!}
             </div>
 
             <div class="categorias">
-                {!! Form::select('area_id', $tipos, null, ['class' => 'selectpicker', 'title' => 'Área']) !!}
+                {!! Form::select('area_id', $areas, null, ['class' => 'selectpicker area', 'title' => 'Área', 'required']) !!}
 
-                {!! Form::select('categoria', $tipos, null, ['class' => 'selectpicker categoria', 'title' => 'Categoria']) !!}
+                {!! Form::select('categoria', [], null, ['class' => 'selectpicker categoria', 'title' => 'Categoria']) !!}
 
-                {!! Form::select('subcategoria', $tipos, null, ['class' => 'selectpicker categoria', 'title' => 'Subcategoria']) !!}
+                {!! Form::select('subcategoria', [], null, ['class' => 'selectpicker subcategoria', 'title' => 'Subcategoria']) !!}
             </div>
 
             <div class="tags">
@@ -83,6 +88,9 @@
 
         <div class="informacoes aba-aberta">
             <div class="form-group endereco">
+                {!! Form::hidden('estado', null, ['id' => 'estado']) !!}
+                {!! Form::hidden('cidade', null, ['id' => 'cidade']) !!}
+
                 <div class="row">
                     {!! Form::text('cep', null, ['placeholder' => 'Cep', 'class' => 'cep', 'id' => 'cep']) !!}
 
@@ -99,9 +107,21 @@
             </div>
 
             <div class="form-group fones">
-                <div class="row fone">
-                    {!! Form::text('fone[]', null, ['placeholder' => 'Telefone', 'class' => 'fone-mask']) !!}
-                </div>
+                @if(isset($trabalho) && count($trabalho->telefones) > 0)
+                    @foreach($trabalho->telefones as $key_fone => $fone)
+                        <div class="row fone">
+                            {!! Form::text('fone[]', $fone->fone, ['placeholder' => 'Telefone', 'class' => 'fone-mask']) !!}
+
+                            @if($key_fone > 0)
+                                <a href="#" class="remove-item"></a>
+                            @endif
+                        </div>
+                    @endforeach
+                @else
+                    <div class="row fone">
+                        {!! Form::text('fone[]', null, ['placeholder' => 'Telefone', 'class' => 'fone-mask']) !!}
+                    </div>
+                @endif
 
                 <div class="row add">
                     <a href="#" class="add-fone">+ adicionar</a>
@@ -116,16 +136,40 @@
 
             <div class="form-group redes-sociais">
                 <div class="row social slug">
-                    {!! Form::text('slug', null, ['id' => 'slug']) !!}
+                    {!! Form::text('slug', null, ['id' => 'slug', 'required']) !!}
                 </div>
 
-                <div class="row social">
-                    {!! Form::text('social[]', null, ['placeholder' => 'Site']) !!}
-                </div>
+                @if(isset($trabalho))
+                    @foreach($trabalho->redes as $key_rede => $rede)
+                        <div class="row social">
+                            {!! Form::text('social[]', $rede->url, ['placeholder' => 'Link']) !!}
 
-                <div class="row social">
-                    {!! Form::text('social[]', null, ['placeholder' => 'Facebook']) !!}
-                </div>
+                            @if($key_rede > 1)
+                                <a href="#" class="remove-item"></a>
+                            @endif
+                        </div>
+                    @endforeach
+
+                    @if(count($trabalho->redes) == 0)
+                        <div class="row social">
+                            {!! Form::text('social[]', null, ['placeholder' => 'Site']) !!}
+                        </div>
+                    @endif
+
+                    @if(count($trabalho->redes) <= 1)
+                        <div class="row social">
+                            {!! Form::text('social[]', null, ['placeholder' => 'Facebook']) !!}
+                        </div>
+                    @endif
+                @else
+                    <div class="row social">
+                        {!! Form::text('social[]', null, ['placeholder' => 'Site']) !!}
+                    </div>
+
+                    <div class="row social">
+                        {!! Form::text('social[]', null, ['placeholder' => 'Facebook']) !!}
+                    </div>
+                @endif
 
                 <div class="row add">
                     <a href="#" class="add-social">+ adicionar</a>
@@ -133,17 +177,29 @@
             </div>
 
             <div class="form-group atendimento">
-                <div class="row semana">
-                    {!! Form::select('dia', $dias_semana, null, ['class' => 'selectpicker dia', 'title' => 'Dia']) !!}
+                @if(isset($trabalho) && count($trabalho->horarios) > 0)
+                    @foreach($trabalho->horarios as $key_horario => $horario)
+                        <div class="row semana">
+                            {!! Form::select('dia[]', $dias_semana, $horario->dia, ['class' => 'selectpicker dia', 'title' => 'Dia']) !!}
+                            {!! Form::select('de_manha[]', $horarios, substr($horario->de_manha, 0, 5), ['class' => 'selectpicker', 'title' => 'Hora']) !!}
+                            {!! Form::select('ate_tarde[]', $horarios, substr($horario->ate_tarde, 0, 5), ['class' => 'selectpicker', 'title' => 'Hora']) !!}
+                            {!! Form::select('de_tarde[]', $horarios, substr($horario->de_tarde, 0, 5), ['class' => 'selectpicker', 'title' => 'Hora']) !!}
+                            {!! Form::select('ate_noite[]', $horarios, substr($horario->ate_noite, 0, 5), ['class' => 'selectpicker', 'title' => 'Hora']) !!}
 
-                    {!! Form::select('de_manha', $horarios, null, ['class' => 'selectpicker', 'title' => 'Hora']) !!}
-
-                    {!! Form::select('ate_tarde', $horarios, null, ['class' => 'selectpicker', 'title' => 'Hora']) !!}
-
-                    {!! Form::select('de_tarde', $horarios, null, ['class' => 'selectpicker', 'title' => 'Hora']) !!}
-
-                    {!! Form::select('ate_noite', $horarios, null, ['class' => 'selectpicker', 'title' => 'Hora']) !!}
-                </div>
+                            @if($key_horario > 0)
+                                <a href="#" class="remove-item"></a>
+                            @endif
+                        </div>
+                    @endforeach
+                @else
+                    <div class="row semana">
+                        {!! Form::select('dia[]', $dias_semana, null, ['class' => 'selectpicker dia', 'title' => 'Dia']) !!}
+                        {!! Form::select('de_manha[]', $horarios, null, ['class' => 'selectpicker', 'title' => 'Hora']) !!}
+                        {!! Form::select('ate_tarde[]', $horarios, null, ['class' => 'selectpicker', 'title' => 'Hora']) !!}
+                        {!! Form::select('de_tarde[]', $horarios, null, ['class' => 'selectpicker', 'title' => 'Hora']) !!}
+                        {!! Form::select('ate_noite[]', $horarios, null, ['class' => 'selectpicker', 'title' => 'Hora']) !!}
+                    </div>
+                @endif
 
                 <div class="row add">
                     <a href="#" class="add-atendimento">+ adicionar</a>

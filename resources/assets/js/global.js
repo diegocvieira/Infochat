@@ -8,6 +8,8 @@ $(document).ready(function() {
     function modalAlert(body, btn) {
         var modal = $('#modal-alert');
 
+        modal.find('.modal-footer .btn2').remove();
+
         modal.find('.modal-body').html(body);
         modal.find('.modal-footer .btn').text(btn);
         modal.modal('show');
@@ -25,7 +27,14 @@ $(document).ready(function() {
         }
     };
 
-    $.validator.setDefaults({ ignore: ":hidden:not(.chosen-select)" });
+    $.validator.setDefaults({ ignore: ":hidden:not(.selectpicker)" });
+
+    $(document).on('change', 'select.selectpicker', function() {
+        if($(this).val() != '') {
+            $(this).prev().prev().removeClass('error');
+            $(this).parent().removeClass('error');
+        }
+    });
 
     $('.aside-categorias').on('click', '.open-sub', function(e) {
         e.preventDefault();
@@ -227,7 +236,7 @@ $(document).ready(function() {
         $('#insert-tag').before("<div class='new-tag'><span>" + value + "</span><input style='display: none; width:" + ((value.length + 1) * 10) + "px;' type='text' name='tag[]' value='" + value + "' /><a href='#'></a></div>");
 
         $('#insert-tag').val('');
-        $('select.categoria').val('').selectpicker('refresh');
+        $('select.categoria, select.subcategoria').val('').selectpicker('refresh');
 
         var count = parseInt($('.tags').find('.count-tag').text());
 
@@ -250,11 +259,29 @@ $(document).ready(function() {
         }
     });
 
-    // Inserir tag com a categoria
-    $(document).on('change', 'select.categoria', function() {
+    // Inserir tag com a categoria e buscar subcategorias
+    $(document).on('change', 'select.categoria, select.subcategoria', function() {
         $('.tags').find('.placeholder').hide();
 
-        insertTag($(this).val());
+        // Preencher select das subcategorias
+        if($(this).hasClass('categoria')) {
+            var select = $('#form-trabalho-config').find('select.subcategoria');
+
+            $.ajax({
+                url: '/subcategorias/get/' + $(this).val(),
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $(data.subcategorias).each(function(index, element) {
+                        select.append("<option value='" + element.id + "' data-title='" + element.titulo + "'>" + element.titulo + "</option>");
+                    });
+
+                    select.selectpicker('refresh');
+                }
+            });
+        }
+
+        insertTag($(this).find(':selected').data('title'));
     });
 
     // Mostrar placeholder novamente
@@ -321,9 +348,7 @@ $(document).ready(function() {
         var url = "https://viacep.com.br/ws/" + cep + "/json/";
 
         if(cep.length != 8) {
-            var modal = $('#modal-alert');
-            modal.find('.modal-body').text('Não identificamos o CEP que você informou, verifique se digitou corretamente.');
-            modal.modal('show');
+            modalAlert('Não identificamos o CEP que você informou, verifique se digitou corretamente.', 'OK');
 
             return false;
         }
@@ -332,20 +357,20 @@ $(document).ready(function() {
             if (dadosRetorno.erro == true) {
                 $("#logradouro").val('');
                 $("#bairro").val('');
+                $("#cidade").val('');
+                $("#estado").val('');
 
-                var modal = $('#modal-alert');
-                modal.find('.modal-body').text('Não identificamos o CEP que você informou, verifique se digitou corretamente.');
-                modal.modal('show');
+                modalAlert('Não identificamos o CEP que você informou, verifique se digitou corretamente.', 'OK');
             } else {
                 $("#logradouro").val(dadosRetorno.logradouro);
                 $("#bairro").val(dadosRetorno.bairro);
+                $("#cidade").val(dadosRetorno.localidade);
+                $("#estado").val(dadosRetorno.uf);
 
                 dadosRetorno.bairro != '' ? $("#numero").focus() : $("#bairro").focus();
             }
         }).fail(function() {
-            var modal = $('#modal-alert');
-            modal.find('.modal-body').text('Houve um erro ao identificar o seu CEP. Entre em contato conosco.');
-            modal.modal('show');
+            modalAlert('Houve um erro ao identificar o seu CEP. Entre em contato conosco.', 'OK');
 
             return false;
         });
@@ -404,7 +429,7 @@ $(document).ready(function() {
         last.find('.bootstrap-select').find('.selectpicker').insertBefore($('.semana:last .bootstrap-select:first'));
         last.find('.bootstrap-select').remove();
         last.find('.remove-item').remove();
-        last.find('select').selectpicker();
+        last.find('select').val('').selectpicker();
         last.find('.bootstrap-select:last').after("<a href='#' class='remove-item'></a>");
     });
 
@@ -415,22 +440,61 @@ $(document).ready(function() {
         $(this).parent().remove();
     });
 
-    // Modal de CPF/CNPJ
-    $(document).on('change', 'select.tipo', function() {
-        var tipo = $(this).val() == '1' ? 'CPF' : 'CNPJ',
-            modal = $('#modal-alert');
-
-        var body = "<p>Informe o seu " + tipo + " para garantir a veracidade dos dados.<br>Ele não será divulgado!</p><input type='text' name='a' value='' placeholder='escreva aqui' />";
+    function modalCpfCnpj() {
+        var tipo = $('#form-trabalho-config').find('select.tipo').val() == '1' ? 'CPF' : 'CNPJ',
+            modal = $('#modal-alert'),
+            body = "<p>Informe o seu " + tipo + " para garantir a veracidade dos dados.<br>Ele não será divulgado!</p><input type='text' name='a' value='' placeholder='escreva aqui' />";
 
         modalAlert(body, 'Enviar');
 
-        tipo == 'CPF' ? modal.find('input').mask('000.000.000-00', {reverse: true}) : modal.find('input').mask('00.000.000/0000-00', {reverse: true});
+        tipo == 'CPF' ? modal.find('input').mask('000.000.000-00', {reverse: true, clearIfNotMatch: true}) : modal.find('input').mask('00.000.000/0000-00', {reverse: true, clearIfNotMatch: true});
 
         modal.find('.modal-footer .btn').unbind().on('click',function(e) {
-            $('#form-trabalho-config').find('#cpf-cnpj').val(modal.find('input').val());
+            $('#form-trabalho-config').find('.cpf-cnpj').val(modal.find('input').val());
+        });
+    }
+
+    // Modal de CPF/CNPJ e busca por areas
+    $(document).on('change', 'select.tipo', function() {
+        var select = $('#form-trabalho-config').find('select.area');
+
+        modalCpfCnpj();
+
+        $.ajax({
+            url: '/areas/get/' + $(this).val(),
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                $(data.areas).each(function(index, element) {
+                    select.append("<option value='" + element.id + "'>" + element.titulo + "</option>");
+                });
+
+                select.selectpicker('refresh');
+            }
         });
     });
 
+    // Buscar categorias
+    $(document).on('change', 'select.area', function() {
+        var select = $('#form-trabalho-config').find('select.categoria');
+
+        select.find('option').remove();
+
+        $.ajax({
+            url: '/categorias/get/' + $(this).val(),
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                $(data.categorias).each(function(index, element) {
+                    select.append("<option value='" + element.id + "' data-title='" + element.titulo + "'>" + element.titulo + "</option>");
+                });
+
+                select.selectpicker('refresh');
+            }
+        });
+    });
+
+    // Modal alterar o status do trabalho
     $(document).on('click', '.switch', function(e) {
         e.preventDefault();
 
@@ -440,17 +504,15 @@ $(document).ready(function() {
         modal.find('.btn').addClass('btn-confirmar');
 
         if(input.is(':checked')) {
-            modalAlert("Seu perfil de trabalho ficará oculto no infochat e os usuários" + 'não' + "poderão entrar em contato com você. As conversas abertas seguirão normalmente!", 'Desativar');
+            modalAlert("Seu perfil de trabalho ficará oculto no infochat e os usuários " + '<b>não</b>' + " poderão entrar em contato com você. As conversas abertas seguirão normalmente!", 'Desativar');
 
-            modal.find('.modal-footer').prepend("<button type='button' class='btn btn-default' data-dismiss='modal'>Voltar</button>");
+            modal.find('.modal-footer').prepend("<button type='button' class='btn btn-default btn2' data-dismiss='modal'>Voltar</button>");
         } else {
             modalAlert('Seu perfil de trabalho ficará visivel no infochat e os usuários poderão entrar em contato com você.', 'Ativar');
         }
 
         modal.find('.modal-footer .btn-confirmar').unbind().on('click',function(e) {
             var status = input.is(':checked') ? '0' : '1';
-
-            console.log('ok');
 
             $.ajax({
                 url: '/trabalho/config/status',
@@ -462,20 +524,50 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function (data) {
                     if(data.status == true) {
-                        data.status_value == '0' ? input.prop('checked', false) : input.prop('checked', true);
+                        if(status == '0') {
+                            input.prop('checked', false);
+                        } else {
+                            input.prop('checked', true);
+
+                            modal.find('.modal-footer .btn').removeClass('btn-confirmar').text('OK');
+                            modal.find('.modal-body').text('Mantenha o infochat aberto. Se sair fique atento ao seu e-mail, avisaremos por lá quando tiver mensagem para você (se necessário tire o infochat da lista de spam).');
+                        }
                     } else {
-                        //modalAlert("É necessário primeiro criar o seu perfil de trabalho para depois poder ativá-lo.");
                         modal.find('.modal-footer .btn').removeClass('btn-confirmar').text('OK');
-                        modal.find('.modal-body').text('É necessário primeiro criar o seu perfil de trabalho para depois poder ativá-lo.');
+                        modal.find('.modal-body').text(data.msg);
                     }
+
+                    modal.find('.modal-footer .btn').unbind().on('click',function(e) {
+                        return true;
+                    });
                 }
             });
 
-            return false;
+            if(status == 1) {
+                return false;
+            }
         });
     });
 
+    // Pre visualizar imagem
+    $(document).on('change', '#form-trabalho-config .imagem input[type=file]', function() {
+        var preview = $(this).prev();
+        var reader = new FileReader();
 
+        if($(this)[0].files[0].size > 5100000) {
+            modalAlert('A imagem tem que ter no máximo 5mb.', 'OK');
+        } else {
+            reader.onload = function(e) {
+                preview.removeClass('sem-imagem').css({
+                    'background-image' : 'url(' + e.target.result + ')',
+                    'background-size' : 'cover'
+                });
+            }
+
+            preview.show();
+            reader.readAsDataURL($(this)[0].files[0]);
+        }
+    });
 
 
 
@@ -504,6 +596,72 @@ $(document).ready(function() {
 
             $('#cep').mask('00000-000', {reverse: false});
             $('.fone-mask').mask(SPMaskBehavior, spOptions);
+
+            $('#form-trabalho-config').validate({
+                rules: {
+                    nome: {
+                        required: true,
+                        minlength: 1,
+                        maxlength: 100
+                    },
+                    tipo: {
+                        required: true,
+                        minlength: 1
+                    },
+                    area_id : {
+                        required: true,
+                        minlength: 1
+                    },
+                    slug: {
+                        required: true,
+                        minlength: 1,
+                        maxlength: 100
+                    }
+                },
+                highlight: function (element, errorClass, validClass) {
+                    $(element).addClass(errorClass).removeClass(validClass);
+
+                    if($(element).hasClass('selectpicker')) {
+                        $(element).prev().prev().addClass('error');
+                    }
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass(errorClass).addClass(validClass);
+
+                    if($(element).hasClass('selectpicker')) {
+                        $(element).prev().prev().removeClass('error');
+                    }
+                },
+                errorPlacement: function(error, element) {
+                    if(element.hasClass('selectpicker')) {
+                        $(element).prev().prev().addClass('error');
+                    }
+                },
+                submitHandler: function(form) {
+                    if($('.cpf-cnpj').val() != '') {
+                        $(form).find('input[type=submit]').val('Salvando').prop('disabled', true);
+
+                        $.ajax({
+                            url: $(form).attr('action'),
+                            method: 'POST',
+                            dataType: 'json',
+                            data: new FormData(form),
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+                                modalAlert(data.msg, 'OK');
+
+                                $(form).find('input[type=submit]').val('Salvar').prop('disabled', false);
+                            }
+                        });
+                    } else {
+                        modalCpfCnpj();
+                    }
+
+                    return false;
+                }
+            });
         }
     });
 

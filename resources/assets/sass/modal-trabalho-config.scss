@@ -8,7 +8,7 @@
         width: 920px;
     }
 
-    #cpf-cnpj {
+    .cpf-cnpj {
         display: none;
     }
 
@@ -72,7 +72,7 @@
             &.dropdown-toggle {
                 background-color: rgb(245, 245, 245);
                 outline: none !important;
-                color: rgb(100, 100, 100);
+                color: #000;
 
                 &.bs-placeholder, &.bs-placeholder:hover, &.bs-placeholder:focus, &.bs-placeholder:active {
                     color: rgb(150, 150, 150);
@@ -94,6 +94,10 @@
         width: 29%;
         height: 215px;
 
+        input[type=file] {
+            display: none;
+        }
+
         .bg {
             border: 1px solid rgb(230, 230, 230);
             float: left;
@@ -107,23 +111,24 @@
                 background-size: 80px;
                 background-image: url('../img/paisagem.png');
                 box-shadow: 2.5px 4.33px 19px 1px rgba(100, 100, 100, 0.118);
+            }
 
-                &:after {
-                    content: 'trocar imagem';
-                    border: 1px solid rgb(230, 230, 230);
-                    border-radius: 3px;
-                    background-color: rgba(0, 0, 0, 0.5);
-                    position: absolute;
-                    left: 50%;
-                    top: 50%;
-                    width: 98px;
-                    margin: -14px 0 0 -49px;
-                    text-align: center;
-                    line-height: 1.8;
-                    height: 28px;
-                    font-size: 12.5px;
-                    color: rgb(255, 255, 255);
-                }
+            .trocar-imagem {
+                border: 1px solid rgb(230, 230, 230);
+                border-radius: 3px;
+                background-color: rgba(0, 0, 0, 0.5);
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                width: 98px;
+                margin: -14px 0 0 -49px;
+                text-align: center;
+                line-height: 1.8;
+                height: 28px;
+                font-size: 12.5px;
+                color: rgb(255, 255, 255);
+                font-weight: normal;
+                cursor: pointer;
             }
         }
     }
