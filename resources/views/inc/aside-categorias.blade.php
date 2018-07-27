@@ -11,19 +11,19 @@
 
     <ul id="categorias">
         <li>
-            <a href="#" class="cor-destaque">TODOS</a>
+            <a href="#" class="cor-destaque tipo {{ (!isset($tipo) || $tipo == 'todos') ? 'active' : '' }}" data-search="todos">TODOS</a>
         </li>
 
         <li>
-            <a href="#" class="cor-destaque">PROFISSIONAIS</a>
+            <a href="#" class="cor-destaque tipo {{ (isset($tipo) && $tipo == 'profissionais') ? 'active' : '' }}" data-search="profissionais">PROFISSIONAIS</a>
         </li>
 
         <li>
-            <a href="#" class="cor-destaque">ESTABELECIMENTOS</a>
+            <a href="#" class="cor-destaque tipo {{ (isset($tipo) && $tipo == 'estabelecimentos') ? 'active' : '' }}" data-search="estabelecimentos">ESTABELECIMENTOS</a>
         </li>
 
         <li>
-            <a href="#" class="cor-destaque">FAVORITOS</a>
+            <a href="#" class="cor-destaque tipo" data-search="favoritos">FAVORITOS</a>
         </li>
 
         <div class="busca-categorias">
@@ -37,18 +37,10 @@
         </div>
 
         <span id="list-categorias">
-            @foreach($categorias as $categoria)
+            @foreach($areas as $a)
                 <li>
-                    <a href="#" class="open-sub">{{ $categoria->titulo }}</a>
+                    <a href="#" class="area {{ (isset($area) && $area == $a->id) ? 'active' : '' }}" data-search="{{ $a->slug }}" style="background-image: url({{ asset('img/categorias/' . $a->slug . '.png') }})">{{ $a->titulo }}</a>
                 </li>
-
-                <div class="subs">
-                    @foreach($categoria->subcategorias as $subcategoria)
-                        <li>
-                            <a href="#">{{ $subcategoria->titulo }}</a>
-                        </li>
-                    @endforeach
-                </div>
             @endforeach
         </span>
     </ul>

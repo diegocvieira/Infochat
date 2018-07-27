@@ -36,15 +36,210 @@ $(document).ready(function() {
         }
     });
 
-    $('.aside-categorias').on('click', '.open-sub', function(e) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    $(document).on('click', '.aside-categorias #list-categorias a', function(e) {
         e.preventDefault();
 
-        var subs = $(this).parent().next();
+        var next = $(this).parent().next(),
+            submit = $(this).hasClass('close-area') ? false : true,
+            $this = $(this);
 
-        $('.aside-categorias').find('.subs').not(subs).hide();
+        if($(this).hasClass('area')) {
+            var area = $('.aside-categorias').find('.area').parent();
 
-        subs.is(':visible') ? subs.hide() : subs.show();
+            $('.aside-categorias').find('.cats').remove();
+
+            $.ajax({
+                url: 'aside/categorias/' + $(this).data('search'),
+                method: 'GET',
+                dataType:'json',
+                success: function(data) {
+                    if(submit) {
+                        $this.parent().after("<div class='cats'></div>");
+
+                        $(data.categorias).each(function(index, element) {
+                            $this.parent().next().append("<li><a href='#' class='categoria' data-search='" + element.slug + "'>" + element.titulo + "</a></li>")
+                        });
+                    }
+
+                    $this.hasClass('close-area') ? area.show() : area.not($this.parent()).hide();
+
+                    $this.toggleClass('close-area');
+
+                    //$this.parent().next().toggle();
+
+                    //area.next().find('.subs').hide();
+                }
+            });
+
+            $('#form-search-area').val($this.data('search'));
+            $('#form-search-tag').val('');
+        } else {
+            if($(this).hasClass('categoria')) {
+                $.ajax({
+                    url: 'aside/subcategorias/' + $(this).data('search'),
+                    method: 'GET',
+                    dataType:'json',
+                    success: function(data) {
+                        $this.parent().after("<div class='subs'></div>");
+
+                        $(data.subcategorias).each(function(index, element) {
+                            $this.parent().next().append("<li><a href='#' data-search='" + element.slug + "'>" + element.titulo + "</a></li>")
+                        });
+
+                        //$this.parent().next().is(':visible') ? $this.parent().next().hide() : $this.parent().next().show();
+
+                        $('.aside-categorias').find('.subs').not($this.parent().next()).hide();
+                    }
+                });
+            } else {
+                $('.aside-categorias').find('.subs a').removeClass('active');
+
+                $(this).addClass('active');
+            }
+
+            $('#form-search-tag').val($(this).data('search'));
+        }
+
+        if(submit) {
+            $('#form-search').submit();
+        }
     });
+
+    $('#categorias').on('click', '.tipo', function(e) {
+        e.preventDefault();
+
+        $('#categorias').find('.tipo').removeClass('active');
+
+        $(this).addClass('active');
+
+        $('#form-search-tipo').val($(this).data('search'));
+        $('#form-search').submit();
+
+        $('#list-categorias').find('li').remove();
+
+        $.ajax({
+            url: 'aside/areas/' + $(this).data('search'),
+            method: 'GET',
+            dataType:'json',
+            success: function(data) {
+                $(data.areas).each(function(index, element) {
+                    $('#list-categorias').append("<li><a href='#' data-search='" + element.slug + "'>" + element.titulo + "</a></li>")
+                });
+            }
+        });
+    });
+
+    $(document).on('submit', '#form-search', function() {
+        $.ajax({
+            url: $(this).attr('action'),
+            method: 'POST',
+            dataType:'json',
+            data: $(this).serialize(),
+            success: function(data) {
+                $('#form-search-results').html(data.trabalhos);
+
+                window.history.pushState('', '', data.url);
+            }
+        });
+
+        return false;
+    });
+
+
+    $('.abas-resultados').on('click', 'a', function(e) {
+        e.preventDefault();
+
+        $('.abas-resultados').find('a').removeClass('active');
+
+        $(this).addClass('active');
+    });
+
+    $('#form-search-results').on('scroll', function() {
+        if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+            var form = $('#form-search'),
+                form_result = $('#form-search-results');
+
+            form.find('#form-search-offset').val(form_result.find('.result').length);
+
+            $.ajax({
+                url: form.attr('action'),
+                method: 'POST',
+                dataType:'json',
+                data: form.serialize(),
+                success: function(data) {
+                    form_result.append(data.trabalhos);
+                }
+            });
+        }
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     $('.aside-categorias').on('click', '.cidade-atual', function(e) {
         e.preventDefault();
@@ -129,6 +324,55 @@ $(document).ready(function() {
 
         return false;
     });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -266,6 +510,8 @@ $(document).ready(function() {
         // Preencher select das subcategorias
         if($(this).hasClass('categoria')) {
             var select = $('#form-trabalho-config').find('select.subcategoria');
+
+            select.find('option').remove();
 
             $.ajax({
                 url: '/subcategorias/get/' + $(this).val(),
@@ -458,6 +704,8 @@ $(document).ready(function() {
     $(document).on('change', 'select.tipo', function() {
         var select = $('#form-trabalho-config').find('select.area');
 
+        select.find('option').remove();
+
         modalCpfCnpj();
 
         $.ajax({
@@ -569,103 +817,7 @@ $(document).ready(function() {
         }
     });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    $.ajax({
-        url: '/trabalho/config',
-        method: 'GET',
-        dataType: 'json',
-        success: function (data) {
-            var modal = $('#modal-default');
-            modal.addClass('modal-trabalho-config');
-            modal.find('.modal-body').html(data.body);
-            modal.modal('show');
-
-            $('.selectpicker').selectpicker('refresh');
-
-            $('#cep').mask('00000-000', {reverse: false});
-            $('.fone-mask').mask(SPMaskBehavior, spOptions);
-
-            $('#form-trabalho-config').validate({
-                rules: {
-                    nome: {
-                        required: true,
-                        minlength: 1,
-                        maxlength: 100
-                    },
-                    tipo: {
-                        required: true,
-                        minlength: 1
-                    },
-                    area_id : {
-                        required: true,
-                        minlength: 1
-                    },
-                    slug: {
-                        required: true,
-                        minlength: 1,
-                        maxlength: 100
-                    }
-                },
-                highlight: function (element, errorClass, validClass) {
-                    $(element).addClass(errorClass).removeClass(validClass);
-
-                    if($(element).hasClass('selectpicker')) {
-                        $(element).prev().prev().addClass('error');
-                    }
-                },
-                unhighlight: function (element, errorClass, validClass) {
-                    $(element).removeClass(errorClass).addClass(validClass);
-
-                    if($(element).hasClass('selectpicker')) {
-                        $(element).prev().prev().removeClass('error');
-                    }
-                },
-                errorPlacement: function(error, element) {
-                    if(element.hasClass('selectpicker')) {
-                        $(element).prev().prev().addClass('error');
-                    }
-                },
-                submitHandler: function(form) {
-                    if($('.cpf-cnpj').val() != '') {
-                        $(form).find('input[type=submit]').val('Salvando').prop('disabled', true);
-
-                        $.ajax({
-                            url: $(form).attr('action'),
-                            method: 'POST',
-                            dataType: 'json',
-                            data: new FormData(form),
-                            cache: false,
-                            contentType: false,
-                            processData: false,
-                            success: function (data) {
-                                modalAlert(data.msg, 'OK');
-
-                                $(form).find('input[type=submit]').val('Salvar').prop('disabled', false);
-                            }
-                        });
-                    } else {
-                        modalCpfCnpj();
-                    }
-
-                    return false;
-                }
-            });
-        }
-    });
-
-
+    // Validar e submeter form
     $('#open-trabalho-config').on('click', function(e) {
         e.preventDefault();
 
@@ -682,6 +834,73 @@ $(document).ready(function() {
                 $('.selectpicker').selectpicker('refresh');
 
                 $('#cep').mask('00000-000', {reverse: false});
+                $('.fone-mask').mask(SPMaskBehavior, spOptions);
+
+                $('#form-trabalho-config').validate({
+                    rules: {
+                        nome: {
+                            required: true,
+                            minlength: 1,
+                            maxlength: 100
+                        },
+                        tipo: {
+                            required: true,
+                            minlength: 1
+                        },
+                        area_id : {
+                            required: true,
+                            minlength: 1
+                        },
+                        slug: {
+                            required: true,
+                            minlength: 1,
+                            maxlength: 100
+                        }
+                    },
+                    highlight: function (element, errorClass, validClass) {
+                        $(element).addClass(errorClass).removeClass(validClass);
+
+                        if($(element).hasClass('selectpicker')) {
+                            $(element).prev().prev().addClass('error');
+                        }
+                    },
+                    unhighlight: function (element, errorClass, validClass) {
+                        $(element).removeClass(errorClass).addClass(validClass);
+
+                        if($(element).hasClass('selectpicker')) {
+                            $(element).prev().prev().removeClass('error');
+                        }
+                    },
+                    errorPlacement: function(error, element) {
+                        if(element.hasClass('selectpicker')) {
+                            $(element).prev().prev().addClass('error');
+                        }
+                    },
+                    submitHandler: function(form) {
+                        if($('.cpf-cnpj').val() != '') {
+                            $(form).find('input[type=submit]').val('Salvando').prop('disabled', true);
+
+                            $.ajax({
+                                url: $(form).attr('action'),
+                                method: 'POST',
+                                dataType: 'json',
+                                data: new FormData(form),
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                success: function (data) {
+                                    modalAlert(data.msg, 'OK');
+
+                                    $(form).find('input[type=submit]').val('Salvar').prop('disabled', false);
+                                }
+                            });
+                        } else {
+                            modalCpfCnpj();
+                        }
+
+                        return false;
+                    }
+                });
             }
         });
     });

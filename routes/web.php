@@ -26,6 +26,16 @@ Route::get('areas/get/{tipo}', 'GlobalController@getAreas');
 Route::get('teste/teste', 'TrabalhoController@teste');
 
 
+Route::get('aside/categorias/{slug}', 'GlobalController@asideCategorias');
+Route::get('aside/subcategorias/{slug}', 'GlobalController@asideSubcategorias');
+Route::get('aside/areas/{tipo}', 'GlobalController@asideAreas');
+
+
+
+
+Route::post('trabalhos/busca', 'TrabalhoController@formBusca');
+Route::any('busca/{tipo?}/{palavra_chave?}/{area?}/{tag?}', 'TrabalhoController@busca');
+
 
 Route::group(['prefix' => 'trabalho'], function() {
     Route::group(['middleware' => 'auth:web'], function() {

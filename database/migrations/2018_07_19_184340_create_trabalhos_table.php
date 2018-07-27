@@ -21,7 +21,7 @@ class CreateTrabalhosTable extends Migration
             $table->string('nome', 100);
             $table->string('email', 62)->nullable();
             $table->string('slug', 100)->unique();
-            $table->boolean('status');
+            $table->boolean('status')->default(0);
             $table->string('imagem', 100)->nullable();
             $table->string('descricao', 10000)->nullable();
             $table->string('cpf_cnpj', 50);
@@ -32,6 +32,7 @@ class CreateTrabalhosTable extends Migration
             $table->string('bairro', 50)->nullable();
             $table->string('cep', 10)->nullable();
             $table->string('complemento', 50)->nullable();
+            $table->integer('pageviews')->default(0);
             $table->timestamps();
         });
     }

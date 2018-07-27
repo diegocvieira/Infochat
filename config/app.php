@@ -162,6 +162,7 @@ return [
 
         Jenssegers\Agent\AgentServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+        App\Providers\ComposerServiceProvider::class,
     ],
 
     /*

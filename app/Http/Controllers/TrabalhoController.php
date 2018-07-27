@@ -13,7 +13,10 @@ class TrabalhoController extends Controller
 {
     public function getConfig()
     {
-        $trabalho = Trabalho::where('user_id', Auth::guard('web')->user()->id)->first();
+        $trabalho = Trabalho::where('user_id', Auth::guard('web')->user()->id)
+                            ->withoutGlobalScope('ativo')
+                            ->withoutGlobalScope('cidade')
+                            ->first();
 
         $tipos = [
             '1' => 'Profissional',
@@ -37,10 +40,14 @@ class TrabalhoController extends Controller
             '5' => 'Sábado'
         ];
 
-        $areas = Area::where('tipo', $trabalho->tipo)->pluck('titulo', 'id');
+        if(isset($trabalho)) {
+            $areas = Area::where('tipo', $trabalho->tipo)->pluck('titulo', 'id');
+
+            $categorias = Categoria::where('area_id', $trabalho->area_id)->get();
+        }
 
         return response()->json([
-            'body' => view('admin.trabalho-config', compact('areas', 'trabalho', 'tipos', 'horarios', 'dias_semana'))->render()
+            'body' => view('admin.trabalho-config', compact('categorias', 'areas', 'trabalho', 'tipos', 'horarios', 'dias_semana'))->render()
         ]);
     }
 
@@ -50,12 +57,27 @@ class TrabalhoController extends Controller
         $slug = str_slug($request->slug, '-');
 
         // Validar o slug
-        $slug_validate = Trabalho::where('slug', $slug)->where('user_id', '!=', $user_id)->count();
+        $slug_validate = Trabalho::where('slug', $slug)
+                                ->where('user_id', '!=', $user_id)
+                                ->withoutGlobalScope('ativo')
+                                ->withoutGlobalScope('cidade')
+                                ->count();
 
         if($slug_validate == 0 && $request->nome && $slug && $request->area_id && $request->tipo) {
             // Verificar se o trabalho ja existe
-            $t = Trabalho::where('user_id', $user_id)->first();
-            $trabalho = isset($t) ? $t : new Trabalho;
+            $t = Trabalho::where('user_id', $user_id)
+                        ->withoutGlobalScope('ativo')
+                        ->withoutGlobalScope('cidade')
+                        ->first();
+
+            // Escolher entre create e update
+            if(isset($t)) {
+                $msg = 'Informações alteradas com sucesso!';
+                $trabalho = $t;
+            } else {
+                $msg = 'Perfil criado com sucesso!';
+                $trabalho = new Trabalho;
+            }
 
             // Buscar a cidade no banco
             $cidade = Cidade::whereHas('estado', function($q) use($request) {
@@ -63,46 +85,61 @@ class TrabalhoController extends Controller
             })->where('title', 'LIKE', '%' . $request->cidade . '%')->select('id')->first();
         	$cidade_id = $cidade ? $cidade->id : null;
 
-            $request['cidade_id'] = $cidade_id;
-            $request['user_id'] = $user_id;
-            $request['slug'] = $slug;
+            $trabalho->cidade_id = $cidade_id;
+            $trabalho->user_id = $user_id;
+            $trabalho->slug = $slug;
+            $trabalho->tipo = $request->tipo;
+            $trabalho->nome = $request->nome;
+            $trabalho->descricao = $request->descricao;
+            $trabalho->logradouro = $request->logradouro;
+            $trabalho->numero = $request->numero;
+            $trabalho->bairro = $request->bairro;
+            $trabalho->complemento = $request->complemento;
+            $trabalho->cpf_cnpj = $request->cpf_cnpj;
+            $trabalho->area_id = $request->area_id;
+            $trabalho->cep = $request->cep;
+            $trabalho->email = $request->email;
 
             if(!empty($request->img)) {
                 if(isset($t) && $t->imagem) {
                     unlink('uploads/perfil/' . $t->imagem);
                 }
 
-                // Salva a imagem e move para a pasta
+                // Move  a imagem para a pasta
                 $file = $request->img;
-                $destinationPath = 'uploads'; // Caminho da pasta
                 $fileName = date('YmdHis') . microtime(true) . rand(111111111, 999999999) . '.' . $file->getClientOriginalExtension(); // Renomear
-                $file->move($destinationPath, $fileName); // Mover para a pasta
+                $file->move('uploads/perfil', $fileName); // Mover para a pasta
 
-                $request['imagem'] = $fileName;
+                $trabalho->imagem = $fileName;
             }
 
-            // Escolher entre create e update
-            if(isset($t)) {
-                $trabalho->update($request->all());
-                $msg = 'Informações alteradas com sucesso!';
-            } else {
-                $trabalho->create($request->all());
-                $msg = 'Perfil criado com sucesso!';
-            }
+            $trabalho->save();
 
             // Telefones
             $trabalho->telefones()->delete();
-            foreach($request->fone as $fone) {
-                if(!empty($fone)) {
-                    $trabalho->telefones()->create(['fone' => $fone]);
+            if(isset($request->fone)) {
+                foreach($request->fone as $fone) {
+                    if(!empty($fone)) {
+                        $trabalho->telefones()->create(['fone' => $fone]);
+                    }
                 }
             }
 
             // Redes sociais
             $trabalho->redes()->delete();
-            foreach($request->social as $social) {
-                if(!empty($social)) {
-                    $trabalho->redes()->create(['url' => $social]);
+            if(isset($request->social)) {
+                foreach($request->social as $social) {
+                    if(!empty($social)) {
+                        $trabalho->redes()->create(['url' => $social]);
+                    }
+                }
+            }
+
+            // Tags
+            $trabalho->tags()->delete();
+            if(isset($request->tag)) {
+                foreach($request->tag as $tag) {
+                    $trabalho->tags()->create(['tag' => $tag]);
                 }
             }
 
@@ -117,7 +154,7 @@ class TrabalhoController extends Controller
                 }
             }
         } else {
-            $msg = 'Este slug já está em uso. Escolha outro e tente novamente.';
+            $msg = 'Esta url já está em uso. Escolha outro e tente novamente.';
         }
 
         return json_encode(['msg' => $msg]);
@@ -125,7 +162,10 @@ class TrabalhoController extends Controller
 
     public function setStatus(Request $request)
     {
-        $trabalho = Trabalho::where('user_id', Auth::guard('web')->user()->id)->first();
+        $trabalho = Trabalho::where('user_id', Auth::guard('web')->user()->id)
+                            ->withoutGlobalScope('ativo')
+                            ->withoutGlobalScope('cidade')
+                            ->first();
 
         if(count($trabalho) > 0) {
             $trabalho->status = $request->status;
@@ -141,11 +181,52 @@ class TrabalhoController extends Controller
     }
 
 
+    public function busca($tipo = null, $palavra_chave = null, $area = null, $tag = null, $offset = null)
+    {
+        $offset = $offset ? $offset : 0;
 
+        $trabalhos = Trabalho::filtroArea($area)
+                            ->filtroTag($tag)
+                            ->filtroPalavraChave($palavra_chave)
+                            ->filtroTipo($tipo)
+                            ->offset($offset)
+                            ->limit(2)
+                            ->get();
 
+        // Gera a URL
+        if(!$palavra_chave && $area) {
+            $palavra_chave = 'area';
+        }
+        $url = '/busca/' . $tipo;
+        if($area || $palavra_chave) {
+            $url =  $url . '/' . $palavra_chave;
+        }
+        if($area) {
+            $url = $url . '/' . $area . '/' . $tag;
+        }
 
+        // Detecta se foi acessado por url ou ajax
+        if($_SERVER['REQUEST_METHOD'] == 'GET') {
+            return view('busca', compact('trabalhos', 'palavra_chave', 'tipo', 'area', 'tag'));
+        } else {
+            return response()->json([
+                'trabalhos' => view('pagination', compact('trabalhos', 'offset'))->render(),
+                'url' => $url
+            ]);
+        }
+    }
 
+    public function formBusca(Request $request)
+    {
+        $palavra_chave = $request->palavra_chave;
+        $tipo = $request->tipo;
+        $area = $request->area;
+        $tag = $request->tag;
 
+        $offset = $request->offset;
+
+        return $this->busca($tipo, $palavra_chave, $area, $tag, $offset);
+    }
 
 
 
@@ -164,21 +245,35 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
-        $dia = ['Domingo', 'Quarta'];
-        $de_manha = ["08:00", "09:00"];
-        $ate_tarde = ["13:00", "14:00"];
-        $de_tarde = ["13:00", "14:00"];
-        $ate_noite = ["19:00", "18:00"];
-        $novo = array_map(function($d, $dm, $at, $dt, $an) {
-            return array('dia' => $d, 'de_manha' => $dm, 'ate_tarde' => $at, 'de_tarde' => $dt, 'ate_noite' => $an);
-        }, $dia, $de_manha, $ate_tarde, $de_tarde, $ate_noite);
+        $areas = Area::select('titulo', 'slug')->distinct()->orderBy('titulo', 'asc')->get();
 
-        return $novo;
+        foreach($areas as $area) {
+            echo "<b>AREA - $area->titulo </b><br>";
+
+            $categorias = Categoria::whereHas('area', function($q) use($area) {
+                $q->where('slug', $area->slug);
+            })->select('titulo', 'slug')->distinct()->orderBy('titulo', 'asc')->get();
+            foreach($categorias as $categoria) {
+                echo "<i>CATEGORIA - $categoria->titulo - $categoria->area_id</i><br>";
+
+                $subcategorias = Subcategoria::whereHas('categoria', function($q) use($categoria) {
+                    $q->where('slug', $categoria->slug);
+                })->select('titulo', 'slug')->distinct()->orderBy('titulo', 'asc')->get();
+                foreach($subcategorias as $subcategoria) {
+                    echo "SUBCATEGORIA - $subcategoria->titulo<br>";
+                }
+            }
+        }
+
+
+
+
+
 
         /*$row = 1;
         $cat = false;
 
-        if(($handle = fopen(public_path('categorias-profissionais.csv'), "r")) !== FALSE) {
+        if(($handle = fopen(public_path('categorias-estabelecimentos.csv'), "r")) !== FALSE) {
             while(($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                 $num = count($data);
                 $row++;
@@ -188,13 +283,13 @@ class TrabalhoController extends Controller
                         $area = new Area;
                         $area->titulo = str_replace('*', '', $data[$col]);
                         $area->slug = str_slug($data[$col], '-');
-                        $area->tipo = 1;
+                        $area->tipo = 2;
                         //$area->save();
                         $area_id = $area->id;
 
                         echo str_replace('*', '', $data[$col]) . " ------------------------------ area<br />\n";
-                    } else if($data[$col] != '' && ($cat || $data[$col] == 'Artista')) {
-                         $categoria = new Categoria;
+                    } else if($data[$col] != '' && ($cat || $data[$col] == 'Açougues e frigoríficos')) {
+                        $categoria = new Categoria;
                         $categoria->titulo = $data[$col];
                         $categoria->slug = str_slug($data[$col], '-');
                         $categoria->area_id = $area_id;

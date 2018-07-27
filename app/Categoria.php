@@ -12,4 +12,9 @@ class Categoria extends Model
     {
         return $this->HasMany('App\Subcategoria');
     }
+
+    public function area()
+    {
+        return $this->belongsTo('App\Area');
+    }
 }

@@ -19,9 +19,7 @@ class GlobalController extends Controller
             _setCidade($cidade, $force = true);
         }
 
-        $categorias = Categoria::get();
-
-        return view('pagina-inicial', compact('categorias'));
+        return view('pagina-inicial');
     }
 
     public function getCidade(Request $request)
@@ -71,5 +69,42 @@ class GlobalController extends Controller
         $subcategorias = Subcategoria::where('categoria_id', $categoria)->get();
 
         return json_encode(['subcategorias' => $subcategorias]);
+    }
+
+    public function asideCategorias($slug)
+    {
+        $categorias = Categoria::whereHas('area', function($q) use($slug) {
+            $q->where('slug', $slug);
+        })->select('titulo', 'slug')->distinct()->orderBy('titulo', 'asc')->get();
+
+        return json_encode(['categorias' => $categorias]);
+    }
+
+    public function asideSubcategorias($slug)
+    {
+        $subcategorias = Subcategoria::whereHas('categoria', function($q) use($slug) {
+            $q->where('slug', $slug);
+        })->select('titulo', 'slug')->distinct()->orderBy('titulo', 'asc')->get();
+
+        return json_encode(['subcategorias' => $subcategorias]);
+    }
+
+    public function asideAreas($tipo)
+    {
+        if($tipo == 'profissionais') {
+            $tipo = 1;
+        } else if($tipo == 'estabelecimentos') {
+            $tipo = 2;
+        } else {
+            $tipo = '';
+        }
+
+        if($tipo) {
+            $areas = Area::where('tipo', $tipo)->select('titulo', 'slug')->distinct()->orderBy('titulo', 'asc')->get();
+        } else {
+            $areas = Area::select('titulo', 'slug')->distinct()->orderBy('titulo', 'asc')->get();
+        }
+
+        return json_encode(['areas' => $areas]);
     }
 }

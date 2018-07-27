@@ -23,9 +23,15 @@
             </div>
 
             <div class="categorias">
-                {!! Form::select('area_id', $areas, null, ['class' => 'selectpicker area', 'title' => 'Área', 'required']) !!}
+                {!! Form::select('area_id', isset($trabalho) ? $areas : [], null, ['class' => 'selectpicker area', 'title' => 'Área', 'required']) !!}
 
-                {!! Form::select('categoria', [], null, ['class' => 'selectpicker categoria', 'title' => 'Categoria']) !!}
+                <select name="categoria" title="Categoria" class="selectpicker categoria">
+                    @if(isset($trabalho))
+                        @foreach($categorias as $categoria)
+                            <option value="{{ $categoria->id }}" data-title="{{ $categoria->titulo }}">{{ $categoria->titulo }}</option>
+                        @endforeach
+                    @endif
+                </select>
 
                 {!! Form::select('subcategoria', [], null, ['class' => 'selectpicker subcategoria', 'title' => 'Subcategoria']) !!}
             </div>
@@ -35,7 +41,7 @@
                     <span class="label">Palavras-chave</span>
 
                     <div class="info-tag">
-                        <a href="#" title="Informações sobre as tags"></a>
+                        <a href="#"></a>
 
                         <div class="infos">
                             <p>
@@ -47,11 +53,21 @@
                         </div>
                     </div>
 
-                    <span class="count-tag">10</span>
+                    <span class="count-tag">{{ (isset($trabalho) && count($trabalho->tags) > 0) ? 10 - count($trabalho->tags) : 10 }}</span>
                 </div>
 
                 <label for="insert-tag">
-                    <span class="placeholder">ex.: fotógrafo, padaria, capinha celular, advogada, bar, bicicleta...</span>
+                    @if(isset($trabalho) && count($trabalho->tags) > 0)
+                        @foreach($trabalho->tags as $tag)
+                            <div class="new-tag">
+                                <span>{{ $tag->tag }}</span>
+                                <input style="display: none;" type="text" name="tag[]" value="{{ $tag->tag }}" />
+                                <a href="#"></a>
+                            </div>
+                        @endforeach
+                    @else
+                        <span class="placeholder">ex.: fotógrafo, padaria, capinha celular, advogada, bar, bicicleta...</span>
+                    @endif
 
                     {!! Form::text('insert_tag', '', ['id' => 'insert-tag']) !!}
                 </label>
@@ -139,7 +155,7 @@
                     {!! Form::text('slug', null, ['id' => 'slug', 'required']) !!}
                 </div>
 
-                @if(isset($trabalho))
+                @if(isset($trabalho) && count($trabalho->redes) > 0)
                     @foreach($trabalho->redes as $key_rede => $rede)
                         <div class="row social">
                             {!! Form::text('social[]', $rede->url, ['placeholder' => 'Link']) !!}
@@ -149,12 +165,6 @@
                             @endif
                         </div>
                     @endforeach
-
-                    @if(count($trabalho->redes) == 0)
-                        <div class="row social">
-                            {!! Form::text('social[]', null, ['placeholder' => 'Site']) !!}
-                        </div>
-                    @endif
 
                     @if(count($trabalho->redes) <= 1)
                         <div class="row social">
@@ -181,10 +191,10 @@
                     @foreach($trabalho->horarios as $key_horario => $horario)
                         <div class="row semana">
                             {!! Form::select('dia[]', $dias_semana, $horario->dia, ['class' => 'selectpicker dia', 'title' => 'Dia']) !!}
-                            {!! Form::select('de_manha[]', $horarios, substr($horario->de_manha, 0, 5), ['class' => 'selectpicker', 'title' => 'Hora']) !!}
-                            {!! Form::select('ate_tarde[]', $horarios, substr($horario->ate_tarde, 0, 5), ['class' => 'selectpicker', 'title' => 'Hora']) !!}
-                            {!! Form::select('de_tarde[]', $horarios, substr($horario->de_tarde, 0, 5), ['class' => 'selectpicker', 'title' => 'Hora']) !!}
-                            {!! Form::select('ate_noite[]', $horarios, substr($horario->ate_noite, 0, 5), ['class' => 'selectpicker', 'title' => 'Hora']) !!}
+                            {!! Form::select('de_manha[]', $horarios, format_horario($horario->de_manha), ['class' => 'selectpicker', 'title' => 'Hora']) !!}
+                            {!! Form::select('ate_tarde[]', $horarios, format_horario($horario->ate_tarde), ['class' => 'selectpicker', 'title' => 'Hora']) !!}
+                            {!! Form::select('de_tarde[]', $horarios, format_horario($horario->de_tarde), ['class' => 'selectpicker', 'title' => 'Hora']) !!}
+                            {!! Form::select('ate_noite[]', $horarios, format_horario($horario->ate_noite), ['class' => 'selectpicker', 'title' => 'Hora']) !!}
 
                             @if($key_horario > 0)
                                 <a href="#" class="remove-item"></a>
@@ -203,6 +213,62 @@
 
                 <div class="row add">
                     <a href="#" class="add-atendimento">+ adicionar</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="dados aba-aberta">
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="dado like">
+                        <img src="{{ asset('img/icon-like.png') }}" /><span>89%</span>
+                    </div>
+
+                    <p>Porcentagem de usuários que avaliaram<br>positivamente o seu atendimento no infochat</p>
+                </div>
+
+                <div class="col-xs-6">
+                    <div class="dado nota">
+                        <img src="{{ asset('img/icon-star.png') }}" /><span>4.7</span>
+                    </div>
+
+                    <p>Nota média que os usuários do infochat<br>deram para o seu serviço ou empresa</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="dado tempo">
+                        <img src="{{ asset('img/icon-clock.png') }}" /><span>2h36m</span>
+                    </div>
+
+                    <p>Tempo médio que você leva para atender<br>o contato dos usuários do infochat</p>
+                </div>
+
+                <div class="col-xs-6">
+                    <div class="dado grafico">
+                        <img src="{{ asset('img/icon-poll.png') }}" /><span>25hs</span>
+                    </div>
+
+                    <p>Horário em que os usuários do infochat<br>mais enviam mensagens para você</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="dado pageviews">
+                        <img src="{{ asset('img/icon-eye.png') }}" /><span>{{ (isset($trabalho) && $trabalho->pageviews > 0) ? format_pageviews($trabalho->pageviews) : '-' }}</span>
+                    </div>
+
+                    <p>Número de vezes que o seu perfil foi<br>visualizado por usuários do infochat</p>
+                </div>
+
+                <div class="col-xs-6">
+                    <div class="dado usuarios">
+                        <img src="{{ asset('img/icon-profile.png') }}" /><span>296</span>
+                    </div>
+
+                    <p>Número de usuários do infochat que<br>entraram em contato com você</p>
                 </div>
             </div>
         </div>
