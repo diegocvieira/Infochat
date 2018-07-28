@@ -1,10 +1,12 @@
 $(document).ready(function() {
     $('body').css('opacity', '1');
 
+    // Aparecer e ocultar mensagens flash session
     setTimeout(function() {
         $('.session-flash').fadeOut();
     }, 5000);
 
+    // Modal de alertas
     function modalAlert(body, btn) {
         var modal = $('#modal-alert');
 
@@ -27,8 +29,10 @@ $(document).ready(function() {
         }
     };
 
+    // Fazer validate ignorar campos ocultos
     $.validator.setDefaults({ ignore: ":hidden:not(.selectpicker)" });
 
+    // Remover class de erro ao selecionar um valor valido
     $(document).on('change', 'select.selectpicker', function() {
         if($(this).val() != '') {
             $(this).prev().prev().removeClass('error');
@@ -36,26 +40,10 @@ $(document).ready(function() {
         }
     });
 
+    ////////////////////////////// ASIDE (CATEGORIAS E CIDADE) //////////////////////////////
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    $(document).on('click', '.aside-categorias #list-categorias a', function(e) {
+    // Exibir categorias e subscategorias e pesquisar trabalhos ao seleciona-las
+    $(document).on('click', '#categorias .cat-search', function(e) {
         e.preventDefault();
 
         var next = $(this).parent().next(),
@@ -76,17 +64,13 @@ $(document).ready(function() {
                         $this.parent().after("<div class='cats'></div>");
 
                         $(data.categorias).each(function(index, element) {
-                            $this.parent().next().append("<li><a href='#' class='categoria' data-search='" + element.slug + "'>" + element.titulo + "</a></li>")
+                            $this.parent().next().append("<li><a href='#' class='categoria cat-search' data-search='" + element.slug + "'>" + element.titulo + "</a></li>")
                         });
                     }
 
                     $this.hasClass('close-area') ? area.show() : area.not($this.parent()).hide();
 
                     $this.toggleClass('close-area');
-
-                    //$this.parent().next().toggle();
-
-                    //area.next().find('.subs').hide();
                 }
             });
 
@@ -102,10 +86,8 @@ $(document).ready(function() {
                         $this.parent().after("<div class='subs'></div>");
 
                         $(data.subcategorias).each(function(index, element) {
-                            $this.parent().next().append("<li><a href='#' data-search='" + element.slug + "'>" + element.titulo + "</a></li>")
+                            $this.parent().next().append("<li><a href='#' class='cat-search' data-search='" + element.slug + "'>" + element.titulo + "</a></li>")
                         });
-
-                        //$this.parent().next().is(':visible') ? $this.parent().next().hide() : $this.parent().next().show();
 
                         $('.aside-categorias').find('.subs').not($this.parent().next()).hide();
                     }
@@ -124,6 +106,7 @@ $(document).ready(function() {
         }
     });
 
+    // Exibir areas e pesquisar trabalhos ao selecionar um novo tipo
     $('#categorias').on('click', '.tipo', function(e) {
         e.preventDefault();
 
@@ -134,7 +117,7 @@ $(document).ready(function() {
         $('#form-search-tipo').val($(this).data('search'));
         $('#form-search').submit();
 
-        $('#list-categorias').find('li').remove();
+        $('#categorias').find('.area').remove();
 
         $.ajax({
             url: 'aside/areas/' + $(this).data('search'),
@@ -142,12 +125,121 @@ $(document).ready(function() {
             dataType:'json',
             success: function(data) {
                 $(data.areas).each(function(index, element) {
-                    $('#list-categorias').append("<li><a href='#' data-search='" + element.slug + "'>" + element.titulo + "</a></li>")
+                    $('#categorias').append("<li><a href='#' class='area' data-search='" + element.slug + "' style='background-image: url(img/categorias/" + element.slug + ".png);'>" + element.titulo + "</a></li>")
                 });
             }
         });
     });
 
+    // Exibir form de busca por cidades
+    $('.aside-categorias').on('click', '.cidade-atual', function(e) {
+        e.preventDefault();
+
+        $('#form-busca-cidade').show();
+        $('#form-busca-cidade').find('input[type=text]').val('').focus();
+    });
+
+    //Fechar busca por cidade e categorias
+    $(document).click(function(e) {
+        if(!$(e.target).closest('.cidades').length) {
+            $('.cidades').find('#form-busca-cidade').hide();
+            $('.cidades').find('#modal-busca-cidade').remove();
+        }
+
+        if(!$(e.target).closest('#categorias').length) {
+            $('#categorias').find('#form-busca-categoria').hide();
+            $('#categorias').find('#modal-busca-categorias').remove();
+        }
+    });
+
+    // Enviar form de busca por cidades
+    $('#form-busca-cidade').on('submit', function(e) {
+        e.preventDefault();
+
+        if($(this).find('input[type=text]').val()) {
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                dataType:'json',
+                data: $(this).serialize(),
+                success: function (data) {
+                    var modal = $('#modal-busca-cidade');
+
+                    modal.length ? modal.find('li').remove() : $('#form-busca-cidade').append("<div id='modal-busca-cidade'><ul></ul></div>");
+
+                    $(data.cidades).each(function(index, element) {
+                        $('#modal-busca-cidade').find('ul').append("<li><a href='/cidades/set/" + element.id + "'>" + element.title + ' - ' + element.estado.letter + "</a></li>");
+                    });
+                }
+            });
+        }
+
+        return false;
+    });
+
+    // Exibir form de busca por categorias
+    $('.aside-categorias').on('click', '.open-busca-categoria', function(e) {
+        e.preventDefault();
+
+        $('.open-hide-busca-categoria').toggle();
+        $('#form-busca-categoria').find('input[type=text]').val('').focus();
+    });
+
+    // Enviar form de busca por categorias
+    $('#form-busca-categoria').on('submit', function(e) {
+        e.preventDefault();
+
+        if($(this).find('input[type=text]').val()) {
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                dataType:'json',
+                data: $(this).serialize(),
+                success: function (data) {
+                    var modal = $('#modal-busca-categorias');
+
+                    modal.length ? modal.find('li').remove() : $('#form-busca-categoria').append("<div id='modal-busca-categorias'><ul></ul></div>");
+
+                    $(data.categorias).each(function(index, element) {
+                        $('#modal-busca-categorias').find('ul').append("<li><a href='#' data-search='" + element.slug + "'>" + element.titulo + "</a></li>");
+                    });
+                }
+            });
+        }
+
+        return false;
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ////////////////////////////// RESULTADOS DAS BUSCAS //////////////////////////////
+
+    // Filtrar a ordem dos resultados
+    $(document).on('change', 'select.filtro-ordem', function() {
+        $('#form-search-ordem').val($(this).val());
+
+        $('#form-search').submit();
+    });
+
+    // Submeter form principal de busca
     $(document).on('submit', '#form-search', function() {
         $.ajax({
             url: $(this).attr('action'),
@@ -155,16 +247,24 @@ $(document).ready(function() {
             dataType:'json',
             data: $(this).serialize(),
             success: function(data) {
-                $('#form-search-results').html(data.trabalhos);
-
                 window.history.pushState('', '', data.url);
+
+                if(data.trabalhos.length > 0) {
+                    $('div.filtro-ordem').show();
+
+                    $('#form-search-results').html(data.trabalhos);
+                } else {
+                    $('div.filtro-ordem').hide();
+
+                    $('#form-search-results').html("<div class='sem-resultados'><p>Sua pesquisa não encontrou resultado.<br>Verifique se todas as palavras estão corretas ou tente palavras-chave diferentes.</p></div>");
+                }
             }
         });
 
         return false;
     });
 
-
+    // Alternar entre abas dos resultados e mensagens
     $('.abas-resultados').on('click', 'a', function(e) {
         e.preventDefault();
 
@@ -173,6 +273,7 @@ $(document).ready(function() {
         $(this).addClass('active');
     });
 
+    // Scroll infinito nos resultados
     $('#form-search-results').on('scroll', function() {
         if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
             var form = $('#form-search'),
@@ -209,142 +310,42 @@ $(document).ready(function() {
 
 
 
+    ////////////////////////////// CHAT //////////////////////////////
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    $('.aside-categorias').on('click', '.cidade-atual', function(e) {
+    $(document).on('click', '.ver-perfil', function(e) {
         e.preventDefault();
 
-        $('#form-busca-cidade').show();
-        $('#form-busca-cidade').find('input[type=text]').val('').focus();
+        $('#form-search-results').find('.result').removeClass('active-trabalho');
+
+        $(this).parents('.result').addClass('active-trabalho');
+
+        $.ajax({
+            url: '/trabalho/show/' + $(this).data('id'),
+            method: 'GET',
+            dataType:'json',
+            success: function(data) {
+                $('.chat').html(data.trabalho);
+            }
+        });
     });
 
-    $(document).click(function(e) {
-        if(!$(e.target).closest('.cidades').length) {
-            $('.cidades').find('#form-busca-cidade').hide();
-            $('.cidades').find('#modal-busca-cidade').remove();
-        }
-
-        if(!$(e.target).closest('#categorias').length) {
-            $('#categorias').find('.open-busca-categoria').show();
-            $('#categorias').find('#form-busca-categoria').hide();
-        }
+    $(document).on('change', '#form-avaliar input[type=radio]', function() {
+        $('#form-avaliar').submit();
     });
 
-    $('#form-busca-cidade').on('submit', function(e) {
-        e.preventDefault();
-
-        if($(this).find('input[type=text]').val()) {
-            $.ajax({
-                url: $(this).attr('action'),
-                method: 'POST',
-                dataType:'json',
-                data: $(this).serialize(),
-                success: function (data) {
-                    var modal = $('#modal-busca-cidade');
-
-                    modal.length ? modal.find('li').remove() : $('.aside-categorias').find('.cidades').append("<div id='modal-busca-cidade'><ul></ul></div>");
-
-                    $(data.cidades).each(function(index, element) {
-                        $('#modal-busca-cidade').find('ul').append("<li><a href='/cidades/set/" + element.id + "'>" + element.title + ' - ' + element.estado.letter + "</a></li>");
-                    });
-                }
-            });
-        }
+    $(document).on('submit', '#form-avaliar', function() {
+        $.ajax({
+            url: $(this).attr('action'),
+            method: 'POST',
+            dataType:'json',
+            data: $(this).serialize(),
+            success: function(data) {
+                console.log('ok');
+            }
+        });
 
         return false;
-    });
-
-    $('.aside-categorias').on('click', '.open-busca-categoria', function(e) {
-        e.preventDefault();
-
-        $('.open-hide-busca-categoria').toggle();
-        $('#form-busca-categoria').find('input[type=text]').val('').focus();
-    });
-
-    $('#form-busca-categoria').on('submit', function(e) {
-        e.preventDefault();
-
-        if($(this).find('input[type=text]').val()) {
-            $.ajax({
-                url: $(this).attr('action'),
-                method: 'POST',
-                dataType:'json',
-                data: $(this).serialize(),
-                success: function (data) {
-                    $('#list-categorias').hide();
-                    $('#list-categorias-busca').remove();
-
-                    $('#categorias').append("<span id='list-categorias-busca'></span>");
-
-                    $(data.categorias).each(function(index, element) {
-                        $('#list-categorias-busca').append("<li><a href='#' class='open-sub'>" + element.titulo + "</a></li><div class='subs' style='display: block;'></div>");
-
-                        var subs = $('#list-categorias-busca').find('.subs:last');
-
-                        $(element.subcategorias).each(function(index2, element2) {
-                            subs.append("<li><a href='#' class='open-sub'>" + element2.titulo + "</a></li>");
-                        });
-                    });
-                }
-            });
-        } else {
-            $('#list-categorias').show();
-            $('#list-categorias-busca').remove();
-        }
-
-        return false;
-    });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    })
 
 
 
@@ -458,21 +459,6 @@ $(document).ready(function() {
             return false;
         }
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     ////////////////////////////// MODAL DAS CONFIGURACOES DO TRABALHO //////////////////////////////
 
@@ -817,7 +803,7 @@ $(document).ready(function() {
         }
     });
 
-    // Validar e submeter form
+    // Abrir, validar e submeter form
     $('#open-trabalho-config').on('click', function(e) {
         e.preventDefault();
 

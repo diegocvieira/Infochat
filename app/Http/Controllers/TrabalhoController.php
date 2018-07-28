@@ -8,6 +8,7 @@ use App\Area;
 use App\Categoria;
 use App\Subcategoria;
 use App\Cidade;
+use App\Avaliar;
 
 class TrabalhoController extends Controller
 {
@@ -180,8 +181,7 @@ class TrabalhoController extends Controller
         }
     }
 
-
-    public function busca($tipo = null, $palavra_chave = null, $area = null, $tag = null, $offset = null)
+    public function busca($tipo = null, $palavra_chave = null, $area = null, $tag = null, $ordem = null, $offset = null)
     {
         $offset = $offset ? $offset : 0;
 
@@ -189,8 +189,9 @@ class TrabalhoController extends Controller
                             ->filtroTag($tag)
                             ->filtroPalavraChave($palavra_chave)
                             ->filtroTipo($tipo)
+                            ->filtroOrdem($ordem)
                             ->offset($offset)
-                            ->limit(2)
+                            ->limit(20)
                             ->get();
 
         // Gera a URL
@@ -205,9 +206,17 @@ class TrabalhoController extends Controller
             $url = $url . '/' . $area . '/' . $tag;
         }
 
+        if(count($trabalhos) > 0) {
+            $filtro_ordem = [
+                'populares' => 'populares',
+                'avaliados' => 'mais bem avaliados',
+                'a_z' => 'a - z'
+            ];
+        }
+
         // Detecta se foi acessado por url ou ajax
         if($_SERVER['REQUEST_METHOD'] == 'GET') {
-            return view('busca', compact('trabalhos', 'palavra_chave', 'tipo', 'area', 'tag'));
+            return view('busca', compact('trabalhos', 'palavra_chave', 'tipo', 'area', 'tag', 'filtro_ordem'));
         } else {
             return response()->json([
                 'trabalhos' => view('pagination', compact('trabalhos', 'offset'))->render(),
@@ -222,13 +231,39 @@ class TrabalhoController extends Controller
         $tipo = $request->tipo;
         $area = $request->area;
         $tag = $request->tag;
-
+        $ordem = $request->ordem;
         $offset = $request->offset;
 
-        return $this->busca($tipo, $palavra_chave, $area, $tag, $offset);
+        return $this->busca($tipo, $palavra_chave, $area, $tag, $ordem, $offset);
     }
 
+    public function show($id) {
+        $chat_trabalho = Trabalho::find($id);
 
+        $avaliacao = Avaliar::where('trabalho_id', $id)
+                    ->where('user_id', Auth::guard('web')->user()->id)
+                    ->select('avaliacao')
+                    ->first();
+
+        return response()->json([
+            'trabalho' => view('inc.chat', compact('chat_trabalho', 'avaliacao'))->render()
+        ]);
+    }
+
+    public function avaliar(Request $request)
+    {
+        $a = Avaliar::where('trabalho_id', $request->trabalho_id)
+                    ->where('user_id', Auth::guard('web')->user()->id)
+                    ->first();
+
+        $avaliar = isset($a) ? $a : new Avaliar;
+
+        $avaliar->trabalho_id = $request->trabalho_id;
+        $avaliar->user_id = Auth::guard('web')->user()->id;
+        $avaliar->avaliacao = $request->avaliacao;
+
+        $avaliar->save();
+    }
 
 
 
@@ -245,27 +280,15 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
-        $areas = Area::select('titulo', 'slug')->distinct()->orderBy('titulo', 'asc')->get();
+        $palavra_chave = 'tatuador';
 
-        foreach($areas as $area) {
-            echo "<b>AREA - $area->titulo </b><br>";
+        $first = Subcategoria::where('titulo', 'LIKE', '%' . $palavra_chave . '%')->select('titulo', 'slug');
+        $categorias = Categoria::where('titulo', 'LIKE', '%' . $palavra_chave . '%')
+            ->select('titulo', 'slug')
+            ->union($first)
+            ->get();
 
-            $categorias = Categoria::whereHas('area', function($q) use($area) {
-                $q->where('slug', $area->slug);
-            })->select('titulo', 'slug')->distinct()->orderBy('titulo', 'asc')->get();
-            foreach($categorias as $categoria) {
-                echo "<i>CATEGORIA - $categoria->titulo - $categoria->area_id</i><br>";
-
-                $subcategorias = Subcategoria::whereHas('categoria', function($q) use($categoria) {
-                    $q->where('slug', $categoria->slug);
-                })->select('titulo', 'slug')->distinct()->orderBy('titulo', 'asc')->get();
-                foreach($subcategorias as $subcategoria) {
-                    echo "SUBCATEGORIA - $subcategoria->titulo<br>";
-                }
-            }
-        }
-
-
+        return $categorias;
 
 
 

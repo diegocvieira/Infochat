@@ -6,6 +6,7 @@ use App\Categoria;
 use App\Subcategoria;
 use App\Cidade;
 use App\Area;
+use App\Trabalho;
 use Cookie;
 use DB;
 
@@ -19,7 +20,15 @@ class GlobalController extends Controller
             _setCidade($cidade, $force = true);
         }
 
-        return view('pagina-inicial');
+        $filtro_ordem = [
+            'populares' => 'populares',
+            'avaliados' => 'mais bem avaliados',
+            'a_z' => 'a - z'
+        ];
+
+        $chat_trabalho = Trabalho::find(6);
+
+        return view('pagina-inicial', compact('filtro_ordem', 'chat_trabalho'));
     }
 
     public function getCidade(Request $request)
@@ -40,12 +49,12 @@ class GlobalController extends Controller
 
     public function buscaCategorias(Request $request)
     {
-        $callback = function($query) use($request) {
-            $query->where('titulo', 'LIKE', '%' . $request->nome_categoria . '%');
-        };
-
+        $subcategorias = Subcategoria::where('titulo', 'LIKE', '%' . $request->nome_categoria . '%')
+                                    ->select('titulo', 'slug');
         $categorias = Categoria::where('titulo', 'LIKE', '%' . $request->nome_categoria . '%')
-        ->orWhereHas('subcategorias', $callback)->with(['subcategorias' => $callback])->get();
+                                ->select('titulo', 'slug')
+                                ->union($subcategorias)
+                                ->get();
 
         return json_encode(['categorias' => $categorias]);
     }

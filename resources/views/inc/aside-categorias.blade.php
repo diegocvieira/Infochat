@@ -36,12 +36,10 @@
             {!! Form::close() !!}
         </div>
 
-        <span id="list-categorias">
-            @foreach($areas as $a)
-                <li>
-                    <a href="#" class="area {{ (isset($area) && $area == $a->id) ? 'active' : '' }}" data-search="{{ $a->slug }}" style="background-image: url({{ asset('img/categorias/' . $a->slug . '.png') }})">{{ $a->titulo }}</a>
-                </li>
-            @endforeach
-        </span>
+        @foreach($areas as $a)
+            <li>
+                <a href="#" class="area cat-search {{ (isset($area) && $area == $a->id) ? 'active' : '' }}" data-search="{{ $a->slug }}" style="background-image: url({{ asset('img/categorias/' . $a->slug . '.png') }})">{{ $a->titulo }}</a>
+            </li>
+        @endforeach
     </ul>
 </aside>

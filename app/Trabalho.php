@@ -65,6 +65,17 @@ class Trabalho extends Model
         }
     }
 
+    public function scopeFiltroOrdem($query, $ordem)
+    {
+        if($ordem) {
+            if($ordem == 'a_z') {
+                return $query->orderBy('nome', 'asc');
+            } else if($ordem == 'populares') {
+                return $query->orderBy('pageviews', 'desc');
+            }
+        }
+    }
+
     public function scopeFiltroTipo($query, $tipo)
     {
         if($tipo == 'profissionais') {

@@ -38,10 +38,14 @@ Route::any('busca/{tipo?}/{palavra_chave?}/{area?}/{tag?}', 'TrabalhoController@
 
 
 Route::group(['prefix' => 'trabalho'], function() {
+    Route::get('show/{id}', 'TrabalhoController@show');
+
     Route::group(['middleware' => 'auth:web'], function() {
         Route::get('config', 'TrabalhoController@getConfig');
         Route::post('config', 'TrabalhoController@setConfig');
         Route::post('config/status', 'TrabalhoController@setStatus');
+
+        Route::post('avaliar', 'TrabalhoController@avaliar');
     });
 });
 
