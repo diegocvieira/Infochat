@@ -56,3 +56,24 @@ function format_horario($horario)
 {
     return substr($horario, 0, 5);
 }
+
+function diaSemana($data)
+{
+    setlocale(LC_ALL, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+
+    $data = date('Y-m-d', strtotime($data));
+
+    if($data == date('Y-m-d')) {
+        $dia = 'HOJE';
+    } else if($data == date('Y-m-d', strtotime('-1 day'))) {
+        $dia = 'ONTEM';
+    } else {
+        $dia = strftime('%A', strtotime($data));
+
+        if($dia != 'sábado' || 'domingo') {
+            $dia = $dia . '-feira';
+        }
+    }
+
+    return $dia;
+}

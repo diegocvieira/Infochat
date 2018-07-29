@@ -4,6 +4,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Cookie;
+use Auth;
 
 class Trabalho extends Model
 {
@@ -12,6 +13,11 @@ class Trabalho extends Model
         'user_id', 'tipo', 'nome', 'area_id', 'imagem', 'cpf_cnpj', 'descricao', 'cidade_id', 'logradouro', 'numero', 'bairro', 'complemento', 'slug', 'status', 'cep', 'email'
     ];
     protected $dates = ['created_at', 'updated_at'];
+
+    public function user()
+    {
+        return $this->BelongsTo('App\User');
+    }
 
     public function telefones()
     {
@@ -104,5 +110,11 @@ class Trabalho extends Model
         static::addGlobalScope('ativo', function(Builder $builder) {
         	$builder->where('status', 1);
 	    });
+
+        if(Auth::guard('web')->check()) {
+            static::addGlobalScope('trabalho_logado', function(Builder $builder) {
+            	$builder->where('user_id', '!=', Auth::guard('web')->user()->id);
+    	    });
+        }
 	}
 }

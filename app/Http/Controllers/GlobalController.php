@@ -9,6 +9,8 @@ use App\Area;
 use App\Trabalho;
 use Cookie;
 use DB;
+use App\Mensagem;
+use Auth;
 
 class GlobalController extends Controller
 {
@@ -26,9 +28,9 @@ class GlobalController extends Controller
             'a_z' => 'a - z'
         ];
 
-        $chat_trabalho = Trabalho::find(6);
+        $trabalhos = Trabalho::limit(20)->get();
 
-        return view('pagina-inicial', compact('filtro_ordem', 'chat_trabalho'));
+        return view('pagina-inicial', compact('filtro_ordem', 'trabalhos'));
     }
 
     public function getCidade(Request $request)

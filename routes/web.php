@@ -37,6 +37,11 @@ Route::post('trabalhos/busca', 'TrabalhoController@formBusca');
 Route::any('busca/{tipo?}/{palavra_chave?}/{area?}/{tag?}', 'TrabalhoController@busca');
 
 
+
+Route::post('mensagem/save', 'MensagemController@save');
+Route::get('mensagens/paginate/{id}/{offset}', 'MensagemController@pagination');
+
+
 Route::group(['prefix' => 'trabalho'], function() {
     Route::get('show/{id}', 'TrabalhoController@show');
 
@@ -48,7 +53,6 @@ Route::group(['prefix' => 'trabalho'], function() {
         Route::post('avaliar', 'TrabalhoController@avaliar');
     });
 });
-
 
 Route::group(['prefix' => 'cliente'], function() {
     Route::post('cadastro', 'UserController@create');

@@ -12,6 +12,7 @@
         top: 0;
         position: absolute;
         padding: 0 20px;
+        z-index: 2;
 
         .imagem {
             width: 40px;
@@ -100,6 +101,81 @@
         min-height: calc(100% - 70px);
         max-height: calc(100% - 70px);
         overflow: auto;
+        padding: 80px 30px 0 30px;
+
+        .row {
+            width: 100%;
+            float: left;
+            margin: 5px 0;
+
+            h3 {
+                font-size: 12.5px;
+                color: rgb(100, 100, 100);
+                font-weight: 700;
+                text-align: center;
+                text-transform: uppercase;
+            }
+
+            .msg {
+                max-width: 50%;
+                padding: 8px 90px 8px 15px;
+                border-radius: 15px;
+                position: relative;
+
+                &.recebida {
+                    $color-recebida: rgb(240, 240, 240);
+                    float: left;
+                    background-color: $color-recebida;
+
+                    &:after{
+                        content: '';
+                        position: absolute;
+                        width: 0;
+                        height: 0;
+                        left: -10px;
+                        right: auto;
+                        top: 0;
+                        bottom: auto;
+                        border: 12px solid;
+                        border-color: $color-recebida $color-recebida transparent transparent;
+                    }
+                }
+
+                &.enviada {
+                    $color-enviada: rgb(226, 229, 244);
+                    float: right;
+                    background-color: $color-enviada;
+
+                    &:after{
+                        content: '';
+                        position: absolute;
+                        width: 0;
+                        height: 0;
+                        left: auto;
+                        right: -10px;
+                        top: 0;
+                        bottom: auto;
+                        border: 12px solid;
+                        border-color: $color-enviada transparent transparent $color-enviada;
+                    }
+                }
+
+                p {
+                    font-size: 13.7px;
+                    color: rgb(100, 100, 100);
+                    margin: 0;
+                    float: left;
+                }
+
+                span {
+                    font-size: 10.833px;
+                    color: rgb(150, 150, 150);
+                    position: absolute;
+                    right: 15px;
+                    bottom: 5px;
+                }
+            }
+        }
     }
 
     #form-enviar-msg {
@@ -108,6 +184,50 @@
         height: 70px;
         float: left;
         padding: 15px 0 15px 20px;
+
+        .lock {
+            background-position: center;
+            background-image: url('../img/icon-lock.png');
+            background-repeat: no-repeat;
+            background-size: 20px;
+            height: 40px;
+            width: 40px;
+            background-color: rgb(255, 255, 255);
+            border-radius: 5px 0 0 5px;
+            float: left;
+            position: relative;
+
+            &+ input[type=text] {
+                border-radius: 0 5px 5px 0;
+                padding-left: 0;
+                width: calc(90% - 40px);
+            }
+
+            &:hover > .balao {
+                display: inherit;
+            }
+
+            .balao {
+                display: none;
+                border: 1px solid rgb(230, 230, 230);
+                border-radius: 3px;
+                background-color: rgb(255, 255, 255);
+                box-shadow: 2.5px 4.33px 19px 1px rgba(100, 100, 100, 0.078);
+                width: 358px;
+                position: absolute;
+                top: -45px;
+                left: 0;
+                text-align: center;
+
+                p {
+                    font-size: 13.3px;
+                    color: rgb(150, 150, 150);
+                    line-height: 1.25;
+                    margin: 0;
+                    padding: 10px;
+                }
+            }
+        }
 
         input[type=text] {
             border-radius: 5px;
@@ -118,14 +238,10 @@
             color: #000;
             float: left;
             border: none;
-            padding-left: 45px;
-            background-position: 2%;
-            background-image: url('../img/icon-lock.png');
-            background-repeat: no-repeat;
-            background-size: 20px;
+            padding-left: 10px;
         }
 
-        input[type=submit] {
+        .button {
             background-image: url('../img/icon-send.png');
             background-position: center;
             background-repeat: no-repeat;

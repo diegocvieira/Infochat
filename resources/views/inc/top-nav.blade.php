@@ -26,7 +26,7 @@
             <ul>
                 @if(Auth::guard('web')->check())
                     <li>
-                        <a href="#" class="open-nav" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ Auth::guard('web')->user()->nome }}</a>
+                        <a href="#" class="open-nav" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ strstr(Auth::guard('web')->user()->nome, ' ', true) }}</a>
 
                         <ul class="dropdown-menu">
                             <li><a href="{{ action('TrabalhoController@getConfig') }}" class="icon-perfil-trabalho" id="open-trabalho-config">Perfil de trabalho</a></li>

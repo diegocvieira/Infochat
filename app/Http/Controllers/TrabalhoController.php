@@ -9,6 +9,7 @@ use App\Categoria;
 use App\Subcategoria;
 use App\Cidade;
 use App\Avaliar;
+use App\Mensagem;
 
 class TrabalhoController extends Controller
 {
@@ -216,7 +217,7 @@ class TrabalhoController extends Controller
 
         // Detecta se foi acessado por url ou ajax
         if($_SERVER['REQUEST_METHOD'] == 'GET') {
-            return view('busca', compact('trabalhos', 'palavra_chave', 'tipo', 'area', 'tag', 'filtro_ordem'));
+            return view('pagina-inicial', compact('trabalhos', 'palavra_chave', 'tipo', 'area', 'tag', 'filtro_ordem'));
         } else {
             return response()->json([
                 'trabalhos' => view('pagination', compact('trabalhos', 'offset'))->render(),
@@ -240,13 +241,26 @@ class TrabalhoController extends Controller
     public function show($id) {
         $chat_trabalho = Trabalho::find($id);
 
-        $avaliacao = Avaliar::where('trabalho_id', $id)
-                    ->where('user_id', Auth::guard('web')->user()->id)
-                    ->select('avaliacao')
-                    ->first();
+        if(Auth::guard('web')->check()) {
+            $user_id = Auth::guard('web')->user()->id;
+
+            $avaliacao = Avaliar::where('trabalho_id', $id)
+                        ->where('user_id', $user_id)
+                        ->select('avaliacao')
+                        ->first();
+
+            $mensagens = Mensagem::where('remetente_id', $user_id)
+                                ->where('destinatario_id', $chat_trabalho->user_id)
+                                ->orWhere('remetente_id', $chat_trabalho->user_id)
+                                ->where('destinatario_id', $user_id)
+                                ->limit(15)
+                                ->orderBy('created_at', 'desc')
+                                ->get()
+                                ->all();
+        }
 
         return response()->json([
-            'trabalho' => view('inc.chat', compact('chat_trabalho', 'avaliacao'))->render()
+            'trabalho' => view('inc.chat', compact('chat_trabalho', 'avaliacao', 'mensagens'))->render()
         ]);
     }
 
@@ -280,15 +294,13 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
-        $palavra_chave = 'tatuador';
+        $m = Mensagem::where('remetente_id', 2)
+        ->where('destinatario_id', 1)
+        ->orWhere('remetente_id', 1)
+        ->where('destinatario_id', 2)
+        ->first();
 
-        $first = Subcategoria::where('titulo', 'LIKE', '%' . $palavra_chave . '%')->select('titulo', 'slug');
-        $categorias = Categoria::where('titulo', 'LIKE', '%' . $palavra_chave . '%')
-            ->select('titulo', 'slug')
-            ->union($first)
-            ->get();
-
-        return $categorias;
+        return $m;
 
 
 

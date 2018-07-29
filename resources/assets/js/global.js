@@ -312,7 +312,7 @@ $(document).ready(function() {
 
     ////////////////////////////// CHAT //////////////////////////////
 
-    $(document).on('click', '.ver-perfil', function(e) {
+    $(document).on('click', '.open-chat', function(e) {
         e.preventDefault();
 
         $('#form-search-results').find('.result').removeClass('active-trabalho');
@@ -325,6 +325,11 @@ $(document).ready(function() {
             dataType:'json',
             success: function(data) {
                 $('.chat').html(data.trabalho);
+
+                $('.chat').find('.mensagens').scrollTop($('.chat').find('.mensagens')[0].scrollHeight);
+
+                //Scroll custom para funcionar em conteudo carregdao dinamicamente
+                listenForScrollEvent($('.chat .mensagens'));
             }
         });
     });
@@ -340,14 +345,66 @@ $(document).ready(function() {
             dataType:'json',
             data: $(this).serialize(),
             success: function(data) {
-                console.log('ok');
             }
         });
 
         return false;
-    })
+    });
 
+    $(document).on('submit', '#form-enviar-msg', function() {
+        var input = $(this).find('input[type=text]');
 
+        if(input.val()){
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                dataType:'json',
+                data: $(this).serialize(),
+                success: function(data) {
+                    var div = $('.chat').find('.mensagens');
+
+                    div.append("<div class='row'><div class='msg enviada'><p>" + data.msg + "</p><span>" + data.hora + "</span></div></div>");
+
+                    div.scrollTop(div[0].scrollHeight);
+
+                    input.val('');
+                }
+            });
+        }
+
+        return false;
+    });
+
+    // Scroll infinito nas mensagens do chat
+    $(document).on('custom-scroll', '.chat .mensagens', function() {
+        if($(this).scrollTop() == 0) {
+            var div = $('.chat').find('.mensagens');
+
+            $.ajax({
+                url: 'mensagens/paginate/' + $('.chat').find('.trabalho-id').val() + '/' + div.find('.msg').length,
+                method: 'GET',
+                dataType:'json',
+                success: function(data) {
+                    div.prepend(data.mensagens);
+
+                    // Verifica se o nome do dia ja existe e o remove
+                    var seen = {};
+                    $('.chat .dia h3').each(function() {
+                        var txt = $(this).text();
+
+                        seen[txt] ? $(this).parent().remove() : seen[txt] = true;
+                    });
+                }
+            });
+        }
+    });
+
+    // Scroll custom para funcionar em conteudo carregdao dinamicamente
+    function listenForScrollEvent(e) {
+        e.on('scroll', function() {
+            e.trigger('custom-scroll');
+        });
+    }
 
 
 

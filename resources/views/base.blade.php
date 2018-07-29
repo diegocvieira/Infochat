@@ -1,8 +1,6 @@
 @include('inc.header')
 
-@if(isset($top_nav))
-    @include('inc.top-nav')
-@endif
+@include('inc.top-nav')
 
 @yield('content')
 

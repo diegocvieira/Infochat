@@ -25,11 +25,27 @@
 </div>
 
 <div class="mensagens">
-
+    @include('pagination-mensagens')
 </div>
 
-{!! Form::open(['method' => 'post', 'id' => 'form-enviar-msg']) !!}
-    {!! Form::text('msg', null, ['placeholder' => 'Digite uma mensagem']) !!}
+@if(Auth::guard('web')->check())
+    {!! Form::open(['method' => 'post', 'action' => 'MensagemController@save', 'id' => 'form-enviar-msg']) !!}
+        {!! Form::text('mensagem', null, ['placeholder' => 'Digite uma mensagem']) !!}
 
-    {!! Form::submit('') !!}
-{!! Form::close() !!}
+        {!! Form::hidden('destinatario_id', $chat_trabalho->user->id, ['class' => 'trabalho-id']) !!}
+
+        {!! Form::submit('', ['class' => 'button']) !!}
+    {!! Form::close() !!}
+@else
+    <div id="form-enviar-msg">
+        <div class="lock">
+            <div class="balao">
+                <p>Acesse sua conta ou cadastre-se para liberar o infochat</p>
+            </div>
+        </div>
+
+        {!! Form::text('mensagem', null, ['placeholder' => 'Digite uma mensagem']) !!}
+
+        <button type="button" class="button"></button>
+    </div>
+@endif
