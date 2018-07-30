@@ -111,6 +111,7 @@ class Trabalho extends Model
         	$builder->where('status', 1);
 	    });
 
+        // Remover o usuario logado das buscas
         if(Auth::guard('web')->check()) {
             static::addGlobalScope('trabalho_logado', function(Builder $builder) {
             	$builder->where('user_id', '!=', Auth::guard('web')->user()->id);

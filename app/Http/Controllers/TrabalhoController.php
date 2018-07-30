@@ -18,6 +18,7 @@ class TrabalhoController extends Controller
         $trabalho = Trabalho::where('user_id', Auth::guard('web')->user()->id)
                             ->withoutGlobalScope('ativo')
                             ->withoutGlobalScope('cidade')
+                            ->withoutGlobalScope('trabalho_logado')
                             ->first();
 
         $tipos = [
