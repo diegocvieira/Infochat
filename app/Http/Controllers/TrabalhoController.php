@@ -64,6 +64,7 @@ class TrabalhoController extends Controller
                                 ->where('user_id', '!=', $user_id)
                                 ->withoutGlobalScope('ativo')
                                 ->withoutGlobalScope('cidade')
+                                ->withoutGlobalScope('trabalho_logado')
                                 ->count();
 
         if($slug_validate == 0 && $request->nome && $slug && $request->area_id && $request->tipo) {
@@ -71,6 +72,7 @@ class TrabalhoController extends Controller
             $t = Trabalho::where('user_id', $user_id)
                         ->withoutGlobalScope('ativo')
                         ->withoutGlobalScope('cidade')
+                        ->withoutGlobalScope('trabalho_logado')
                         ->first();
 
             // Escolher entre create e update
@@ -168,6 +170,7 @@ class TrabalhoController extends Controller
         $trabalho = Trabalho::where('user_id', Auth::guard('web')->user()->id)
                             ->withoutGlobalScope('ativo')
                             ->withoutGlobalScope('cidade')
+                            ->withoutGlobalScope('trabalho_logado')
                             ->first();
 
         if(count($trabalho) > 0) {
