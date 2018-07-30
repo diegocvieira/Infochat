@@ -17,6 +17,8 @@ class CreateCategoriasTable extends Migration
             $table->increments('id');
             $table->string('titulo', 100);
             $table->string('slug', 100);
+            $table->unsignedInteger('area_id');
+            $table->foreign('area_id')->references('id')->on('areas')->onDelete('cascade');
         });
     }
 
