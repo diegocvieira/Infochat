@@ -1,4 +1,4 @@
-@if(isset($mensagens))
+@if(isset($mensagens) && count($mensagens) > 0)
     @foreach($mensagens as $mensagem)
         <div class="result">
             <a href="#" class="open-chat" data-id="{{ $mensagem->user_destinatario->trabalho->id }}">

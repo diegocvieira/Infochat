@@ -1,4 +1,4 @@
-@if(isset($mensagens))
+@if(isset($mensagens) && count($mensagens) > 0)
     @foreach($mensagens as $mensagem)
         <div class="result">
             <a href="#" class="open-chat" data-id="{{ $mensagem->user_remetente->trabalho->id }}">
@@ -32,7 +32,7 @@
             <img src="{{ asset('img/icon-work.png') }}" />
             <p>Atenda seus clientes online e<br>permitir que novos clientes encontrem você</p>
             @if(Auth::guard('web')->check())
-                <a href="#" id="open-trabalho-config">Ativar perfil de trabalho</a>
+                <a href="{{ action('TrabalhoController@getConfig') }}" id="open-trabalho-config">Ativar perfil de trabalho</a>
             @else
                 <a href="#" data-toggle="modal" data-target="#modal-login-usuario">Ativar perfil de trabalho</a>
             @endif

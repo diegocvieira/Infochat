@@ -911,7 +911,7 @@ $(document).ready(function() {
     });
 
     // Abrir, validar e submeter form
-    $('#open-trabalho-config').on('click', function(e) {
+    $(document).on('click', '#open-trabalho-config', function(e) {
         e.preventDefault();
 
         $.ajax({
