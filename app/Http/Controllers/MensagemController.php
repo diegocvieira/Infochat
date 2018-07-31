@@ -10,18 +10,11 @@ class MensagemController extends Controller
 {
     public function save(Request $request)
     {
-        $m = Mensagem::where('remetente_id', 2)
-                    ->where('destinatario_id', 1)
-                    ->orWhere('remetente_id', 1)
-                    ->where('destinatario_id', 2)
-                    ->count();
-
         $mensagem = new Mensagem;
 
         $mensagem->remetente_id = Auth::guard('web')->user()->id;
         $mensagem->destinatario_id = $request->destinatario_id;
         $mensagem->mensagem = $request->mensagem;
-        $mensagem->tipo = $m > 0 ? 0 : 1;
 
         $mensagem->save();
 
