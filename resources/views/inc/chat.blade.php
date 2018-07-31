@@ -1,4 +1,6 @@
 <div class="topo-chat">
+    {!! Form::hidden('user_id', $chat_trabalho->user_id, ['id' => 'user_id']) !!}
+
     <div class="imagem">
         @if($chat_trabalho->imagem)
             <img src="{{ asset('uploads/perfil/' . $chat_trabalho->imagem) }}" alt="Foto de perfil de {{ $chat_trabalho->nome }}" />

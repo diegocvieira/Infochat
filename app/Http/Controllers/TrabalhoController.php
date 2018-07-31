@@ -16,10 +16,10 @@ class TrabalhoController extends Controller
     public function getConfig()
     {
         $trabalho = Trabalho::where('user_id', Auth::guard('web')->user()->id)
-                            ->withoutGlobalScope('ativo')
-                            ->withoutGlobalScope('cidade')
-                            ->withoutGlobalScope('trabalho_logado')
-                            ->first();
+            ->withoutGlobalScope('ativo')
+            ->withoutGlobalScope('cidade')
+            ->withoutGlobalScope('trabalho_logado')
+            ->first();
 
         $tipos = [
             '1' => 'Profissional',
@@ -232,14 +232,7 @@ class TrabalhoController extends Controller
 
     public function formBusca(Request $request)
     {
-        $palavra_chave = $request->palavra_chave;
-        $tipo = $request->tipo;
-        $area = $request->area;
-        $tag = $request->tag;
-        $ordem = $request->ordem;
-        $offset = $request->offset;
-
-        return $this->busca($tipo, $palavra_chave, $area, $tag, $ordem, $offset);
+        return $this->busca($request->tipo, $request->palavra_chave, $request->area, $request->tag, $request->ordem, $request->offset);
     }
 
     public function show($id) {
@@ -298,17 +291,6 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
-        $m = Mensagem::where('remetente_id', 2)
-        ->where('destinatario_id', 1)
-        ->orWhere('remetente_id', 1)
-        ->where('destinatario_id', 2)
-        ->first();
-
-        return $m;
-
-
-
-
         /*$row = 1;
         $cat = false;
 

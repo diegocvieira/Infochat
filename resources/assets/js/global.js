@@ -64,7 +64,7 @@ $(document).ready(function() {
                         $this.parent().after("<div class='cats'></div>");
 
                         $(data.categorias).each(function(index, element) {
-                            $this.parent().next().append("<li><a href='#' class='categoria cat-search' data-search='" + element.slug + "'>" + element.titulo + "</a></li>")
+                            $this.parent().next().append("<li><a href='#' class='categoria cat-search' data-search='" + element.titulo + "'>" + element.titulo + "</a></li>");
                         });
                     }
 
@@ -74,7 +74,7 @@ $(document).ready(function() {
                 }
             });
 
-            $('#form-search-area').val($this.data('search'));
+            $('#form-search-area').val($(this).hasClass('close-area') ? '' : $this.data('search'));
             $('#form-search-tag').val('');
         } else {
             if($(this).hasClass('categoria')) {
@@ -86,7 +86,7 @@ $(document).ready(function() {
                         $this.parent().after("<div class='subs'></div>");
 
                         $(data.subcategorias).each(function(index, element) {
-                            $this.parent().next().append("<li><a href='#' class='cat-search' data-search='" + element.slug + "'>" + element.titulo + "</a></li>")
+                            $this.parent().next().append("<li><a href='#' class='cat-search' data-search='" + element.titulo + "'>" + element.titulo + "</a></li>");
                         });
 
                         $('.aside-categorias').find('.subs').not($this.parent().next()).hide();
@@ -101,9 +101,9 @@ $(document).ready(function() {
             $('#form-search-tag').val($(this).data('search'));
         }
 
-        if(submit) {
+        //if(submit) {
             $('#form-search').submit();
-        }
+        //}
     });
 
     // Exibir areas e pesquisar trabalhos ao selecionar um novo tipo
@@ -125,7 +125,7 @@ $(document).ready(function() {
             dataType:'json',
             success: function(data) {
                 $(data.areas).each(function(index, element) {
-                    $('#categorias').append("<li><a href='#' class='area' data-search='" + element.slug + "' style='background-image: url(img/categorias/" + element.slug + ".png);'>" + element.titulo + "</a></li>")
+                    $('#categorias').append("<li><a href='#' class='area cat-search' data-search='" + element.slug + "' style='background-image: url(img/categorias/" + element.slug + ".png);'>" + element.titulo + "</a></li>")
                 });
             }
         });
@@ -149,6 +149,7 @@ $(document).ready(function() {
         if(!$(e.target).closest('#categorias').length) {
             $('#categorias').find('#form-busca-categoria').hide();
             $('#categorias').find('#modal-busca-categorias').remove();
+            $('.open-busca-categoria').show();
         }
     });
 
@@ -181,7 +182,8 @@ $(document).ready(function() {
     $('.aside-categorias').on('click', '.open-busca-categoria', function(e) {
         e.preventDefault();
 
-        $('.open-hide-busca-categoria').toggle();
+        $('.open-busca-categoria').hide();
+        $('#form-busca-categoria').show();
         $('#form-busca-categoria').find('input[type=text]').val('').focus();
     });
 
@@ -201,7 +203,7 @@ $(document).ready(function() {
                     modal.length ? modal.find('li').remove() : $('#form-busca-categoria').append("<div id='modal-busca-categorias'><ul></ul></div>");
 
                     $(data.categorias).each(function(index, element) {
-                        $('#modal-busca-categorias').find('ul').append("<li><a href='#' data-search='" + element.slug + "'>" + element.titulo + "</a></li>");
+                        $('#modal-busca-categorias').find('ul').append("<li><a href='#' class='cat-search' data-search='" + element.titulo + "'>" + element.titulo + "</a></li>");
                     });
                 }
             });
@@ -249,6 +251,9 @@ $(document).ready(function() {
             success: function(data) {
                 window.history.pushState('', '', data.url);
 
+                $('.abas-resultados').find('a').removeClass('active');
+                $('.abas-resultados').find('a[data-type=resultado]').addClass('active');
+
                 if(data.trabalhos.length > 0) {
                     $('div.filtro-ordem').show();
 
@@ -271,6 +276,25 @@ $(document).ready(function() {
         $('.abas-resultados').find('a').removeClass('active');
 
         $(this).addClass('active');
+
+        var type = $(this).data('type');
+
+        if(type == 'resultado') {
+            $('#form-search').submit();
+        } else {
+            $.ajax({
+                url: $(this).attr('href'),
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('div.filtro-ordem').hide();
+
+                    window.history.pushState('', '', '/');
+
+                    $('#form-search-results').html(data.mensagens);
+                }
+            });
+        }
     });
 
     // Scroll infinito nos resultados
@@ -310,7 +334,10 @@ $(document).ready(function() {
 
 
 
+
     ////////////////////////////// CHAT //////////////////////////////
+
+
 
     $(document).on('click', '.open-chat', function(e) {
         e.preventDefault();
@@ -326,12 +353,35 @@ $(document).ready(function() {
             success: function(data) {
                 $('.chat').html(data.trabalho);
 
+                // Scroll to bottom
                 $('.chat').find('.mensagens').scrollTop($('.chat').find('.mensagens')[0].scrollHeight);
 
                 //Scroll custom para funcionar em conteudo carregdao dinamicamente
                 listenForScrollEvent($('.chat .mensagens'));
             }
         });
+
+        var interval = null;
+
+        // Limpar setinterval anterior
+        clearInterval(interval);
+
+        // Atualizar chat em tempo real
+        interval = setInterval(function() {
+            $.ajax({
+                url: 'mensagens/paginate/' + $('.chat').find('#user_id').val() + '/0',
+                method: 'GET',
+                dataType:'json',
+                success: function(data) {
+                    var div = $('.chat').find('.mensagens');
+
+                    // Verifica se a ultima mensagem que esta no chat foi a ultima recebida
+                    if(div.find('.recebida:last p').text() != data.last_msg) {
+                        div.html(data.mensagens);
+                    }
+                }
+            });
+        }, 30000);
     });
 
     $(document).on('change', '#form-avaliar input[type=radio]', function() {
@@ -399,7 +449,7 @@ $(document).ready(function() {
         }
     });
 
-    // Scroll custom para funcionar em conteudo carregdao dinamicamente
+    // Scroll custom para funcionar em conteudo carregado dinamicamente
     function listenForScrollEvent(e) {
         e.on('scroll', function() {
             e.trigger('custom-scroll');

@@ -11,10 +11,20 @@
                 @include('inc.abas-resultados')
             </div>
 
-            <div class="col-xs-5 chat"></div>
+            <div class="col-xs-5 chat">
+                <div class="sem-selecao">
+                    <img src="{{ asset('img/cockatto.png') }}" />
+
+                    @if(Auth::guard('web')->check())
+                        <p>Selecione um profissional ou estabelecimento<br>para pedir informações ou tirar dúvidas</p>
+                    @else
+                        <p>Acesse sua conta e selecione um profissional<br>ou estabelecimento para ser atendido</p>
+                    @endif
+                </div>
+            </div>
 
             <div class="col-xs-2">
-                adsense
+                
             </div>
         </div>
     </div>

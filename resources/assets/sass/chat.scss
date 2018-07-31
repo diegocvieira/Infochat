@@ -3,6 +3,21 @@
     height: 100%;
     position: relative;
 
+    .sem-selecao {
+        text-align: center;
+        height: 220px;
+        position: relative;
+        top: 50%;
+        margin-top: -110px;
+
+        p {
+            font-size: 16.6px;
+            color: rgba(150, 150, 150, 0.8);
+            line-height: 1.25;
+            margin: 20px 0 0 0;
+        }
+    }
+
     .topo-chat {
         background-color: rgb(255, 255, 255);
         box-shadow: 2.5px 4.33px 14.25px 0.75px rgba(100, 100, 100, 0.078);
@@ -108,21 +123,8 @@
             float: left;
             margin: 5px 0;
 
-            h3 {
-                font-size: 12.5px;
-                color: rgb(100, 100, 100);
-                font-weight: 700;
-                text-align: center;
-                text-transform: uppercase;
-            }
-
-            .msg {
-                max-width: 50%;
-                padding: 8px 90px 8px 15px;
-                border-radius: 15px;
-                position: relative;
-
-                &.recebida {
+            &.recebida {
+                .msg {
                     $color-recebida: rgb(240, 240, 240);
                     float: left;
                     background-color: $color-recebida;
@@ -140,8 +142,10 @@
                         border-color: $color-recebida $color-recebida transparent transparent;
                     }
                 }
+            }
 
-                &.enviada {
+            &.enviada {
+                .msg {
                     $color-enviada: rgb(226, 229, 244);
                     float: right;
                     background-color: $color-enviada;
@@ -159,6 +163,21 @@
                         border-color: $color-enviada transparent transparent $color-enviada;
                     }
                 }
+            }
+
+            h3 {
+                font-size: 12.5px;
+                color: rgb(100, 100, 100);
+                font-weight: 700;
+                text-align: center;
+                text-transform: uppercase;
+            }
+
+            .msg {
+                max-width: 50%;
+                padding: 8px 90px 8px 15px;
+                border-radius: 15px;
+                position: relative;
 
                 p {
                     font-size: 13.7px;

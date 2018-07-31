@@ -9,8 +9,8 @@
             </div>
         @endif
 
-        <div class="row">
-            <div class="msg {{ $mensagem->remetente_id == Auth::guard('web')->user()->id ? 'enviada' : 'recebida' }}">
+        <div class="row {{ $mensagem->remetente_id == Auth::guard('web')->user()->id ? 'enviada' : 'recebida' }}">
+            <div class="msg">
                 <p>{{ $mensagem->mensagem }}</p>
 
                 <span>{{ date('H:i', strtotime($mensagem->created_at)) }}</span>

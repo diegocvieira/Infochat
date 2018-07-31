@@ -1,6 +1,6 @@
 @foreach($trabalhos as $trabalho)
     <div class="result">
-        <a href="#" class="open-chat" data-id="{{ $trabalho->id }}">
+        <a href="#" class="{{ Auth::guard('web')->check() ? 'open-chat' : '' }}" data-id="{{ $trabalho->id }}">
             <div class="col-xs-2">
                 <div class="imagem">
                     @if($trabalho->imagem)

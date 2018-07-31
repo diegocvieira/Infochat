@@ -31,7 +31,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="{{ action('TrabalhoController@getConfig') }}" class="icon-perfil-trabalho" id="open-trabalho-config">Perfil de trabalho</a></li>
 
-                            <li><a href="#como-funciona" class="icon-conta">Configurações</a></li>
+                            <li><a href="#" class="icon-conta">Configurações</a></li>
 
                             <li><a href="{{ route('usuario-logout') }}" class="icon-logout">Sair :(</a></li>
                         </ul>
