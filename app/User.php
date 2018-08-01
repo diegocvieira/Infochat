@@ -9,7 +9,7 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $fillable = [
-        'nome', 'imagem', 'email', 'password',
+        'nome', 'imagem', 'email', 'password'
     ];
 
     protected $hidden = [
@@ -18,6 +18,6 @@ class User extends Authenticatable
 
     public function trabalho()
     {
-        return $this->HasOne('App\Trabalho');
+        return $this->hasOne('App\Trabalho');
     }
 }

@@ -9,7 +9,7 @@
 
     	<title>{{ $header_title or 'Infochat - Atendimento online da sua cidade' }}</title>
 
-    	<link rel="shortcut icon" href="img/cockatto.png">
+    	<link rel="shortcut icon" href="img/favicon.ico">
 
     	<meta name="theme-color" content="#3f51b5">
 

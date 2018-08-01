@@ -8,18 +8,14 @@ use App\Area;
 use App\Categoria;
 use App\Subcategoria;
 use App\Cidade;
-use App\Avaliar;
+use App\AvaliarAtendimento;
 use App\Mensagem;
 
 class TrabalhoController extends Controller
 {
     public function getConfig()
     {
-        $trabalho = Trabalho::where('user_id', Auth::guard('web')->user()->id)
-            ->withoutGlobalScope('ativo')
-            ->withoutGlobalScope('cidade')
-            ->withoutGlobalScope('trabalho_logado')
-            ->first();
+        $trabalho = Trabalho::where('user_id', Auth::guard('web')->user()->id)->first();
 
         $tipos = [
             '1' => 'Profissional',
@@ -60,20 +56,11 @@ class TrabalhoController extends Controller
         $slug = str_slug($request->slug, '-');
 
         // Validar o slug
-        $slug_validate = Trabalho::where('slug', $slug)
-                                ->where('user_id', '!=', $user_id)
-                                ->withoutGlobalScope('ativo')
-                                ->withoutGlobalScope('cidade')
-                                ->withoutGlobalScope('trabalho_logado')
-                                ->count();
+        $slug_validate = Trabalho::where('slug', $slug)->where('user_id', '!=', $user_id)->count();
 
         if($slug_validate == 0 && $request->nome && $slug && $request->area_id && $request->tipo) {
             // Verificar se o trabalho ja existe
-            $t = Trabalho::where('user_id', $user_id)
-                        ->withoutGlobalScope('ativo')
-                        ->withoutGlobalScope('cidade')
-                        ->withoutGlobalScope('trabalho_logado')
-                        ->first();
+            $t = Trabalho::where('user_id', $user_id)->first();
 
             // Escolher entre create e update
             if(isset($t)) {
@@ -100,7 +87,6 @@ class TrabalhoController extends Controller
             $trabalho->numero = $request->numero;
             $trabalho->bairro = $request->bairro;
             $trabalho->complemento = $request->complemento;
-            $trabalho->cpf_cnpj = $request->cpf_cnpj;
             $trabalho->area_id = $request->area_id;
             $trabalho->cep = $request->cep;
             $trabalho->email = $request->email;
@@ -167,11 +153,7 @@ class TrabalhoController extends Controller
 
     public function setStatus(Request $request)
     {
-        $trabalho = Trabalho::where('user_id', Auth::guard('web')->user()->id)
-                            ->withoutGlobalScope('ativo')
-                            ->withoutGlobalScope('cidade')
-                            ->withoutGlobalScope('trabalho_logado')
-                            ->first();
+        $trabalho = Trabalho::where('user_id', Auth::guard('web')->user()->id)->first();
 
         if(count($trabalho) > 0) {
             $trabalho->status = $request->status;
@@ -195,6 +177,7 @@ class TrabalhoController extends Controller
                             ->filtroPalavraChave($palavra_chave)
                             ->filtroTipo($tipo)
                             ->filtroOrdem($ordem)
+                            ->filtroUserLogado()
                             ->offset($offset)
                             ->limit(20)
                             ->get();
@@ -224,7 +207,7 @@ class TrabalhoController extends Controller
             return view('pagina-inicial', compact('trabalhos', 'palavra_chave', 'tipo', 'area', 'tag', 'filtro_ordem'));
         } else {
             return response()->json([
-                'trabalhos' => view('pagination', compact('trabalhos', 'offset'))->render(),
+                'trabalhos' => view('inc.list-resultados', compact('trabalhos', 'offset'))->render(),
                 'url' => $url
             ]);
         }
@@ -235,49 +218,22 @@ class TrabalhoController extends Controller
         return $this->busca($request->tipo, $request->palavra_chave, $request->area, $request->tag, $request->ordem, $request->offset);
     }
 
-    public function show($id) {
-        $chat_trabalho = Trabalho::find($id);
-
-        if(Auth::guard('web')->check()) {
-            $user_id = Auth::guard('web')->user()->id;
-
-            $avaliacao = Avaliar::where('trabalho_id', $id)
-                        ->where('user_id', $user_id)
-                        ->select('avaliacao')
-                        ->first();
-
-            $mensagens = Mensagem::where('remetente_id', $user_id)
-                                ->where('destinatario_id', $chat_trabalho->user_id)
-                                ->orWhere('remetente_id', $chat_trabalho->user_id)
-                                ->where('destinatario_id', $user_id)
-                                ->limit(15)
-                                ->orderBy('created_at', 'desc')
-                                ->get()
-                                ->all();
-        }
-
-        return response()->json([
-            'trabalho' => view('inc.chat', compact('chat_trabalho', 'avaliacao', 'mensagens'))->render()
-        ]);
-    }
-
-    public function avaliar(Request $request)
+    public function avaliarAtendimento(Request $request)
     {
-        $a = Avaliar::where('trabalho_id', $request->trabalho_id)
+        $a = AvaliarAtendimento::where('trabalho_id', $request->trabalho_id)
                     ->where('user_id', Auth::guard('web')->user()->id)
                     ->first();
 
-        $avaliar = isset($a) ? $a : new Avaliar;
+        $avaliar = isset($a) ? $a : new AvaliarAtendimento;
 
         $avaliar->trabalho_id = $request->trabalho_id;
         $avaliar->user_id = Auth::guard('web')->user()->id;
-        $avaliar->avaliacao = $request->avaliacao;
+        $avaliar->nota = $request->nota;
 
         $avaliar->save();
+
+        session(['atendimento' => $request->nota]);
     }
-
-
-
 
 
 
@@ -291,6 +247,8 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
+        //dd(User::find(1)->trabalho()->toSql());
+
         /*$row = 1;
         $cat = false;
 

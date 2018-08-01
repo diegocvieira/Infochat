@@ -19,7 +19,8 @@ class CreateAvaliacoesTable extends Migration
             $table->foreign('trabalho_id')->references('id')->on('trabalhos')->onDelete('cascade');
             $table->unsignedInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->boolean('avaliacao');
+            $table->boolean('nota');
+            $table->timestamps();
         });
     }
 

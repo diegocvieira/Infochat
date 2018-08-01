@@ -3,12 +3,16 @@
     height: 100%;
     position: relative;
 
-    .sem-selecao {
+    .sem-selecao, .sem-mensagens {
         text-align: center;
         height: 220px;
         position: relative;
         top: 50%;
         margin-top: -110px;
+
+        img {
+            width: 80px;
+        }
 
         p {
             font-size: 16.6px;
@@ -174,7 +178,7 @@
             }
 
             .msg {
-                max-width: 50%;
+                max-width: 75%;
                 padding: 8px 90px 8px 15px;
                 border-radius: 15px;
                 position: relative;

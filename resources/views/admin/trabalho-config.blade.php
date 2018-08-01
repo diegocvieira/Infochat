@@ -1,6 +1,4 @@
 {!! Form::model($trabalho, ['method' => 'post', 'action' => 'TrabalhoController@setConfig', 'id' => 'form-trabalho-config', 'files' => 'true']) !!}
-    {!! Form::text('cpf_cnpj', null, ['class' => 'cpf-cnpj']) !!}
-
     <div class="row">
         <div class="col-xs-4 imagem">
             @if(isset($trabalho) && $trabalho->imagem)
@@ -104,13 +102,16 @@
 
         <div class="informacoes aba-aberta">
             <div class="form-group endereco">
-                {!! Form::hidden('estado', null, ['id' => 'estado']) !!}
-                {!! Form::hidden('cidade', null, ['id' => 'cidade']) !!}
-
                 <div class="row">
                     {!! Form::text('cep', null, ['placeholder' => 'Cep', 'class' => 'cep', 'id' => 'cep']) !!}
 
                     {!! Form::text('bairro', null, ['placeholder' => 'Bairro', 'class' => 'bairro', 'id' => 'bairro']) !!}
+                </div>
+
+                <div class="row">
+                    {!! Form::text('cidade', null, ['id' => 'cidade', 'placeholder' => 'Cidade', 'class' => 'cidade']) !!}
+
+                    {!! Form::text('estado', null, ['id' => 'estado', 'placeholder' => 'Estado', 'class' => 'estado']) !!}
                 </div>
 
                 <div class="row">

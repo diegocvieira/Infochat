@@ -37,31 +37,32 @@ Route::post('trabalhos/busca', 'TrabalhoController@formBusca');
 Route::any('busca/{tipo?}/{palavra_chave?}/{area?}/{tag?}', 'TrabalhoController@busca');
 
 
-
-Route::post('mensagem/save', 'MensagemController@save');
-Route::get('mensagens/paginate/{id}/{offset}', 'MensagemController@pagination');
-
+Route::group(['prefix' => 'mensagem'], function() {
+    // Enviar
+    Route::post('send', 'MensagemController@send');
+    // Listar
+    Route::get('list/{id}/{offset}', 'MensagemController@list');
+    // Exibir chat
+    Route::get('chat/{id}/{tipo}', 'MensagemController@chat')->name('chat');
+    // Listar mensagens pessoais
+    Route::get('list/pessoal', 'MensagemController@pessoal');
+    // Listar mensagens de trabalho
+    Route::get('list/trabalho', 'MensagemController@trabalho');
+});
 
 Route::group(['prefix' => 'trabalho'], function() {
-    Route::get('show/{id}', 'TrabalhoController@show');
-
     Route::group(['middleware' => 'auth:web'], function() {
         Route::get('config', 'TrabalhoController@getConfig');
         Route::post('config', 'TrabalhoController@setConfig');
         Route::post('config/status', 'TrabalhoController@setStatus');
 
-        Route::post('avaliar', 'TrabalhoController@avaliar');
+        Route::post('avaliar-atendimento', 'TrabalhoController@avaliarAtendimento');
     });
 });
 
-Route::group(['prefix' => 'cliente'], function() {
+Route::group(['prefix' => 'usuario'], function() {
     Route::post('cadastro', 'UserController@create');
     Route::post('login', 'UserController@login');
-
-    // Listar mensagens pessoais
-    Route::get('mensagens/pessoal', 'MensagemController@pessoal');
-    // Listar mensagens de trabalho
-    Route::get('mensagens/trabalho', 'MensagemController@trabalho');
 
     Route::group(['middleware' => 'auth:web'], function() {
         Route::get('logout', 'UserController@logout')->name('usuario-logout');

@@ -1,40 +1,47 @@
 <div class="topo-chat">
-    {!! Form::hidden('user_id', $chat_trabalho->user_id, ['id' => 'user_id']) !!}
+    {!! Form::hidden('user_id', $tipo == 'trabalho' ? $chat->user_id : $chat->id, ['id' => 'user_id']) !!}
 
     <div class="imagem">
-        @if($chat_trabalho->imagem)
-            <img src="{{ asset('uploads/perfil/' . $chat_trabalho->imagem) }}" alt="Foto de perfil de {{ $chat_trabalho->nome }}" />
+        @if($chat->imagem)
+            <img src="{{ asset('uploads/perfil/' . $chat->imagem) }}" alt="Foto de perfil de {{ $chat->nome }}" />
         @else
-            <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" alt="Foto de perfil de {{ $chat_trabalho->nome }}" />
+            <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" alt="Foto de perfil de {{ $chat->nome }}" />
         @endif
     </div>
 
-    <h1>{{ $chat_trabalho->nome }}</h1>
+    <h1>{{ $chat->nome }}</h1>
 
-    @if(Auth::guard('web')->check())
-        {!! Form::model($avaliacao, ['method' => 'post', 'id' => 'form-avaliar', 'action' => 'TrabalhoController@avaliar']) !!}
+    @if(Auth::guard('web')->check() && $tipo == 'trabalho')
+        {!! Form::open(['method' => 'post', 'id' => 'form-avaliar', 'action' => 'TrabalhoController@avaliarAtendimento']) !!}
             <span>avalie este atendimento</span>
 
-            {!! Form::hidden('trabalho_id', $chat_trabalho->id) !!}
+            {!! Form::hidden('trabalho_id', $chat->id) !!}
 
-            {!! Form::radio('avaliacao', '1', null, ['id' => 'like']) !!}
+            {!! Form::radio('nota', '1', session('atendimento'), ['id' => 'like']) !!}
             {!! Form::label('like', ' ') !!}
 
-            {!! Form::radio('avaliacao', '0', null, ['id' => 'dislike']) !!}
+            {!! Form::radio('nota', '0', session('atendimento'), ['id' => 'dislike']) !!}
             {!! Form::label('dislike', ' ') !!}
         {!! Form::close() !!}
     @endif
 </div>
 
 <div class="mensagens">
-    @include('pagination-mensagens')
+    @if(isset($mensagens) && count($mensagens) > 0)
+        @include('inc.list-mensagens-chat')
+    @else
+        <div class="sem-mensagens">
+            <img src="{{ asset('img/icon-logo.png') }}" />
+            <p>Escreva uma mensagem e pressione<br>enter para iniciar o atendimento</p>
+        </div>
+    @endif
 </div>
 
 @if(Auth::guard('web')->check())
-    {!! Form::open(['method' => 'post', 'action' => 'MensagemController@save', 'id' => 'form-enviar-msg']) !!}
+    {!! Form::open(['method' => 'post', 'action' => 'MensagemController@send', 'id' => 'form-enviar-msg']) !!}
         {!! Form::text('mensagem', null, ['placeholder' => 'Digite uma mensagem']) !!}
 
-        {!! Form::hidden('destinatario_id', $chat_trabalho->user->id, ['class' => 'trabalho-id']) !!}
+        {!! Form::hidden('destinatario_id', $tipo == 'trabalho' ? $chat->user->id : $chat->id, ['class' => 'trabalho-id']) !!}
 
         {!! Form::submit('', ['class' => 'button']) !!}
     {!! Form::close() !!}

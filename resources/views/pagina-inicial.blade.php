@@ -13,7 +13,7 @@
 
             <div class="col-xs-5 chat">
                 <div class="sem-selecao">
-                    <img src="{{ asset('img/cockatto.png') }}" />
+                    <img src="{{ asset('img/icon-logo.png') }}" />
 
                     @if(Auth::guard('web')->check())
                         <p>Selecione um profissional ou estabelecimento<br>para pedir informações ou tirar dúvidas</p>
@@ -24,7 +24,7 @@
             </div>
 
             <div class="col-xs-2">
-                
+
             </div>
         </div>
     </div>

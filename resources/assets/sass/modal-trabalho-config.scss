@@ -512,7 +512,11 @@
                         width: 275px;
                     }
 
-                    .numero, .complemento {
+					.cidade {
+						width: 360px;
+					}
+
+                    .numero, .complemento, .estado {
                         width: 80px;
                     }
                 }
@@ -555,7 +559,7 @@
                         }
 
                         input {
-                            padding-left: 125px;
+                            padding: 0 10px 0 125px;
                         }
                     }
                 }

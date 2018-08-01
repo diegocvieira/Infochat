@@ -102,6 +102,14 @@
         <script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js'></script>
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.8/jquery.mask.min.js"></script>
 
+        <script>
+            @if(Auth::guard('web')->check())
+                var logado = true;
+            @else
+                var logado = false;
+            @endif
+        </script>
+
         <script src="{{ asset('js/global.js') }}"></script>
     </body>
 </html>

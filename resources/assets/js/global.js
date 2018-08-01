@@ -337,17 +337,21 @@ $(document).ready(function() {
 
     ////////////////////////////// CHAT //////////////////////////////
 
+    $(document).on('click', '.ver-perfil', function(e) {
+        e.stopPropagation();
 
+        alert('ok');
+    });
 
     $(document).on('click', '.open-chat', function(e) {
         e.preventDefault();
 
         $('#form-search-results').find('.result').removeClass('active-trabalho');
 
-        $(this).parents('.result').addClass('active-trabalho');
+        $(this).addClass('active-trabalho');
 
         $.ajax({
-            url: '/trabalho/show/' + $(this).data('id'),
+            url: '/mensagem/chat/' + $(this).data('id') + '/' + $(this).data('type'),
             method: 'GET',
             dataType:'json',
             success: function(data) {
@@ -358,30 +362,34 @@ $(document).ready(function() {
 
                 //Scroll custom para funcionar em conteudo carregdao dinamicamente
                 listenForScrollEvent($('.chat .mensagens'));
+
+                $('#form-enviar-msg').find('input[type=text]').focus();
             }
         });
 
-        var interval = null;
+        if(logado == true) {
+            var interval = null;
 
-        // Limpar setinterval anterior
-        clearInterval(interval);
+            // Limpar setinterval anterior
+            clearInterval(interval);
 
-        // Atualizar chat em tempo real
-        interval = setInterval(function() {
-            $.ajax({
-                url: 'mensagens/paginate/' + $('.chat').find('#user_id').val() + '/0',
-                method: 'GET',
-                dataType:'json',
-                success: function(data) {
-                    var div = $('.chat').find('.mensagens');
+            // Atualizar chat em tempo real
+            interval = setInterval(function() {
+                $.ajax({
+                    url: 'mensagem/list/' + $('.chat').find('#user_id').val() + '/0',
+                    method: 'GET',
+                    dataType:'json',
+                    success: function(data) {
+                        var div = $('.chat').find('.mensagens');
 
-                    // Verifica se a ultima mensagem que esta no chat foi a ultima recebida
-                    if(div.find('.recebida:last p').text() != data.last_msg) {
-                        div.html(data.mensagens);
+                        // Verifica se a ultima mensagem que esta no chat foi a ultima recebida
+                        if(div.find('.recebida:last p').text() != data.last_msg) {
+                            div.html(data.mensagens);
+                        }
                     }
-                }
-            });
-        }, 30000);
+                });
+            }, 10000);
+        }
     });
 
     $(document).on('change', '#form-avaliar input[type=radio]', function() {
@@ -411,9 +419,11 @@ $(document).ready(function() {
                 dataType:'json',
                 data: $(this).serialize(),
                 success: function(data) {
+                    $('.chat').find('.sem-mensagens').remove();
+
                     var div = $('.chat').find('.mensagens');
 
-                    div.append("<div class='row'><div class='msg enviada'><p>" + data.msg + "</p><span>" + data.hora + "</span></div></div>");
+                    div.append("<div class='row enviada'><div class='msg'><p>" + data.msg + "</p><span>" + data.hora + "</span></div></div>");
 
                     div.scrollTop(div[0].scrollHeight);
 
@@ -431,7 +441,7 @@ $(document).ready(function() {
             var div = $('.chat').find('.mensagens');
 
             $.ajax({
-                url: 'mensagens/paginate/' + $('.chat').find('.trabalho-id').val() + '/' + div.find('.msg').length,
+                url: 'mensagem/list/' + $('.chat').find('.trabalho-id').val() + '/' + div.find('.msg').length,
                 method: 'GET',
                 dataType:'json',
                 success: function(data) {
@@ -779,27 +789,11 @@ $(document).ready(function() {
         $(this).parent().remove();
     });
 
-    function modalCpfCnpj() {
-        var tipo = $('#form-trabalho-config').find('select.tipo').val() == '1' ? 'CPF' : 'CNPJ',
-            modal = $('#modal-alert'),
-            body = "<p>Informe o seu " + tipo + " para garantir a veracidade dos dados.<br>Ele não será divulgado!</p><input type='text' name='a' value='' placeholder='escreva aqui' />";
-
-        modalAlert(body, 'Enviar');
-
-        tipo == 'CPF' ? modal.find('input').mask('000.000.000-00', {reverse: true, clearIfNotMatch: true}) : modal.find('input').mask('00.000.000/0000-00', {reverse: true, clearIfNotMatch: true});
-
-        modal.find('.modal-footer .btn').unbind().on('click',function(e) {
-            $('#form-trabalho-config').find('.cpf-cnpj').val(modal.find('input').val());
-        });
-    }
-
-    // Modal de CPF/CNPJ e busca por areas
+    // Busca por areas
     $(document).on('change', 'select.tipo', function() {
         var select = $('#form-trabalho-config').find('select.area');
 
         select.find('option').remove();
-
-        modalCpfCnpj();
 
         $.ajax({
             url: '/areas/get/' + $(this).val(),
@@ -926,7 +920,7 @@ $(document).ready(function() {
 
                 $('.selectpicker').selectpicker('refresh');
 
-                $('#cep').mask('00000-000', {reverse: false});
+                $('#cep').mask('00000-000', {reverse: false, clearIfNotMatch : true});
                 $('.fone-mask').mask(SPMaskBehavior, spOptions);
 
                 $('#form-trabalho-config').validate({
@@ -948,6 +942,24 @@ $(document).ready(function() {
                             required: true,
                             minlength: 1,
                             maxlength: 100
+                        },
+                        cep: {
+                            required: true
+                        },
+                        bairro: {
+                            required: true
+                        },
+                        logradouro: {
+                            required: true
+                        },
+                        numero: {
+                            required: true
+                        },
+                        cidade: {
+                            required: true
+                        },
+                        estado: {
+                            required: true
                         }
                     },
                     highlight: function (element, errorClass, validClass) {
@@ -970,26 +982,22 @@ $(document).ready(function() {
                         }
                     },
                     submitHandler: function(form) {
-                        if($('.cpf-cnpj').val() != '') {
-                            $(form).find('input[type=submit]').val('Salvando').prop('disabled', true);
+                        $(form).find('input[type=submit]').val('Salvando').prop('disabled', true);
 
-                            $.ajax({
-                                url: $(form).attr('action'),
-                                method: 'POST',
-                                dataType: 'json',
-                                data: new FormData(form),
-                                cache: false,
-                                contentType: false,
-                                processData: false,
-                                success: function (data) {
-                                    modalAlert(data.msg, 'OK');
+                        $.ajax({
+                            url: $(form).attr('action'),
+                            method: 'POST',
+                            dataType: 'json',
+                            data: new FormData(form),
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+                                modalAlert(data.msg, 'OK');
 
-                                    $(form).find('input[type=submit]').val('Salvar').prop('disabled', false);
-                                }
-                            });
-                        } else {
-                            modalCpfCnpj();
-                        }
+                                $(form).find('input[type=submit]').val('Salvar').prop('disabled', false);
+                            }
+                        });
 
                         return false;
                     }

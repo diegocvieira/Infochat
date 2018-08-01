@@ -16,10 +16,11 @@ class GlobalController extends Controller
 {
     public function inicial()
     {
+        // Setar poa como cidade default
         if(!Cookie::get('sessao_cidade_slug')) {
-            $cidade = Cidade::find(4913);
+            $this->setCidade(4927);
 
-            _setCidade($cidade, $force = true);
+            return redirect()->route('inicial');
         }
 
         $filtro_ordem = [
@@ -28,7 +29,7 @@ class GlobalController extends Controller
             'a_z' => 'a - z'
         ];
 
-        $trabalhos = Trabalho::limit(20)->get();
+        $trabalhos = Trabalho::filtroUserLogado()->limit(20)->get();
 
         return view('pagina-inicial', compact('filtro_ordem', 'trabalhos'));
     }
@@ -51,8 +52,8 @@ class GlobalController extends Controller
 
     public function buscaCategorias(Request $request)
     {
-        $subcategorias = Subcategoria::where('titulo', 'LIKE', '%' . $request->nome_categoria . '%')
-                                    ->select('titulo', 'slug');
+        $subcategorias = Subcategoria::where('titulo', 'LIKE', '%' . $request->nome_categoria . '%')->select('titulo', 'slug');
+
         $categorias = Categoria::where('titulo', 'LIKE', '%' . $request->nome_categoria . '%')
                                 ->select('titulo', 'slug')
                                 ->union($subcategorias)
@@ -61,6 +62,7 @@ class GlobalController extends Controller
         return json_encode(['categorias' => $categorias]);
     }
 
+    // Usado no modal trabalho config
     public function getAreas($tipo)
     {
         $areas = Area::where('tipo', $tipo)->get();
@@ -68,6 +70,7 @@ class GlobalController extends Controller
         return json_encode(['areas' => $areas]);
     }
 
+    // Usado no modal trabalho config
     public function getCategorias($area)
     {
         $categorias = Categoria::where('area_id', $area)->get();
@@ -75,6 +78,7 @@ class GlobalController extends Controller
         return json_encode(['categorias' => $categorias]);
     }
 
+    // Usado no modal trabalho config
     public function getSubcategorias($categoria)
     {
         $subcategorias = Subcategoria::where('categoria_id', $categoria)->get();

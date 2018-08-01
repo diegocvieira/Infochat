@@ -10,7 +10,7 @@ class Trabalho extends Model
 {
     protected $table = 'trabalhos';
     protected $fillable = [
-        'user_id', 'tipo', 'nome', 'area_id', 'imagem', 'cpf_cnpj', 'descricao', 'cidade_id', 'logradouro', 'numero', 'bairro', 'complemento', 'slug', 'status', 'cep', 'email'
+        'user_id', 'tipo', 'nome', 'area_id', 'imagem', 'descricao', 'cidade_id', 'logradouro', 'numero', 'bairro', 'complemento', 'slug', 'status', 'cep', 'email'
     ];
     protected $dates = ['created_at', 'updated_at'];
 
@@ -99,23 +99,32 @@ class Trabalho extends Model
         }
     }
 
+    public function scopeFiltroUserLogado($query)
+    {
+        if(Auth::guard('web')->check()) {
+            return $query->where('user_id', '!=', Auth::guard('web')->user()->id);
+        }
+    }
+
     protected static function boot()
 	{
 	    parent::boot();
 
-		static::addGlobalScope('cidade', function(Builder $builder) {
-        	$builder->where('cidade_id', Cookie::get('sessao_cidade_id'));
-	    });
+		//static::addGlobalScope('cidade', function(Builder $builder) {
+        	//$builder->where('cidade_id', Cookie::get('sessao_cidade_id'));
+	    //});
 
-        static::addGlobalScope('ativo', function(Builder $builder) {
-        	$builder->where('status', 1);
-	    });
+        //static::addGlobalScope('ativo', function(Builder $builder) {
+        	//$builder->where('status', 1);
+	    //});
 
         // Remover o usuario logado das buscas
-        if(Auth::guard('web')->check()) {
-            static::addGlobalScope('trabalho_logado', function(Builder $builder) {
-            	$builder->where('user_id', '!=', Auth::guard('web')->user()->id);
-    	    });
-        }
+        //if(Auth::guard('web')->check()) {
+            //static::addGlobalScope('trabalho_logado', function(Builder $builder) {
+            	//$builder->where('user_id', '!=', Auth::guard('web')->user()->id);
+    	    //});
+        //}
+
+        //ssssssdddddd
 	}
 }

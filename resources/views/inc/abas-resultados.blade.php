@@ -12,7 +12,7 @@
 
 <div id="form-search-results">
     @if(count($trabalhos) > 0)
-        @include('pagination')
+        @include('inc.list-resultados')
     @else
         <div class="sem-resultados">
             <p>Sua pesquisa não encontrou resultado.<br>Verifique se todas as palavras estão corretas ou tente palavras-chave diferentes.</p>
