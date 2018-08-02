@@ -18,7 +18,6 @@ class MensagemController extends Controller
         $mensagem->remetente_id = Auth::guard('web')->user()->id;
         $mensagem->destinatario_id = $request->destinatario_id;
         $mensagem->mensagem = $request->mensagem;
-        $mensagem->lida = date('Y-m-d H:i:s');
 
         $mensagem->save();
 

@@ -96,6 +96,24 @@
             </div>
         </div><!-- /.modal -->
 
+        <div class="modal fade" id="modal-como-funciona" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <a href="#" class="arrow prev" data-position="1"></a>
+
+                    <img src="{{ asset('img/como-funciona/1.png') }}" class="img-responsive" />
+
+                    <a href="#" class="arrow next" data-position="1"></a>
+
+                    <div class="position">
+                        @for($i = 1; $i <= 5; $i++)
+                            <a href="#" data-position="{{ $i }}" class="advance {{ $i == 1 ? 'active' : '' }}"></a>
+                        @endfor
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+
         <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js"></script>

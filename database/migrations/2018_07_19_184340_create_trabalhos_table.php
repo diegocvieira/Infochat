@@ -26,7 +26,6 @@ class CreateTrabalhosTable extends Migration
             $table->boolean('status')->default(0);
             $table->string('imagem', 100)->nullable();
             $table->string('descricao', 10000)->nullable();
-            $table->string('cpf_cnpj', 50);
             $table->unsignedInteger('cidade_id')->nullable();
             $table->foreign('cidade_id')->references('id')->on('cidades')->onDelete('cascade');
             $table->string('logradouro', 100)->nullable();

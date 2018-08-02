@@ -204,6 +204,105 @@ a {
 	}
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#modal-como-funciona {
+    .modal-dialog {
+        width: 70%;
+        height: 90%;
+        margin: 0;
+    }
+
+    .modal-content {
+        width: 100%;
+        height: 100%;
+        position: relative;
+
+        .arrow {
+            position: absolute;
+            top: 50%;
+            background-repeat: no-repeat;
+            background-position: left;
+            background-size: contain;
+            width: 50px;
+            height: 50px;
+            background-image: url('../img/arrow.png');
+
+            &.prev {
+                left: -70px;
+                display: none;
+                -webkit-transform: rotate(90deg);
+                -moz-transform: rotate(90deg);
+                -ms-transform: rotate(90deg);
+                -o-transform: rotate(90deg);
+                transform: rotate(90deg);
+            }
+
+            &.next {
+                right: -70px;
+                -webkit-transform: rotate(270deg);
+                -moz-transform: rotate(270deg);
+                -ms-transform: rotate(270deg);
+                -o-transform: rotate(270deg);
+                transform: rotate(270deg);
+            }
+        }
+
+        .position {
+            position: absolute;
+            bottom: -30px;
+            left: 0;
+            right: 0;
+
+            a {
+                border: 2px solid #fff;
+                border-radius: 50%;
+                width: 10px;
+                height: 10px;
+                display: inline-block;
+
+                &.active {
+                    background-color: #fff;
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @import 'top-nav.scss';
 @import 'aside-categorias.scss';
 @import 'modal-trabalho-config.scss';

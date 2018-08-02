@@ -19,7 +19,7 @@ class CreateMensagensTable extends Migration
             $table->foreign('remetente_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedInteger('destinatario_id');
             $table->foreign('destinatario_id')->references('id')->on('users')->onDelete('cascade');
-            $table->boolean('lida')->default(0);
+            $table->boolean('lida')->nullable();
             $table->string('mensagem', 5000);
             $table->timestamps();
         });

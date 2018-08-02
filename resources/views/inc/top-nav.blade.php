@@ -38,7 +38,7 @@
                     </li>
                 @else
                     <li class="button">
-                        <a href="#">Como funciona</a>
+                        <a href="#" data-toggle="modal" data-target="#modal-como-funciona">Como funciona</a>
                     </li>
 
                     <li>

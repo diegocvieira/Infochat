@@ -6,6 +6,43 @@ $(document).ready(function() {
         $('.session-flash').fadeOut();
     }, 5000);
 
+    // Passar imagens do modal nas flechas do teclado
+    $('#modal-como-funciona').on('keydown', function(e) {
+        var position = parseInt($('#modal-como-funciona').find('.position .active').data('position'));
+
+        if(e.which == 39 && position < 5) {
+            $('#modal-como-funciona').find('.next').trigger('click'); // right
+        } else if(e.which == 37 && position > 1) {
+            $('#modal-como-funciona').find('.prev').trigger('click'); // left
+        }
+    });
+    $('#modal-como-funciona').on('click', '.arrow, .advance', function(e) {
+        e.preventDefault();
+
+        var modal = $('#modal-como-funciona'),
+            position = parseInt($(this).data('position'));
+
+        // Verifica se o click foi nas flechas
+        if($(this).hasClass('arrow')) {
+            // Faz o calculo para next ou prev
+            position = $(this).hasClass('next') ? position + 1 : position - 1;
+        }
+
+        // Adiciona a imagem
+        $('#modal-como-funciona').find('img').attr('src', '/img/como-funciona/' + position + '.png');
+
+        // Atualiza a posicao da imagem na flecha
+        modal.find('.arrow').data('position', position);
+        // Atualiza a class active nos circulos
+        modal.find('.advance').removeClass('active');
+        modal.find('.advance[data-position=' + position + ']').addClass('active');
+
+        // Oculta a flecha next se estiver na ultima imagem
+        position == 5 ? modal.find('.next').hide() : modal.find('.next').show();
+        // Oculta a flecha prev se estiver na primeira imagem
+        position == 1 ? modal.find('.prev').hide() : modal.find('.prev').show();
+    });
+
     // Modal de alertas
     function modalAlert(body, btn) {
         var modal = $('#modal-alert');

@@ -247,6 +247,21 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
+        $mensagens = Mensagem::whereIn('id', function($query) {
+            $query->selectRaw('min(id)')
+                ->from('mensagens')
+                ->where('remetente_id', 1)
+                ->orWhere('destinatario_id', 1)
+                ->groupBy('remetente_id');
+            })
+            ->where('destinatario_id', 1)
+            //->where('destinatario_id', 1)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+            return $mensagens;
+
+
         //dd(User::find(1)->trabalho()->toSql());
 
         /*$row = 1;
