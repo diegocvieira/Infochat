@@ -15,3 +15,8 @@ mix.js('resources/assets/js/global.js', 'public/js')
     .sass('resources/assets/sass/global.scss', 'public/css')
     .copyDirectory('resources/assets/img', 'public/img')
     .copyDirectory('resources/assets/fonts', 'public/fonts');
+
+
+if(mix.inProduction()) {
+    mix.version();
+}

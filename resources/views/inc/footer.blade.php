@@ -128,6 +128,6 @@
             @endif
         </script>
 
-        <script src="{{ asset('js/global.js') }}"></script>
+        <script src="{{ mix('/js/global.js') }}"></script>
     </body>
 </html>

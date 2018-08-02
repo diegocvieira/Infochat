@@ -52,7 +52,7 @@
 
         <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css'>
 
-        <link rel="stylesheet" type="text/css" href="{{ url('css/global.css') }}"/>
+        <link rel="stylesheet" type="text/css" href="{{ mix('/css/global.css') }}"/>
     </head>
     <body class="<?php echo isset($body_class) ? $body_class : '' ?>">
         @if(session('session_flash'))
