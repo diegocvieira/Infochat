@@ -385,14 +385,18 @@ $(document).ready(function() {
     $(document).on('click', '.favoritar', function(e) {
         e.preventDefault();
 
-        $.ajax({
-            url: '/trabalho/favoritar/' + $(this).data('id'),
-            method: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                $('.favoritar').toggleClass('favorito');
-            }
-        });
+        if(logged) {
+            $.ajax({
+                url: '/trabalho/favoritar/' + $(this).data('id'),
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $('.favoritar').toggleClass('favorito');
+                }
+            });
+        } else {
+            modalAlert('É necessário estar logado para poder favoritar', 'OK');
+        }
     });
 
     // Alternar entre abas

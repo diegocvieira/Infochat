@@ -34,7 +34,7 @@
         </div>
 
         <div class="add-favoritos">
-            <a href="#" class="favoritar {{ Auth::guard('web')->user()->favorito($trabalho->id) ? 'favorito' : '' }}" data-id="{{ $trabalho->id }}"></a>
+            <a href="#" class="favoritar {{ (Auth::guard('web')->check() && Auth::guard('web')->user()->favorito($trabalho->id)) ? 'favorito' : '' }}" data-id="{{ $trabalho->id }}"></a>
         </div>
     </div>
 </div>
