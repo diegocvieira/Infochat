@@ -361,9 +361,130 @@ $(document).ready(function() {
 
 
 
+    $(document).on('click', '.ver-perfil', function(e) {
+        e.stopPropagation();
 
+        $.ajax({
+            url: '/trabalho/show/' + $(this).data('id'),
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                var modal = $('#modal-default');
+                modal.removeAttr('class');
+                modal.addClass('modal fade modal-trabalho-perfil');
+                modal.find('.modal-body').html(data.trabalho);
+                modal.modal('show');
 
+                //Scroll custom para funcionar em conteudo carregdao dinamicamente
+                listenForScrollEvent($('.modal-trabalho-perfil .comentarios'));
+            }
+        });
+    });
 
+    // Favoritar (Add e remover)
+    $(document).on('click', '.favoritar', function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: '/trabalho/favoritar/' + $(this).data('id'),
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('.favoritar').toggleClass('favorito');
+            }
+        });
+    });
+
+    // Alternar entre abas
+    $(document).on('click', '.modal-trabalho-perfil .abas a', function(e) {
+        e.preventDefault();
+
+        $('.aba-aberta').hide();
+        $('.abas').find('a').removeClass('active');
+
+        $('.' + $(this).data('type')).show();
+        $(this).addClass('active');
+    });
+
+    $(document).on('mouseover click', '#form-avaliar-trabalho .nota label', function() {
+        var nota = $(this).prev().val();
+
+        $(this).parents('.nota').find('label').each(function() {
+            if($(this).prev().val() <= nota) {
+                $(this).addClass('star-full');
+            } else {
+                $(this).removeClass('star-full');
+            }
+        });
+
+        $(this).addClass('star-full');
+    });
+
+    $(document).on('mouseleave', '#form-avaliar-trabalho .nota label', function() {
+        var input_checked = $(this).parents('.nota').find('input[type=radio]:checked')
+
+        if(input_checked.length) {
+            var nota = input_checked.val();
+
+            $(this).parents('.nota').find('input[type=radio]').each(function() {
+                if($(this).val() > nota) {
+                    $(this).next().removeClass('star-full');
+                } else {
+                    $(this).next().addClass('star-full');
+                }
+            });
+        } else {
+            $(this).parents('.nota').find('label').removeClass('star-full');
+        }
+    });
+
+    $(document).on('submit', '#form-avaliar-trabalho', function() {
+        if($(this).find('input[type=radio]').is(':checked')) {
+            if(logged) {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: 'POST',
+                    dataType: 'json',
+                    data: $(this).serialize(),
+                    success: function(data) {
+                        if(data.status == true) {
+                            var msg = 'Avaliação realizada com sucesso!',
+                                imagem = data.imagem ? "<img src='/uploads/perfil/" + data.imagem + "' />" : "<img src='/img/paisagem.png' class='sem-imagem' />";
+
+                            $('.modal-trabalho-perfil').find('.comentarios').prepend("<div class='comentario'><div class='imagem-user'>" + imagem + "</div><div class='header-comentario'><h4>" + data.nome + "</h4><span class='nota'>" + data.nota + ".0</span><span class='data'>" + data.data + "</span></div><div class='descricao-comentario'><p>" + data.descricao + "</p></div></div>");
+                        } else {
+                            var msg = 'Ocorreu um erro. Atualize a página e tente novamente.';
+                        }
+
+                        modalAlert(msg, 'OK');
+                    }
+                });
+            } else {
+                modalAlert('Acesse sua conta para poder avaliar.', 'OK');
+            }
+        }
+
+        return false;
+    });
+
+    $(document).on('custom-scroll', '.modal-trabalho-perfil .comentarios', function() {
+        if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+            var div = $('.modal-trabalho-perfil').find('.comentarios');
+
+            $.ajax({
+                url: '/trabalho/avaliar/list/' + $('.modal-trabalho-perfil').find('input[name=trabalho_id]').val() + '/' + div.find('.comentario').length,
+                method: 'GET',
+                dataType:'json',
+                success: function(data) {
+                    $(data.avaliacoes).each(function(index, element) {
+                        imagem = element.user.imagem ? "<img src='/uploads/perfil/" + element.user.imagem + "' />" : "<img src='/img/paisagem.png' class='sem-imagem' />";
+
+                        div.append("<div class='comentario'><div class='imagem-user'>" + imagem + "</div><div class='header-comentario'><h4>" + element.user.nome + "</h4><span class='nota'>" + element.nota + ".0</span><span class='data'>" + element.created_at + "</span></div><div class='descricao-comentario'><p>" + element.descricao + "</p></div></div>");
+                    });
+                }
+            });
+        }
+    });
 
 
 
@@ -373,12 +494,6 @@ $(document).ready(function() {
 
 
     ////////////////////////////// CHAT //////////////////////////////
-
-    $(document).on('click', '.ver-perfil', function(e) {
-        e.stopPropagation();
-
-        alert('ok');
-    });
 
     $(document).on('click', '.open-chat', function(e) {
         e.preventDefault();
@@ -404,7 +519,7 @@ $(document).ready(function() {
             }
         });
 
-        if(logado == true) {
+        if(logged == true) {
             var interval = null;
 
             // Limpar setinterval anterior
@@ -951,7 +1066,8 @@ $(document).ready(function() {
             dataType: 'json',
             success: function (data) {
                 var modal = $('#modal-default');
-                modal.addClass('modal-trabalho-config');
+                modal.removeAttr('class');
+                modal.addClass('modal fade modal-trabalho-config');
                 modal.find('.modal-body').html(data.body);
                 modal.modal('show');
 

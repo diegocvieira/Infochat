@@ -35,6 +35,10 @@ class UserController extends Controller
     public function login(Request $request)
     {
         if(Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password])) {
+            $user = User::find(Auth::guard('web')->user()->id);
+            $user->online = 1;
+            $user->save();
+
             $return = ['status' => true];
         } else {
             $return = ['status' => false, 'msg' => 'Não identificamos o e-mail e/ou a senha que você informou.'];
@@ -45,6 +49,10 @@ class UserController extends Controller
 
     public function logout()
     {
+        $user = User::find(Auth::guard('web')->user()->id);
+        $user->online = 0;
+        $user->save();
+
         Session::flush();
         Auth::logout();
 

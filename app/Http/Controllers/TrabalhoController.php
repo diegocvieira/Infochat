@@ -10,6 +10,9 @@ use App\Subcategoria;
 use App\Cidade;
 use App\AvaliarAtendimento;
 use App\Mensagem;
+use DB;
+use App\Avaliar;
+use App\Favoritar;
 
 class TrabalhoController extends Controller
 {
@@ -218,23 +221,43 @@ class TrabalhoController extends Controller
         return $this->busca($request->tipo, $request->palavra_chave, $request->area, $request->tag, $request->ordem, $request->offset);
     }
 
-    public function avaliarAtendimento(Request $request)
+    public function show($id)
     {
-        $a = AvaliarAtendimento::where('trabalho_id', $request->trabalho_id)
-                    ->where('user_id', Auth::guard('web')->user()->id)
-                    ->first();
+        $trabalho = Trabalho::find($id);
 
-        $avaliar = isset($a) ? $a : new AvaliarAtendimento;
+        if(Auth::guard('web')->check()) {
+            $avaliacao_usuario = Avaliar::where('trabalho_id', $id)
+                ->where('user_id', Auth::guard('web')->user()->id)
+                ->select('nota', 'descricao')
+                ->first();
+        }
 
-        $avaliar->trabalho_id = $request->trabalho_id;
-        $avaliar->user_id = Auth::guard('web')->user()->id;
-        $avaliar->nota = $request->nota;
-
-        $avaliar->save();
-
-        session(['atendimento' => $request->nota]);
+        return response()->json([
+            'trabalho' => view('show-trabalho', compact('trabalho', 'avaliacao_usuario'))->render()
+        ]);
     }
 
+    public function favoritar($id)
+    {
+        $user_id = Auth::guard('web')->user()->id;
+
+        $favoritar = Favoritar::where('trabalho_id', $id)
+            ->where('user_id', $user_id)
+            ->first();
+
+        if($favoritar) {
+            $favoritar->delete();
+        } else {
+            $f = new Favoritar;
+
+            $f->trabalho_id = $id;
+            $f->user_id = $user_id;
+
+            $f->save();
+        }
+
+        return json_encode(true);
+    }
 
 
 
@@ -247,19 +270,97 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
-        $mensagens = Mensagem::whereIn('id', function($query) {
-            $query->selectRaw('min(id)')
+        /*$mensagem = Mensagem::selectRaw("CONCAT(FLOOR(sum(diferenca)/60),'h',MOD(sum(diferenca),60),'m') as tempo")
+    ->whereIn('id', function($query) {
+     $query->selectRaw('TIMESTAMPDIFF(MINUTE, m1.created_at, min(m2.created_at)) as diferenca')
+        ->from('mensagens as m1')
+        ->join('mensagens as m2', 'm1.remetente_id', '=', 'm2.destinatario_id')
+        ->where('m2.created_at', '>', 'm1.created_at')
+        ->groupBy('m1.id');
+     })
+     ->where(function($query) {
+           $query->selectRaw('min(id)')
                 ->from('mensagens')
-                ->where('remetente_id', 1)
-                ->orWhere('destinatario_id', 1)
-                ->groupBy('remetente_id');
-            })
-            ->where('destinatario_id', 1)
-            //->where('destinatario_id', 1)
-            ->orderBy('created_at', 'desc')
+                ->where('destinatario_id', 2);
+     })->toSql();
+      //->get();
+*/
+      /*$mensagem = DB::table(DB::raw('(
+          SELECT
+    	TIMESTAMPDIFF(MINUTE, m1.created_at, min(m2.created_at)) as diferenca
+    FROM
+        mensagens m1
+    JOIN
+        mensagens m2 ON m1.remetente_id = m2.destinatario_id AND m2.remetente_id = m1.destinatario_id AND m2.created_at > m1.created_at
+    GROUP BY
+        m1.remetente_id,
+        m1.destinatario_id,
+        m1.created_at,
+        m1.id
+    ) temp'))
+    ->selectRaw("CONCAT(FLOOR(sum(diferenca)/60),'h',MOD(sum(diferenca),60),'m') as tempo")
+    /*->where(function($query) {
+          $query->selectRaw('min(id)')
+               ->from('mensagens')
+               ->where('destinatario_id', 2);
+    })->toSql();
+
+      return $mensagem;*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            /*SELECT
+	CONCAT(FLOOR(sum(diferenca)/60),'h',MOD(sum(diferenca),60),'m') as tempo
+FROM
+(SELECT
+	TIMESTAMPDIFF(MINUTE, m1.created_at, min(m2.created_at)) as diferenca
+FROM
+    mensagens m1
+JOIN
+    mensagens m2 ON m1.remetente_id = m2.destinatario_id AND m2.remetente_id = m1.destinatario_id AND m2.created_at > m1.created_at
+GROUP BY
+    m1.remetente_id,
+    m1.destinatario_id,
+    m1.created_at,
+    m1.id) AS table1
+WHERE
+	(SELECT
+		MIN(id)
+	FROM
+		mensagens
+	WHERE
+		destinatario_id = 2)*/
+
+        /*$mensagem = Mensagem::
+            whereIn('id', function($query) {
+                $query->selectRaw('TIMESTAMPDIFF(MINUTE, m1.created_at, min(m2.created_at)) as diferenca')
+                    ->from('mensagens as m1')
+                    ->join('mensagens as m2', 'm1.remetente_id', '=', 'm2.destinatario_id')
+                    ->where('m2.created_at', '>', 'm1.created_at')
+                    ->groupBy('m1.remetente_id', 'm1.destinatario_id', 'm1.created_at', 'm1.id');
+                })
+            ->where(function($query) {
+                $query->selectRaw('min(id)')
+                    ->from('mensagens')
+                    ->where('destinatario_id', 2);
+                })
+            ->select("CONCAT(FLOOR(sum(diferenca)/60),'h',MOD(sum(diferenca),60),'m') as tempo")
             ->get();
 
-            return $mensagens;
+        return $mensagem;*/
 
 
         //dd(User::find(1)->trabalho()->toSql());

@@ -51,12 +51,18 @@ Route::group(['prefix' => 'mensagem'], function() {
 });
 
 Route::group(['prefix' => 'trabalho'], function() {
+    Route::get('show/{id}', 'TrabalhoController@show');
+
     Route::group(['middleware' => 'auth:web'], function() {
         Route::get('config', 'TrabalhoController@getConfig');
         Route::post('config', 'TrabalhoController@setConfig');
         Route::post('config/status', 'TrabalhoController@setStatus');
 
-        Route::post('avaliar-atendimento', 'TrabalhoController@avaliarAtendimento');
+        Route::post('avaliar-atendimento', 'AvaliarController@avaliarAtendimento')->name('avaliar-atendimento');
+        Route::post('avaliar', 'AvaliarController@avaliar')->name('avaliar-trabalho');
+        Route::get('avaliar/list/{id}/{offset}', 'AvaliarController@list')->name('listar-avaliacoes');
+
+        Route::get('favoritar/{id}', 'TrabalhoController@favoritar');
     });
 });
 

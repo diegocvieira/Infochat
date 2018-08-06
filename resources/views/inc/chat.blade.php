@@ -9,18 +9,22 @@
         @endif
     </div>
 
-    <h1>{{ $chat->nome }}</h1>
+    @if($tipo == 'trabalho')
+        <a href="#" class="ver-perfil" data-id="{{ $chat->id }}">{{ $chat->nome }}</a>
+    @else
+        <a href="#">{{ $chat->nome }}</a>
+    @endif
 
     @if(Auth::guard('web')->check() && $tipo == 'trabalho')
-        {!! Form::open(['method' => 'post', 'id' => 'form-avaliar', 'action' => 'TrabalhoController@avaliarAtendimento']) !!}
+        {!! Form::open(['method' => 'post', 'id' => 'form-avaliar', 'route' => 'avaliar-atendimento']) !!}
             <span>avalie este atendimento</span>
 
             {!! Form::hidden('trabalho_id', $chat->id) !!}
 
-            {!! Form::radio('nota', '1', session('atendimento'), ['id' => 'like']) !!}
+            {!! Form::radio('like', '1', (Session::has('atendimento') && session('atendimento') == '1') ? true : false, ['id' => 'like']) !!}
             {!! Form::label('like', ' ') !!}
 
-            {!! Form::radio('nota', '0', session('atendimento'), ['id' => 'dislike']) !!}
+            {!! Form::radio('like', '0', (Session::has('atendimento') && session('atendimento') == '0') ? true : false, ['id' => 'dislike']) !!}
             {!! Form::label('dislike', ' ') !!}
         {!! Form::close() !!}
     @endif

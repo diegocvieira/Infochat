@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAvaliacoesAtendimentoTable extends Migration
+class CreateAvaliacoesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateAvaliacoesAtendimentoTable extends Migration
      */
     public function up()
     {
-        Schema::create('avaliacoes_atendimento', function (Blueprint $table) {
+        Schema::create('avaliacoes', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('trabalho_id')->nullable();
             $table->foreign('trabalho_id')->references('id')->on('trabalhos')->onDelete('cascade');
             $table->unsignedInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->boolean('likes')->default(0);
-            $table->boolean('dislikes')->default(0);
+            $table->integer('nota');
+            $table->string('descricao', 5000)->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +32,6 @@ class CreateAvaliacoesAtendimentoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('avaliacoes_atendimento');
+        Schema::dropIfExists('avaliacoes');
     }
 }

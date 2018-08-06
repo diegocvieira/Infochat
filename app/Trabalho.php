@@ -5,6 +5,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Cookie;
 use Auth;
+use App\AvaliarAtendimento;
+use App\Avaliar;
+use DB;
 
 class Trabalho extends Model
 {
@@ -14,9 +17,44 @@ class Trabalho extends Model
     ];
     protected $dates = ['created_at', 'updated_at'];
 
+    public function tipoNome($tipo)
+    {
+        return $tipo == '1' ? 'profissional' : 'estabelecimento';
+    }
+
+    public function calc_atendimento($id)
+    {
+        $atendimento = AvaliarAtendimento::select(DB::raw('CEILING((SUM(likes) * 100) / (SUM(likes) + SUM(dislikes))) as nota'))
+            ->where('trabalho_id', $id)
+            ->first();
+
+        $nota = $atendimento->nota;
+
+        if(!$nota) {
+            $nota = 100;
+        }
+
+        return $nota;
+    }
+
+    public function calc_avaliacao($id)
+    {
+        $avaliacao = Avaliar::select(DB::raw('ROUND((SUM(nota) / COUNT(id)), 1) as nota'))
+            ->where('trabalho_id', $id)
+            ->first();
+
+        $nota = $avaliacao->nota;
+
+        if(!$nota) {
+            $nota = 5;
+        }
+
+        return $nota;
+    }
+
     public function user()
     {
-        return $this->BelongsTo('App\User');
+        return $this->belongsTo('App\User');
     }
 
     public function telefones()
@@ -36,12 +74,27 @@ class Trabalho extends Model
 
     public function horarios()
     {
-        return $this->hasMany('App\HorarioAtendimento');
+        return $this->hasMany('App\HorarioAtendimento')->orderBy('dia', 'asc');
     }
 
     public function area()
     {
-        return $this->BelongsTo('App\Area');
+        return $this->belongsTo('App\Area');
+    }
+
+    public function avaliacoes()
+    {
+        return $this->hasMany('App\Avaliar')->whereNotNull('descricao')->orderBy('created_at', 'desc');
+    }
+
+    public function notas_atendimento()
+    {
+        return $this->hasMany('App\AvaliarAtendimento');
+    }
+
+    public function cidade()
+    {
+        return $this->belongsTo('App\Cidade');
     }
 
     public function scopeFiltroArea($query, $area)

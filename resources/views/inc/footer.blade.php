@@ -122,9 +122,9 @@
 
         <script>
             @if(Auth::guard('web')->check())
-                var logado = true;
+                var logged = true;
             @else
-                var logado = false;
+                var logged = false;
             @endif
         </script>
 

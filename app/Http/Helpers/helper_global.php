@@ -57,6 +57,34 @@ function format_horario($horario)
     return substr($horario, 0, 5);
 }
 
+function diaHorario($dia)
+{
+    switch($dia) {
+        case '6':
+            $dia = 'Domingo';
+            break;
+        case '0':
+            $dia = 'Segunda';
+            break;
+        case '1':
+            $dia = 'Terça';
+            break;
+        case '2':
+            $dia = 'Quarta';
+            break;
+        case '3':
+            $dia = 'Quinta';
+            break;
+        case '4':
+            $dia = 'Sexta';
+            break;
+        case '5':
+            $dia = 'Sábado';
+    }
+
+    return $dia;
+}
+
 function diaSemana($data)
 {
     setlocale(LC_ALL, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');

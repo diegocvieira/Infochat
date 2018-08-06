@@ -109,9 +109,9 @@
                 </div>
 
                 <div class="row">
-                    {!! Form::text('cidade', null, ['id' => 'cidade', 'placeholder' => 'Cidade', 'class' => 'cidade']) !!}
+                    {!! Form::text('cidade', isset($trabalho) ? $trabalho->cidade->title : null, ['id' => 'cidade', 'placeholder' => 'Cidade', 'class' => 'cidade']) !!}
 
-                    {!! Form::text('estado', null, ['id' => 'estado', 'placeholder' => 'Estado', 'class' => 'estado']) !!}
+                    {!! Form::text('estado', isset($trabalho) ? $trabalho->cidade->estado->letter : null, ['id' => 'estado', 'placeholder' => 'Estado', 'class' => 'estado']) !!}
                 </div>
 
                 <div class="row">

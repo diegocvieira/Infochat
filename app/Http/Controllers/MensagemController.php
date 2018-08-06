@@ -34,7 +34,7 @@ class MensagemController extends Controller
             ->orWhere('remetente_id', $id)
             ->where('destinatario_id', $user_id)
             ->offset($offset)
-            ->limit(15)
+            ->limit(20)
             ->orderBy('created_at', 'desc')
             ->get()
             ->all();
@@ -55,14 +55,18 @@ class MensagemController extends Controller
     public function pessoal()
     {
         if(Auth::guard('web')->check()) {
-            $mensagens = Mensagem::with('user_destinatario')->whereIn('id', function($query) {
-                $query->selectRaw('min(`id`)')
-                    ->from('mensagens')
-                    ->where('remetente_id', '=', Auth::guard('web')->user()->id)
-                    ->groupBy('destinatario_id');
+            $mensagens = Mensagem::with('user_destinatario')
+                ->where('remetente_id', Auth::guard('web')->user()->id)
+                ->where('created_at', '<', function($q) {
+                    $q->from('mensagens AS m2')
+                      ->select('created_at')
+                      ->whereColumn('m2.destinatario_id', '=', 'mensagens.remetente_id')
+                      ->whereColumn('m2.remetente_id', '=', 'mensagens.destinatario_id');
                 })
-            ->orderBy('created_at', 'desc')
-            ->get();
+                ->select('destinatario_id', 'created_at')
+                ->groupBy('destinatario_id', 'created_at')
+                ->orderBy('created_at', 'desc')
+                ->get();
         }
 
         $section = 'pessoal';
@@ -76,14 +80,18 @@ class MensagemController extends Controller
     public function trabalho()
     {
         if(Auth::guard('web')->check()) {
-            $mensagens = Mensagem::with('user_remetente')->whereIn('id', function($query) {
-                $query->selectRaw('min(id)')
-                    ->from('mensagens')
-                    ->where('destinatario_id', '=', Auth::guard('web')->user()->id)
-                    ->groupBy('remetente_id');
+            $mensagens = Mensagem::with('user_remetente')
+                ->where('destinatario_id', Auth::guard('web')->user()->id)
+                ->where('created_at', '<', function($q) {
+                    $q->from('mensagens AS m2')
+                      ->select('created_at')
+                      ->whereColumn('m2.remetente_id', '=', 'mensagens.destinatario_id')
+                      ->whereColumn('m2.destinatario_id', '=', 'mensagens.remetente_id');
                 })
-            ->orderBy('created_at', 'desc')
-            ->get();
+                ->select('remetente_id', 'created_at')
+                ->groupBy('remetente_id', 'created_at')
+                ->orderBy('created_at', 'desc')
+                ->get();
         }
 
         $section = 'trabalho';
@@ -105,7 +113,7 @@ class MensagemController extends Controller
                 ->where('destinatario_id', $id_chat)
                 ->orWhere('remetente_id', $id_chat)
                 ->where('destinatario_id', $user_id)
-                ->limit(15)
+                ->limit(20)
                 ->orderBy('created_at', 'desc')
                 ->get()
                 ->all();

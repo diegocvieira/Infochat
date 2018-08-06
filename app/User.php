@@ -20,4 +20,9 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\Trabalho');
     }
+
+    public function favorito($id)
+    {
+        return $this->hasMany('App\Favoritar')->where('trabalho_id', $id)->first();
+    }
 }
