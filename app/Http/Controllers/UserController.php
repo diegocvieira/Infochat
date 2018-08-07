@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -11,21 +12,23 @@ class UserController extends Controller
 {
     public function create(Request $request)
     {
-        $dataForm = $request->all();
-
-        $dataForm['password'] = bcrypt($dataForm['password']);
-
-        $validator = Validator::make($request->all(), [
-            'email' => 'unique:users'
-        ]);
+        $validator = Validator::make($request->all(), $this->userCreateRules(), $this->customMessages());
 
         if($validator->fails()) {
-            $return = ['status' => false, 'msg' => 'Este e-mail já está sendo utilizado por outro usuário.'];
+            $return['msg'] = $validator->errors()->first();
+            $return['status'] = false;
         } else {
-            if(User::create($dataForm)) {
+            $usuario = new User;
+
+            $usuario->password = bcrypt($request->password);
+            $usuario->nome = $request->nome;
+            $usuario->email = $request->email;
+
+            if($usuario->save()) {
                 return $this->login($request);
             } else {
-                $return = ['status' => false, 'msg' => 'Ocorreu um erro. Por favor, tente novamente.'];
+                $return['msg'] = 'Ocorreu um erro inesperado. Tente novamente.';
+                $return['status'] = false;
             }
         }
 
@@ -39,9 +42,10 @@ class UserController extends Controller
             $user->online = 1;
             $user->save();
 
-            $return = ['status' => true];
+            $return['status'] = true;
         } else {
-            $return = ['status' => false, 'msg' => 'Não identificamos o e-mail e/ou a senha que você informou.'];
+            $return['status'] = false;
+            $return['msg'] = 'Não identificamos o e-mail e/ou a senha que você informou.';
         }
 
         return json_encode($return);
@@ -57,5 +61,91 @@ class UserController extends Controller
         Auth::logout();
 
         return redirect('/');
+    }
+
+    public function getConfig()
+    {
+        $usuario = User::find(Auth::guard('web')->user()->id);
+
+        return response()->json([
+            'body' => view('admin.usuario-config', compact('usuario'))->render()
+        ]);
+    }
+
+    public function setConfig(Request $request)
+    {
+        $validator = Validator::make($request->all(), $this->userUpdateRules(), $this->customMessages());
+
+         if($validator->fails()) {
+             $return['msg'] = $validator->errors()->first();
+             $return['status'] = false;
+        } else {
+            $usuario = User::find(Auth::guard('web')->user()->id);
+
+            $usuario->nome = $request->nome;
+            $usuario->email = $request->email;
+
+            if($request->password) {
+                $usuario->password = bcrypt($request->password);
+            }
+
+            if(!empty($request->img)) {
+                if($usuario->imagem) {
+                    unlink('uploads/perfil/' . $usuario->imagem);
+                }
+
+                // Move  a imagem para a pasta
+                $file = $request->img;
+                $fileName = date('YmdHis') . microtime(true) . rand(111111111, 999999999) . '.' . $file->getClientOriginalExtension(); // Renomear
+                $file->move('uploads/perfil', $fileName); // Mover para a pasta
+
+                $usuario->imagem = $fileName;
+            }
+
+            if($usuario->save()) {
+                $return['msg'] = 'Informações atualizadas.';
+                $return['status'] = true;
+            } else {
+                $return['msg'] = 'Ocorreu um erro inesperado. Tente novamente.';
+                $return['status'] = false;
+            }
+        }
+
+        return json_encode($return);
+    }
+
+    private function userUpdateRules()
+    {
+        return [
+            'email' => 'required|email|max:65|unique:users,email,' . Auth::guard('web')->user()->id,
+            'nome' => 'required|max:100',
+            'img' => 'image|max:5000',
+            'password' => 'confirmed'
+        ];
+    }
+
+    private function userCreateRules()
+    {
+        return [
+            'email' => 'required|email|max:65|unique:users',
+            'nome' => 'required|max:100',
+            'password' => 'confirmed|min:8'
+        ];
+    }
+
+    private function customMessages()
+    {
+        return [
+            'nome.required' => 'Precisamos saber o seu nome.',
+            'nome.max' => 'Seu nome deve ter menos de 100 caracteres.',
+            'email.max' => 'Seu e-mail deve ter menos de 65 caracteres.',
+            'email.required' => 'Precisamos saber o seu e-mail.',
+            'email.email' => 'Seu endereço de e-mail é inválido.',
+            'email.unique' => 'Este email já está sendo utilizado por outro usuário',
+            'img.image' => 'Imagem inválida',
+            'password.confirmed' => 'As senhas não conferem',
+            'password.min' => 'Sua senha deve ter no mínimo 8 caracteres.',
+            'img.max' => 'A imagem tem que ter no máximo 5mb.'
+        ];
     }
 }

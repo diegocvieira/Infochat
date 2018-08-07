@@ -40,7 +40,7 @@ Route::any('busca/{tipo?}/{palavra_chave?}/{area?}/{tag?}', 'TrabalhoController@
 Route::group(['prefix' => 'mensagem'], function() {
     // Enviar
     Route::post('send', 'MensagemController@send');
-    // Listar
+    // Listar mensagens do chat
     Route::get('list/{id}/{offset}', 'MensagemController@list');
     // Exibir chat
     Route::get('chat/{id}/{tipo}', 'MensagemController@chat')->name('chat');
@@ -72,5 +72,8 @@ Route::group(['prefix' => 'usuario'], function() {
 
     Route::group(['middleware' => 'auth:web'], function() {
         Route::get('logout', 'UserController@logout')->name('usuario-logout');
+
+        Route::get('config', 'UserController@getConfig')->name('get-usuario-config');
+        Route::post('config', 'UserController@setConfig')->name('set-usuario-config');
     });
 });

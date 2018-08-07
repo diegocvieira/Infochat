@@ -175,15 +175,35 @@ class TrabalhoController extends Controller
     {
         $offset = $offset ? $offset : 0;
 
-        $trabalhos = Trabalho::filtroArea($area)
+        $trabalhos = Trabalho::filtroStatus()
+                            ->filtroCidade()
+                            ->filtroArea($area)
                             ->filtroTag($tag)
-                            ->filtroPalavraChave($palavra_chave)
+                            //->filtroPalavraChave($palavra_chave)
                             ->filtroTipo($tipo)
-                            ->filtroOrdem($ordem)
-                            ->filtroUserLogado()
-                            ->offset($offset)
-                            ->limit(20)
-                            ->get();
+                            ->filtroOrdem($ordem);
+
+        if($palavra_chave && $palavra_chave != 'area') {
+            $palavra_chave = str_replace('-', ' ', $palavra_chave);
+
+            // separa cada palavra
+            $palavra_chave_array = explode(' ', $palavra_chave);
+
+            // se houver mais de 2 palavras e a palavra tiver menos de 4 letras ignora na busca
+            foreach($palavra_chave_array as $palavra_cada) {
+                if(count($palavra_chave_array) > 2 && strlen($palavra_cada) < 4) {
+                    continue;
+                }
+
+                $trabalhos = $trabalhos->where('nome', 'LIKE', '%' . $palavra_cada . '%')->orWhereHas('tags', function($q) use($palavra_cada) {
+                    $q->where('tag', 'LIKE', '%' . $palavra_cada . '%');
+                });
+            }
+        }
+
+        $trabalhos = $trabalhos->offset($offset)
+            ->limit(4)
+            ->get();
 
         // Gera a URL
         if(!$palavra_chave && $area) {

@@ -6,6 +6,13 @@ $(document).ready(function() {
         $('.session-flash').fadeOut();
     }, 5000);
 
+    // Scroll custom para funcionar em conteudo carregado dinamicamente
+    function listenForScrollEvent(e) {
+        e.on('scroll', function() {
+            e.trigger('custom-scroll');
+        });
+    }
+
     // Passar imagens do modal nas flechas do teclado
     $('#modal-como-funciona').on('keydown', function(e) {
         var position = parseInt($('#modal-como-funciona').find('.position .active').data('position'));
@@ -280,6 +287,8 @@ $(document).ready(function() {
 
     // Submeter form principal de busca
     $(document).on('submit', '#form-search', function() {
+        $(this).find('#form-search-offset').val('');
+
         $.ajax({
             url: $(this).attr('action'),
             method: 'POST',
@@ -360,9 +369,9 @@ $(document).ready(function() {
 
 
 
-
+    // Abrir modal do perfil do trabalho
     $(document).on('click', '.ver-perfil', function(e) {
-        e.stopPropagation();
+        e.preventDefault();
 
         $.ajax({
             url: '/trabalho/show/' + $(this).data('id'),
@@ -502,49 +511,51 @@ $(document).ready(function() {
     $(document).on('click', '.open-chat', function(e) {
         e.preventDefault();
 
-        $('#form-search-results').find('.result').removeClass('active-trabalho');
+        if($(e.target).attr('class') != 'ver-perfil') {
+            $('#form-search-results').find('.result').removeClass('active-trabalho');
 
-        $(this).addClass('active-trabalho');
+            $(this).addClass('active-trabalho');
 
-        $.ajax({
-            url: '/mensagem/chat/' + $(this).data('id') + '/' + $(this).data('type'),
-            method: 'GET',
-            dataType:'json',
-            success: function(data) {
-                $('.chat').html(data.trabalho);
+            $.ajax({
+                url: '/mensagem/chat/' + $(this).data('id') + '/' + $(this).data('type'),
+                method: 'GET',
+                dataType:'json',
+                success: function(data) {
+                    $('.chat').html(data.trabalho);
 
-                // Scroll to bottom
-                $('.chat').find('.mensagens').scrollTop($('.chat').find('.mensagens')[0].scrollHeight);
+                    // Scroll to bottom
+                    $('.chat').find('.mensagens').scrollTop($('.chat').find('.mensagens')[0].scrollHeight);
 
-                //Scroll custom para funcionar em conteudo carregdao dinamicamente
-                listenForScrollEvent($('.chat .mensagens'));
+                    //Scroll custom para funcionar em conteudo carregdao dinamicamente
+                    listenForScrollEvent($('.chat .mensagens'));
 
-                $('#form-enviar-msg').find('input[type=text]').focus();
-            }
-        });
+                    $('#form-enviar-msg').find('input[type=text]').focus();
+                }
+            });
 
-        if(logged == true) {
-            var interval = null;
+            if(logged == true) {
+                var interval = null;
 
-            // Limpar setinterval anterior
-            clearInterval(interval);
+                // Limpar setinterval anterior
+                clearInterval(interval);
 
-            // Atualizar chat em tempo real
-            interval = setInterval(function() {
-                $.ajax({
-                    url: 'mensagem/list/' + $('.chat').find('#user_id').val() + '/0',
-                    method: 'GET',
-                    dataType:'json',
-                    success: function(data) {
-                        var div = $('.chat').find('.mensagens');
+                // Atualizar chat em tempo real
+                interval = setInterval(function() {
+                    $.ajax({
+                        url: 'mensagem/list/' + $('.chat').find('#user_id').val() + '/0',
+                        method: 'GET',
+                        dataType:'json',
+                        success: function(data) {
+                            var div = $('.chat').find('.mensagens');
 
-                        // Verifica se a ultima mensagem que esta no chat foi a ultima recebida
-                        if(div.find('.recebida:last p').text() != data.last_msg) {
-                            div.html(data.mensagens);
+                            // Verifica se a ultima mensagem que esta no chat foi a ultima recebida
+                            if(div.find('.recebida:last p').text() != data.last_msg) {
+                                div.html(data.mensagens);
+                            }
                         }
-                    }
-                });
-            }, 10000);
+                    });
+                }, 10000);
+            }
         }
     });
 
@@ -615,12 +626,7 @@ $(document).ready(function() {
         }
     });
 
-    // Scroll custom para funcionar em conteudo carregado dinamicamente
-    function listenForScrollEvent(e) {
-        e.on('scroll', function() {
-            e.trigger('custom-scroll');
-        });
-    }
+
 
 
 
@@ -722,14 +728,99 @@ $(document).ready(function() {
                     if(data.status == true) {
                         window.location = '/';
                     } else {
-                        var modal = $('#modal-alert');
-                        modal.find('.modal-body').text(data.msg);
-                        modal.modal('show');
+                        modalAlert(data.msg, 'OK');
                     }
                 }
             });
 
             return false;
+        }
+    });
+
+    ////////////////////////////// MODAL DAS CONFIGURACOES DO USUARIO //////////////////////////////
+
+    $(document).on('click', '#open-usuario-config', function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: $(this).attr('href'),
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                var modal = $('#modal-default');
+                modal.removeAttr('class');
+                modal.addClass('modal fade modal-usuario-config');
+                modal.find('.modal-body').html(data.body);
+                modal.modal('show');
+
+                $('#form-usuario-config').validate({
+                    rules: {
+                        nome: {
+                            required: true,
+                            minlength: 1,
+                            maxlength: 100
+                        },
+                        email: {
+                            required: true,
+                            minlength: 1,
+                            maxlength: 62,
+                            email: true
+                        },
+                        password: {
+                            minlength: 8
+                        },
+                        password_confirmation: {
+                            minlength: 8,
+                            equalTo: "#senha-usuario"
+                        }
+                    },
+                    highlight: function (element, errorClass, validClass) {
+                        $(element).addClass(errorClass).removeClass(validClass);
+                    },
+                    unhighlight: function (element, errorClass, validClass) {
+                        $(element).removeClass(errorClass).addClass(validClass);
+                    },
+                    errorPlacement: function(error, element) {
+                    },
+                    submitHandler: function(form) {
+                        $.ajax({
+                            url: $(form).attr('action'),
+                            method: 'POST',
+                            dataType: 'json',
+                            data: new FormData(form),
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+                                modalAlert(data.msg, 'OK');
+
+                                if(data.status) {
+                                    $('#form-usuario-config').find('input[type=password]').val('');
+                                }
+                            }
+                        });
+
+                        return false;
+                    }
+                });
+            }
+        });
+    });
+
+    // Pre visualizar imagem
+    $(document).on('change', '#form-usuario-config .imagem input[type=file]', function() {
+        var preview = $(this).prev();
+        var reader = new FileReader();
+
+        if($(this)[0].files[0].size > 5100000) {
+            modalAlert('A imagem tem que ter no máximo 5mb.', 'OK');
+        } else {
+            reader.onload = function(e) {
+                preview.removeClass('sem-imagem').attr('src', e.target.result);
+            }
+
+            preview.show();
+            reader.readAsDataURL($(this)[0].files[0]);
         }
     });
 

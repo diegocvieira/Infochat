@@ -29,7 +29,7 @@ class GlobalController extends Controller
             'a_z' => 'a - z'
         ];
 
-        $trabalhos = Trabalho::filtroUserLogado()->limit(20)->get();
+        $trabalhos = Trabalho::filtroStatus()->filtroCidade()->limit(4)->get();
 
         return view('pagina-inicial', compact('filtro_ordem', 'trabalhos'));
     }

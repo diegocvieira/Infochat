@@ -1,10 +1,9 @@
 <?php
+
 namespace App;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Cookie;
-use Auth;
 use App\AvaliarAtendimento;
 use App\Avaliar;
 use DB;
@@ -46,7 +45,7 @@ class Trabalho extends Model
         $nota = $avaliacao->nota;
 
         if(!$nota) {
-            $nota = 5;
+            $nota = 5 . '.0';
         }
 
         return $nota;
@@ -152,32 +151,13 @@ class Trabalho extends Model
         }
     }
 
-    public function scopeFiltroUserLogado($query)
+    public function scopeFiltroCidade($query)
     {
-        if(Auth::guard('web')->check()) {
-            return $query->where('user_id', '!=', Auth::guard('web')->user()->id);
-        }
+        return $query->where('cidade_id', Cookie::get('sessao_cidade_id'));
     }
 
-    protected static function boot()
-	{
-	    parent::boot();
-
-		//static::addGlobalScope('cidade', function(Builder $builder) {
-        	//$builder->where('cidade_id', Cookie::get('sessao_cidade_id'));
-	    //});
-
-        //static::addGlobalScope('ativo', function(Builder $builder) {
-        	//$builder->where('status', 1);
-	    //});
-
-        // Remover o usuario logado das buscas
-        //if(Auth::guard('web')->check()) {
-            //static::addGlobalScope('trabalho_logado', function(Builder $builder) {
-            	//$builder->where('user_id', '!=', Auth::guard('web')->user()->id);
-    	    //});
-        //}
-
-        //ssssssdddddd
-	}
+    public function scopeFiltroStatus($query)
+    {
+        return $query->where('status', 1);
+    }
 }

@@ -57,11 +57,14 @@ class MensagemController extends Controller
         if(Auth::guard('web')->check()) {
             $mensagens = Mensagem::with('user_destinatario')
                 ->where('remetente_id', Auth::guard('web')->user()->id)
-                ->where('created_at', '<', function($q) {
+                ->where('created_at', '<=', function($q) {
                     $q->from('mensagens AS m2')
                       ->select('created_at')
                       ->whereColumn('m2.destinatario_id', '=', 'mensagens.remetente_id')
-                      ->whereColumn('m2.remetente_id', '=', 'mensagens.destinatario_id');
+                      ->whereColumn('m2.remetente_id', '=', 'mensagens.destinatario_id')
+                      ->OrWhereColumn('m2.destinatario_id', '=', 'mensagens.destinatario_id')
+                      ->whereColumn('m2.remetente_id', '=', 'mensagens.remetente_id')
+                      ->limit(1);
                 })
                 ->select('destinatario_id', 'created_at')
                 ->groupBy('destinatario_id', 'created_at')
@@ -82,11 +85,14 @@ class MensagemController extends Controller
         if(Auth::guard('web')->check()) {
             $mensagens = Mensagem::with('user_remetente')
                 ->where('destinatario_id', Auth::guard('web')->user()->id)
-                ->where('created_at', '<', function($q) {
+                ->where('created_at', '<=', function($q) {
                     $q->from('mensagens AS m2')
                       ->select('created_at')
                       ->whereColumn('m2.remetente_id', '=', 'mensagens.destinatario_id')
-                      ->whereColumn('m2.destinatario_id', '=', 'mensagens.remetente_id');
+                      ->whereColumn('m2.destinatario_id', '=', 'mensagens.remetente_id')
+                      ->OrWhereColumn('m2.remetente_id', '=', 'mensagens.remetente_id')
+                      ->whereColumn('m2.destinatario_id', '=', 'mensagens.destinatario_id')
+                      ->limit(1);
                 })
                 ->select('remetente_id', 'created_at')
                 ->groupBy('remetente_id', 'created_at')
