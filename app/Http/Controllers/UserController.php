@@ -7,6 +7,7 @@ use App\User;
 use Validator;
 use Session;
 use Auth;
+use Hash;
 
 class UserController extends Controller
 {
@@ -78,37 +79,64 @@ class UserController extends Controller
 
          if($validator->fails()) {
              $return['msg'] = $validator->errors()->first();
-             $return['status'] = false;
+             $return['status'] = 0;
         } else {
-            $usuario = User::find(Auth::guard('web')->user()->id);
+            if(Hash::check($request->senha_atual, Auth::guard('web')->user()->password)) {
+                $usuario = User::find(Auth::guard('web')->user()->id);
 
-            $usuario->nome = $request->nome;
-            $usuario->email = $request->email;
+                $usuario->nome = $request->nome;
+                $usuario->email = $request->email;
 
-            if($request->password) {
-                $usuario->password = bcrypt($request->password);
-            }
-
-            if(!empty($request->img)) {
-                if($usuario->imagem) {
-                    unlink('uploads/perfil/' . $usuario->imagem);
+                if($request->password) {
+                    $usuario->password = bcrypt($request->password);
                 }
 
-                // Move  a imagem para a pasta
-                $file = $request->img;
-                $fileName = date('YmdHis') . microtime(true) . rand(111111111, 999999999) . '.' . $file->getClientOriginalExtension(); // Renomear
-                $file->move('uploads/perfil', $fileName); // Mover para a pasta
+                if(!empty($request->img)) {
+                    if($usuario->imagem) {
+                        unlink('uploads/perfil/' . $usuario->imagem);
+                    }
 
-                $usuario->imagem = $fileName;
-            }
+                    // Move  a imagem para a pasta
+                    $file = $request->img;
+                    $fileName = date('YmdHis') . microtime(true) . rand(111111111, 999999999) . '.' . $file->getClientOriginalExtension(); // Renomear
+                    $file->move('uploads/perfil', $fileName); // Mover para a pasta
 
-            if($usuario->save()) {
-                $return['msg'] = 'Informações atualizadas.';
-                $return['status'] = true;
+                    $usuario->imagem = $fileName;
+                }
+
+                if($usuario->save()) {
+                    $return['msg'] = 'Informações atualizadas.';
+                    $return['status'] = 1;
+                } else {
+                    $return['msg'] = 'Ocorreu um erro inesperado. Tente novamente.';
+                    $return['status'] = 0;
+                }
             } else {
-                $return['msg'] = 'Ocorreu um erro inesperado. Tente novamente.';
-                $return['status'] = false;
+                $return['msg'] = 'A sua senha atual não confere.';
+                $return['status'] = 2;
             }
+        }
+
+        return json_encode($return);
+    }
+
+    public function excluirConta(Request $request)
+    {
+        if(Hash::check($request->password, Auth::guard('web')->user()->password)) {
+            $usuario = User::find(Auth::guard('web')->user()->id);
+
+            if($usuario->imagem) {
+                unlink('uploads/perfil/' . $usuario->imagem);
+            }
+
+            $usuario->delete();
+
+            Session::flush();
+            Auth::logout();
+
+            $return['status'] = true;
+        } else {
+            $return['status'] = false;
         }
 
         return json_encode($return);

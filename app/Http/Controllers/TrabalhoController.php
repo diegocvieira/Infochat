@@ -290,6 +290,11 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
+        \Mail::send('emails.recuperar-senha', function($q) {
+            $q->from('no-reply@infochat.com', 'infochat');
+            $q->to('diegovc10@hotmail.com')->subject('Teste envio');
+        });
+
         /*$mensagem = Mensagem::selectRaw("CONCAT(FLOOR(sum(diferenca)/60),'h',MOD(sum(diferenca),60),'m') as tempo")
     ->whereIn('id', function($query) {
      $query->selectRaw('TIMESTAMPDIFF(MINUTE, m1.created_at, min(m2.created_at)) as diferenca')

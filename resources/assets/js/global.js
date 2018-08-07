@@ -57,7 +57,7 @@ $(document).ready(function() {
         modal.find('.modal-footer .btn2').remove();
 
         modal.find('.modal-body').html(body);
-        modal.find('.modal-footer .btn').text(btn);
+        modal.find('.modal-footer .btn').removeClass('btn-confirmar').text(btn);
         modal.modal('show');
 
         $('.modal-backdrop:last').css('z-index', '1080');
@@ -739,6 +739,132 @@ $(document).ready(function() {
 
     ////////////////////////////// MODAL DAS CONFIGURACOES DO USUARIO //////////////////////////////
 
+    $(document).on('click', '#excluir-conta', function(e) {
+        e.preventDefault();
+
+        modalAlert("Tem certeza que deseja deletar sua conta?<br>Você perderá todos os dados do seu perfil pessoal e também do seu perfil de trabalho.<input type='password' name='senha_atual' placeholder='digite aqui a sua senha atual' />", 'Deletar');
+
+        var modal = $('#modal-alert');
+
+        modal.find('.btn').addClass('btn-confirmar').css({
+            'background-color' : 'transparent',
+            'border' : '1px solid rgb(122, 162, 244)',
+            'color' : 'rgb(122, 162, 244)'
+        });
+        modal.find('.modal-footer').prepend("<button type='button' class='btn btn-default btn2' data-dismiss='modal'>Voltar</button>");
+
+        modal.find('.modal-footer .btn-confirmar').unbind().on('click', function() {
+            $.ajax({
+                url: 'usuario/excluir-conta',
+                method: 'POST',
+                dataType: 'json',
+                data: 'password=' + modal.find('input[name=senha_atual]').val(),
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (data) {
+                    if(data.status) {
+                        window.location = '/';
+                    } else {
+                        modal.find('.modal-footer .senha-invalida').remove();
+                        modal.find('.modal-footer').prepend("<span class='senha-invalida' style='font-size: 14.5px; color: rgb(240, 108, 108); margin-right: 25px;'>Senha inválida</span>");
+                    }
+                }
+            });
+
+            return false;
+        });
+    });
+
+
+    $.ajax({
+        url: '/usuario/config',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            var modal = $('#modal-default');
+            modal.removeAttr('class');
+            modal.addClass('modal fade modal-usuario-config');
+            modal.find('.modal-body').html(data.body);
+            modal.modal('show');
+
+            $('#form-usuario-config').validate({
+                rules: {
+                    nome: {
+                        required: true,
+                        minlength: 1,
+                        maxlength: 100
+                    },
+                    email: {
+                        required: true,
+                        minlength: 1,
+                        maxlength: 62,
+                        email: true
+                    },
+                    password: {
+                        minlength: 8
+                    },
+                    password_confirmation: {
+                        minlength: 8,
+                        equalTo: "#senha-usuario"
+                    }
+                },
+                highlight: function (element, errorClass, validClass) {
+                    $(element).addClass(errorClass).removeClass(validClass);
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass(errorClass).addClass(validClass);
+                },
+                errorPlacement: function(error, element) {
+                },
+                submitHandler: function(form) {
+                    var modal = $('#modal-alert');
+
+                    modalAlert("Confirme sua senha atual.<input type='password' name='senha_atual' placeholder='digite aqui' />", 'Enviar');
+
+                    modal.find('.btn').addClass('btn-confirmar');
+
+                    modal.find('.modal-footer .btn-confirmar').unbind().on('click', function() {
+                        $('#form-usuario-config').find('input[name=senha_atual]').val(modal.find('input[name=senha_atual]').val());
+
+                        $.ajax({
+                            url: $(form).attr('action'),
+                            method: 'POST',
+                            dataType: 'json',
+                            data: new FormData(form),
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+                                modal.find('.modal-footer .senha-invalida').remove();
+
+                                if(data.status == '0' || data.status == '1') {
+                                    modal.find('.modal-body').html(data.msg);
+                                    modal.find('.modal-footer .btn-confirmar').removeClass('btn-confirmar').text('OK');
+
+                                    modal.find('.modal-footer .btn').unbind().on('click', function() {
+                                        return true;
+                                    });
+                                }
+
+                                if(data.status == '1') {
+                                    $('#form-usuario-config').find('input[type=password]').val('');
+                                }
+
+                                if(data.status == '2') {
+                                    modal.find('.modal-footer').prepend("<span class='senha-invalida' style='font-size: 14.5px; color: rgb(240, 108, 108); margin-right: 25px;'>Senha inválida</span>");
+                                }
+                            }
+                        });
+
+                        return false;
+                    });
+                }
+            });
+        }
+    });
+
+
     $(document).on('click', '#open-usuario-config', function(e) {
         e.preventDefault();
 
@@ -1080,7 +1206,7 @@ $(document).ready(function() {
     $(document).on('click', '.switch', function(e) {
         e.preventDefault();
 
-        var modal = $('#modal-alert')
+        var modal = $('#modal-alert'),
             input = $(this).find('input');
 
         modal.find('.btn').addClass('btn-confirmar');

@@ -75,5 +75,7 @@ Route::group(['prefix' => 'usuario'], function() {
 
         Route::get('config', 'UserController@getConfig')->name('get-usuario-config');
         Route::post('config', 'UserController@setConfig')->name('set-usuario-config');
+
+        Route::post('excluir-conta', 'UserController@excluirConta');
     });
 });

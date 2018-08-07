@@ -1,4 +1,6 @@
 {!! Form::model($usuario, ['method' => 'post', 'route' => 'set-usuario-config', 'id' => 'form-usuario-config', 'files' => 'true']) !!}
+    {!! Form::hidden('senha_atual') !!}
+
     <div class="row">
         <div class="imagem">
             @if($usuario->imagem)
@@ -32,6 +34,6 @@
     </div>
 
     <div class="row text-center">
-        <a href="#" id="deletar-conta">Deletar conta</a>
+        <a href="#" id="excluir-conta">Deletar conta</a>
     </div>
 {!! Form::close() !!}
