@@ -292,7 +292,7 @@ class TrabalhoController extends Controller
     {
         \Mail::send('emails.recuperar-senha', function($q) {
             $q->from('no-reply@infochat.com', 'infochat');
-            $q->to('diegovc10@hotmail.com')->subject('Teste envio');
+            $q->to(['diegovc10@hotmail.com'])->subject('Teste envio');
         });
 
         /*$mensagem = Mensagem::selectRaw("CONCAT(FLOOR(sum(diferenca)/60),'h',MOD(sum(diferenca),60),'m') as tempo")
