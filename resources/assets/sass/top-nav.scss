@@ -5,7 +5,7 @@
 
     #logo-infochat {
         width: 170px;
-        margin: 15px 0 0 10px;
+        margin: 15px 0 0 20px;
     }
 
     .col-xs-3, .col-xs-2, .col-xs-7 {
@@ -87,7 +87,7 @@
             width: 200px;
             left: auto;
             height: auto;
-            padding: 10px 0;
+            padding: 10px 0 0 0;
             top: 60px;
 
             li {
@@ -105,7 +105,6 @@
                     background-size: 20px;
                     background-repeat: no-repeat;
                     background-position: 7%;
-                    font-variant: normal;
                     line-height: normal;
 
                     &.icon-conta {
@@ -118,6 +117,34 @@
 
                     &.icon-logout {
                         background-image: url('../img/icon-logout.png');
+                    }
+                }
+
+                &.termos {
+                    border-top: 1px solid rgb(240, 240, 240);
+                    text-align: center;
+                    margin-top: 7px;
+
+                    a {
+                        font-size: 10.8px;
+                        color: rgb(150, 150, 150);
+                        width: auto;
+                        padding: 8px 0;
+                        clear: inherit;
+
+                        &:first-child {
+                            margin-left: 15px;
+                        }
+
+                        &:hover, &:active {
+                            background-color: transparent;
+                        }
+                    }
+
+                    span {
+                        float: left;
+                        margin: 6px 4px 0 4px;
+                        color: rgb(150, 150, 150);
                     }
                 }
             }

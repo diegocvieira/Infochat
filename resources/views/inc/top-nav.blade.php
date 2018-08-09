@@ -29,11 +29,25 @@
                         <a href="#" class="open-nav" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ strstr(Auth::guard('web')->user()->nome, ' ', true) }}</a>
 
                         <ul class="dropdown-menu">
-                            <li><a href="{{ action('TrabalhoController@getConfig') }}" class="icon-perfil-trabalho" id="open-trabalho-config">Perfil de trabalho</a></li>
+                            <li>
+                                <a href="{{ action('TrabalhoController@getConfig') }}" class="icon-perfil-trabalho" id="open-trabalho-config">Perfil de trabalho</a>
+                            </li>
 
-                            <li><a href="{{ route('get-usuario-config') }}" id="open-usuario-config" class="icon-conta">Configurações</a></li>
+                            <li>
+                                <a href="{{ route('get-usuario-config') }}" id="open-usuario-config" class="icon-conta">Configurações</a>
+                            </li>
 
-                            <li><a href="{{ route('usuario-logout') }}" class="icon-logout">Sair :(</a></li>
+                            <li>
+                                <a href="{{ route('usuario-logout') }}" class="icon-logout">Sair :(</a>
+                            </li>
+
+                            <li class="termos">
+                                <a href="#" id="open-contato">Contato</a>
+                                <span>-</span>
+                                <a href="{{ route('termos-uso') }}">Termos</a>
+                                <span>-</span>
+                                <a href="{{ route('termos-privacidade') }}">Privacidade</a>
+                            </li>
                         </ul>
                     </li>
                 @else

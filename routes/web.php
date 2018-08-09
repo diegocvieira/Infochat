@@ -37,6 +37,15 @@ Route::post('trabalhos/busca', 'TrabalhoController@formBusca');
 Route::any('busca/{tipo?}/{palavra_chave?}/{area?}/{tag?}', 'TrabalhoController@busca');
 
 
+
+Route::get('termos/uso', function() {
+    return view('termos-uso');
+})->name('termos-uso');
+Route::get('termos/privacidade', function() {
+    return view('termos-privacidade');
+})->name('termos-privacidade');
+
+
 Route::group(['prefix' => 'mensagem'], function() {
     // Enviar
     Route::post('send', 'MensagemController@send');

@@ -1,3 +1,7 @@
+<?php
+    $top_nav = true;
+?>
+
 @extends('base')
 
 @section('content')
