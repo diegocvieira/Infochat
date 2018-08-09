@@ -16,7 +16,6 @@ mix.js('resources/assets/js/global.js', 'public/js')
     .copyDirectory('resources/assets/img', 'public/img')
     .copyDirectory('resources/assets/fonts', 'public/fonts');
 
-
 if(mix.inProduction()) {
-    mix.version();
+    mix.version(['public/js/global.js', 'public/css/global.css']);
 }

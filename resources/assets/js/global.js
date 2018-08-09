@@ -50,6 +50,12 @@ $(document).ready(function() {
         position == 1 ? modal.find('.prev').hide() : modal.find('.prev').show();
     });
 
+    $(document).on('click', '#open-contato', function(e) {
+        e.preventDefault();
+
+        modalAlert("Para entrar em contato conosco envie um e-mail para <a href='mailto:contato@infochat.com.br'>contato@infochat.com.br</a>", 'OK');
+    });
+
     // Modal de alertas
     function modalAlert(body, btn) {
         var modal = $('#modal-alert');
@@ -86,7 +92,7 @@ $(document).ready(function() {
 
     ////////////////////////////// ASIDE (CATEGORIAS E CIDADE) //////////////////////////////
 
-    // Exibir categorias e subscategorias e pesquisar trabalhos ao seleciona-las
+    // Exibir categorias e subcategorias e pesquisar trabalhos ao seleciona-las
     $(document).on('click', '#categorias .cat-search', function(e) {
         e.preventDefault();
 
@@ -112,9 +118,11 @@ $(document).ready(function() {
                         });
                     }
 
-                    $this.hasClass('close-area') ? area.show() : area.not($this.parent()).hide();
+                    if(data.categorias.length) {
+                        $this.hasClass('close-area') ? area.show() : area.not($this.parent()).hide();
 
-                    $this.toggleClass('close-area');
+                        $this.toggleClass('close-area');
+                    }
                 }
             });
 
@@ -145,9 +153,7 @@ $(document).ready(function() {
             $('#form-search-tag').val($(this).data('search'));
         }
 
-        //if(submit) {
-            $('#form-search').submit();
-        //}
+        $('#form-search').submit();
     });
 
     // Exibir areas e pesquisar trabalhos ao selecionar um novo tipo
@@ -155,24 +161,31 @@ $(document).ready(function() {
         e.preventDefault();
 
         $('#categorias').find('.tipo').removeClass('active');
-
         $(this).addClass('active');
 
-        $('#form-search-tipo').val($(this).data('search'));
-        $('#form-search').submit();
+        var tipo = $(this).data('search');
 
-        $('#categorias').find('.area').remove();
+        if(!logged && tipo == 'favoritos') {
+            modalAlert('Faça login para acessar seus favoritos.', 'OK');
+        } else {
+            $('#form-search-tipo').val($(this).data('search'));
+            $('#form-search').submit();
+        }
 
-        $.ajax({
-            url: 'aside/areas/' + $(this).data('search'),
-            method: 'GET',
-            dataType:'json',
-            success: function(data) {
-                $(data.areas).each(function(index, element) {
-                    $('#categorias').append("<li><a href='#' class='area cat-search' data-search='" + element.slug + "' style='background-image: url(img/categorias/" + element.slug + ".png);'>" + element.titulo + "</a></li>")
-                });
-            }
-        });
+        if(tipo != 'favoritos') {
+            $('#categorias').find('.area').remove();
+
+            $.ajax({
+                url: 'aside/areas/' + $(this).data('search'),
+                method: 'GET',
+                dataType:'json',
+                success: function(data) {
+                    $(data.areas).each(function(index, element) {
+                        $('#categorias').append("<li><a href='#' class='area cat-search' data-search='" + element.slug + "' style='background-image: url(img/categorias/" + element.slug + ".png);'>" + element.titulo + "</a></li>")
+                    });
+                }
+            });
+        }
     });
 
     // Exibir form de busca por cidades
@@ -767,7 +780,7 @@ $(document).ready(function() {
                         window.location = '/';
                     } else {
                         modal.find('.modal-footer .senha-invalida').remove();
-                        modal.find('.modal-footer').prepend("<span class='senha-invalida' style='font-size: 14.5px; color: rgb(240, 108, 108); margin-right: 25px;'>Senha inválida</span>");
+                        modal.find('.modal-footer').prepend("<span class='senha-invalida'>Senha inválida</span>");
                     }
                 }
             });
@@ -775,95 +788,6 @@ $(document).ready(function() {
             return false;
         });
     });
-
-
-    $.ajax({
-        url: '/usuario/config',
-        method: 'GET',
-        dataType: 'json',
-        success: function (data) {
-            var modal = $('#modal-default');
-            modal.removeAttr('class');
-            modal.addClass('modal fade modal-usuario-config');
-            modal.find('.modal-body').html(data.body);
-            modal.modal('show');
-
-            $('#form-usuario-config').validate({
-                rules: {
-                    nome: {
-                        required: true,
-                        minlength: 1,
-                        maxlength: 100
-                    },
-                    email: {
-                        required: true,
-                        minlength: 1,
-                        maxlength: 62,
-                        email: true
-                    },
-                    password: {
-                        minlength: 8
-                    },
-                    password_confirmation: {
-                        minlength: 8,
-                        equalTo: "#senha-usuario"
-                    }
-                },
-                highlight: function (element, errorClass, validClass) {
-                    $(element).addClass(errorClass).removeClass(validClass);
-                },
-                unhighlight: function (element, errorClass, validClass) {
-                    $(element).removeClass(errorClass).addClass(validClass);
-                },
-                errorPlacement: function(error, element) {
-                },
-                submitHandler: function(form) {
-                    var modal = $('#modal-alert');
-
-                    modalAlert("Confirme sua senha atual.<input type='password' name='senha_atual' placeholder='digite aqui' />", 'Enviar');
-
-                    modal.find('.btn').addClass('btn-confirmar');
-
-                    modal.find('.modal-footer .btn-confirmar').unbind().on('click', function() {
-                        $('#form-usuario-config').find('input[name=senha_atual]').val(modal.find('input[name=senha_atual]').val());
-
-                        $.ajax({
-                            url: $(form).attr('action'),
-                            method: 'POST',
-                            dataType: 'json',
-                            data: new FormData(form),
-                            cache: false,
-                            contentType: false,
-                            processData: false,
-                            success: function (data) {
-                                modal.find('.modal-footer .senha-invalida').remove();
-
-                                if(data.status == '0' || data.status == '1') {
-                                    modal.find('.modal-body').html(data.msg);
-                                    modal.find('.modal-footer .btn-confirmar').removeClass('btn-confirmar').text('OK');
-
-                                    modal.find('.modal-footer .btn').unbind().on('click', function() {
-                                        return true;
-                                    });
-                                }
-
-                                if(data.status == '1') {
-                                    $('#form-usuario-config').find('input[type=password]').val('');
-                                }
-
-                                if(data.status == '2') {
-                                    modal.find('.modal-footer').prepend("<span class='senha-invalida' style='font-size: 14.5px; color: rgb(240, 108, 108); margin-right: 25px;'>Senha inválida</span>");
-                                }
-                            }
-                        });
-
-                        return false;
-                    });
-                }
-            });
-        }
-    });
-
 
     $(document).on('click', '#open-usuario-config', function(e) {
         e.preventDefault();
@@ -909,24 +833,47 @@ $(document).ready(function() {
                     errorPlacement: function(error, element) {
                     },
                     submitHandler: function(form) {
-                        $.ajax({
-                            url: $(form).attr('action'),
-                            method: 'POST',
-                            dataType: 'json',
-                            data: new FormData(form),
-                            cache: false,
-                            contentType: false,
-                            processData: false,
-                            success: function (data) {
-                                modalAlert(data.msg, 'OK');
+                        var modal = $('#modal-alert');
 
-                                if(data.status) {
-                                    $('#form-usuario-config').find('input[type=password]').val('');
+                        modalAlert("Confirme sua senha atual.<input type='password' name='senha_atual' placeholder='digite aqui' />", 'Enviar');
+
+                        modal.find('.btn').addClass('btn-confirmar');
+
+                        modal.find('.modal-footer .btn-confirmar').unbind().on('click', function() {
+                            $('#form-usuario-config').find('input[name=senha_atual]').val(modal.find('input[name=senha_atual]').val());
+
+                            $.ajax({
+                                url: $(form).attr('action'),
+                                method: 'POST',
+                                dataType: 'json',
+                                data: new FormData(form),
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                success: function (data) {
+                                    modal.find('.modal-footer .senha-invalida').remove();
+
+                                    if(data.status == '0' || data.status == '1') {
+                                        modal.find('.modal-body').html(data.msg);
+                                        modal.find('.modal-footer .btn-confirmar').removeClass('btn-confirmar').text('OK');
+
+                                        modal.find('.modal-footer .btn').unbind().on('click', function() {
+                                            return true;
+                                        });
+                                    }
+
+                                    if(data.status == '1') {
+                                        $('#form-usuario-config').find('input[type=password]').val('');
+                                    }
+
+                                    if(data.status == '2') {
+                                        modal.find('.modal-footer').prepend("<span class='senha-invalida'>Senha inválida</span>");
+                                    }
                                 }
-                            }
-                        });
+                            });
 
-                        return false;
+                            return false;
+                        });
                     }
                 });
             }
@@ -1209,8 +1156,6 @@ $(document).ready(function() {
         var modal = $('#modal-alert'),
             input = $(this).find('input');
 
-        modal.find('.btn').addClass('btn-confirmar');
-
         if(input.is(':checked')) {
             modalAlert("Seu perfil de trabalho ficará oculto no infochat e os usuários " + '<b>não</b>' + " poderão entrar em contato com você. As conversas abertas seguirão normalmente!", 'Desativar');
 
@@ -1218,6 +1163,8 @@ $(document).ready(function() {
         } else {
             modalAlert('Seu perfil de trabalho ficará visivel no infochat e os usuários poderão entrar em contato com você.', 'Ativar');
         }
+
+        modal.find('.btn').addClass('btn-confirmar');
 
         modal.find('.modal-footer .btn-confirmar').unbind().on('click',function(e) {
             var status = input.is(':checked') ? '0' : '1';

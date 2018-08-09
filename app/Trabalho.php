@@ -7,6 +7,7 @@ use Cookie;
 use App\AvaliarAtendimento;
 use App\Avaliar;
 use DB;
+use Auth;
 
 class Trabalho extends Model
 {
@@ -54,6 +55,11 @@ class Trabalho extends Model
     public function user()
     {
         return $this->belongsTo('App\User');
+    }
+
+    public function favoritos()
+    {
+        return $this->hasMany('App\Favoritar');
     }
 
     public function telefones()
@@ -137,15 +143,13 @@ class Trabalho extends Model
     public function scopeFiltroTipo($query, $tipo)
     {
         if($tipo == 'profissionais') {
-            $tipo = 1;
+            return $query->where('tipo', 1);
         } else if($tipo == 'estabelecimentos') {
-            $tipo = 2;
-        } else {
-            $tipo = '';
-        }
-
-        if($tipo) {
-            return $query->where('tipo', $tipo);
+            return $query->where('tipo', 2);
+        } else if($tipo == 'favoritos' && Auth::guard('web')->check()) {
+            return $query->whereHas('favoritos', function($q) {
+                $q->where('user_id', Auth::guard('web')->user()->id);
+            });
         } else {
             return $query->where('tipo', 1)->orWhere('tipo', 2);
         }

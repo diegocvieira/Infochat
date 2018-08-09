@@ -13,6 +13,7 @@ use App\Mensagem;
 use DB;
 use App\Avaliar;
 use App\Favoritar;
+use Cookie;
 
 class TrabalhoController extends Controller
 {
@@ -173,17 +174,21 @@ class TrabalhoController extends Controller
 
     public function busca($tipo = null, $palavra_chave = null, $area = null, $tag = null, $ordem = null, $offset = null)
     {
+        $palavra_chave = urldecode($palavra_chave);
+
         $offset = $offset ? $offset : 0;
 
         $trabalhos = Trabalho::filtroStatus()
                             ->filtroCidade()
                             ->filtroArea($area)
                             ->filtroTag($tag)
-                            //->filtroPalavraChave($palavra_chave)
                             ->filtroTipo($tipo)
                             ->filtroOrdem($ordem);
 
         if($palavra_chave && $palavra_chave != 'area') {
+            $header_title = $palavra_chave .' em ' . Cookie::get('sessao_cidade_title') . ' - ' . Cookie::get('sessao_estado_letter') . ' | Infochat';
+            $header_desc = 'Clique para ver ' . $palavra_chave . ' em ' . Cookie::get('sessao_cidade_title') . ' - ' . Cookie::get('sessao_estado_letter') . ' no site infochat.com.br';
+
             $palavra_chave = str_replace('-', ' ', $palavra_chave);
 
             // separa cada palavra
@@ -227,7 +232,7 @@ class TrabalhoController extends Controller
 
         // Detecta se foi acessado por url ou ajax
         if($_SERVER['REQUEST_METHOD'] == 'GET') {
-            return view('pagina-inicial', compact('trabalhos', 'palavra_chave', 'tipo', 'area', 'tag', 'filtro_ordem'));
+            return view('pagina-inicial', compact('trabalhos', 'palavra_chave', 'tipo', 'area', 'tag', 'filtro_ordem', 'header_title', 'header_desc'));
         } else {
             return response()->json([
                 'trabalhos' => view('inc.list-resultados', compact('trabalhos', 'offset'))->render(),
@@ -238,7 +243,9 @@ class TrabalhoController extends Controller
 
     public function formBusca(Request $request)
     {
-        return $this->busca($request->tipo, $request->palavra_chave, $request->area, $request->tag, $request->ordem, $request->offset);
+        $palavra_chave = urlencode($request->palavra_chave);
+
+        return $this->busca($request->tipo, $palavra_chave, $request->area, $request->tag, $request->ordem, $request->offset);
     }
 
     public function show($id)
@@ -290,10 +297,17 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
-        \Mail::send('emails.recuperar-senha', ['teste' => 'teste'], function($q) {
+        $trabalhos = Trabalho::whereHas('favoritos', function($q) {
+            $q->where('user_id', Auth::guard('web')->user()->id);
+        })
+            ->get();
+
+        return $trabalhos;
+
+        /*\Mail::send('emails.recuperar-senha', ['teste' => 'teste'], function($q) {
             $q->from('no-reply@infochat.com', 'infochat');
             $q->to('diegovc10@hotmail.com')->subject('Teste envio');
-        });
+        });*/
 
         /*$mensagem = Mensagem::selectRaw("CONCAT(FLOOR(sum(diferenca)/60),'h',MOD(sum(diferenca),60),'m') as tempo")
     ->whereIn('id', function($query) {

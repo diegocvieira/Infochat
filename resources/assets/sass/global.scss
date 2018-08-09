@@ -201,6 +201,12 @@ a {
                 background-color: rgb(122, 162, 244);
 			}
 		}
+
+        .senha-invalida {
+            font-size: 14.5px;
+            color: rgb(240, 108, 108);
+            margin-right: 25px;
+        }
 	}
 }
 
@@ -274,3 +280,4 @@ a {
 @import 'modal-usuario-config.scss';
 @import 'resultados.scss';
 @import 'chat.scss';
+@import 'termos.scss';
