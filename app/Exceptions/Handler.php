@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Mail;
 
 class Handler extends ExceptionHandler
 {
@@ -34,6 +35,17 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+        if($exception instanceof Exception) {
+            $error['message'] = $e->getMessage();
+            $error['file'] = $e->getFile();
+            $error['line'] = $e->getLine();
+
+            // send email
+            Mail::send('emails.phperror', ['error' => $error], function($message) {
+                $message->to('diegovc10@hotmail.com')->subject('GENERAL ERROR: - ' . date('d/m/Y').' ' . date('H:i').'h');
+            });
+        }
+
         parent::report($exception);
     }
 
