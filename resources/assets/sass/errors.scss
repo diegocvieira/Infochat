@@ -1,0 +1,28 @@
+.pagina-error {
+    background-color: #f0f0f0;
+    text-align: center;
+
+    .container {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    h3 {
+        font-size: 25px;
+        color: rgb(35, 31, 32);
+        font-weight: 700;
+        margin-top: 40px;
+    }
+
+    p {
+        font-size: 18.7px;
+        color: rgb(150, 150, 150);
+        margin-bottom: 40px;
+    }
+
+    a {
+        font-size: 16.6px;
+        color: rgb(122, 162, 244);
+    }
+}
