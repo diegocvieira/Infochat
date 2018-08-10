@@ -34,7 +34,7 @@ class RecuperarSenhaController extends Controller
 
             $url = url('/') . '/recuperar-senha/check/' . $token;
 
-            Mail::send('emails.recuperar-senha', ['url' => $url], function($q) {
+            Mail::send('emails.recuperar-senha', ['url' => $url], function($q) use($email) {
                 $q->from('no-reply@infochat.com.br', 'Infochat');
                 $q->to($email)->subject('Recuperar senha');
             });
