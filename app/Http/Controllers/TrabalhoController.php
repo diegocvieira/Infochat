@@ -174,12 +174,15 @@ class TrabalhoController extends Controller
 
     public function formBusca(Request $request)
     {
-        return $this->busca($request->tipo, $request->palavra_chave, $request->area, $request->tag, $request->ordem, $request->offset);
+        $palavra_chave = urlencode($request->palavra_chave);
+
+        return $this->busca($request->tipo, $palavra_chave, $request->area, $request->tag, $request->ordem, $request->offset);
     }
 
     public function busca($tipo = null, $palavra_chave = null, $area = null, $tag = null, $ordem = null, $offset = null)
     {
         $palavra_chave = urldecode($palavra_chave);
+        $tag = urldecode($tag);
 
         $offset = $offset ? $offset : 0;
 
@@ -224,7 +227,7 @@ class TrabalhoController extends Controller
             $url =  $url . '/' . urlencode($palavra_chave);
         }
         if($area) {
-            $url = $url . '/' . $area . '/' . $tag;
+            $url = $url . '/' . $area . '/' . urlencode($tag);
         }
 
         if(count($trabalhos) > 0) {
@@ -296,6 +299,8 @@ class TrabalhoController extends Controller
     public function teste()
     {
         echo $teste;
+
+
 
         /*\Mail::send('emails.recuperar-senha', ['teste' => 'teste'], function($q) {
             $q->from('no-reply@infochat.com', 'infochat');

@@ -96,9 +96,13 @@ $(document).ready(function() {
     $(document).on('click', '#categorias .cat-search', function(e) {
         e.preventDefault();
 
+        $('#form-search-palavra-chave').val('');
+
         var next = $(this).parent().next(),
             submit = $(this).hasClass('close-area') ? false : true,
             $this = $(this);
+
+        $('#form-search-palavra-chave').attr('placeholder', 'Pesquise em ' + $this.text());
 
         if($(this).hasClass('area')) {
             var area = $('.aside-categorias').find('.area').parent();
@@ -122,6 +126,9 @@ $(document).ready(function() {
                         $this.hasClass('close-area') ? area.show() : area.not($this.parent()).hide();
 
                         $this.toggleClass('close-area');
+                    } else {
+                        $('#categorias .area').removeClass('active');
+                        $this.addClass('active');
                     }
                 }
             });
@@ -142,11 +149,17 @@ $(document).ready(function() {
                         });
 
                         $('.aside-categorias').find('.subs').not($this.parent().next()).hide();
+
+                        if(!data.subcategorias.length) {
+                            $('#categorias .categoria').removeClass('active');
+                            $this.addClass('active');
+                        }
                     }
                 });
             } else {
                 $('.aside-categorias').find('.subs a').removeClass('active');
 
+                $('#categorias .subcategoria').removeClass('active');
                 $(this).addClass('active');
             }
 
@@ -159,6 +172,8 @@ $(document).ready(function() {
     // Exibir areas e pesquisar trabalhos ao selecionar um novo tipo
     $('#categorias').on('click', '.tipo', function(e) {
         e.preventDefault();
+
+        $('#form-search-palavra-chave').val('');
 
         $('#categorias').find('.tipo').removeClass('active');
         $(this).addClass('active');
