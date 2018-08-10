@@ -88,3 +88,9 @@ Route::group(['prefix' => 'usuario'], function() {
         Route::post('excluir-conta', 'UserController@excluirConta');
     });
 });
+
+Route::group(['prefix' => 'recuperar-senha'], function() {
+    Route::post('solicitar', 'RecuperarSenhaController@solicitar');
+    Route::get('check/{token}', 'RecuperarSenhaController@check');
+    Route::post('alterar', 'RecuperarSenhaController@alterar');
+});

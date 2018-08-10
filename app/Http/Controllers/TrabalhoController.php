@@ -172,6 +172,11 @@ class TrabalhoController extends Controller
         }
     }
 
+    public function formBusca(Request $request)
+    {
+        return $this->busca($request->tipo, $request->palavra_chave, $request->area, $request->tag, $request->ordem, $request->offset);
+    }
+
     public function busca($tipo = null, $palavra_chave = null, $area = null, $tag = null, $ordem = null, $offset = null)
     {
         $palavra_chave = urldecode($palavra_chave);
@@ -216,7 +221,7 @@ class TrabalhoController extends Controller
         }
         $url = '/busca/' . $tipo;
         if($area || $palavra_chave) {
-            $url =  $url . '/' . $palavra_chave;
+            $url =  $url . '/' . urlencode($palavra_chave);
         }
         if($area) {
             $url = $url . '/' . $area . '/' . $tag;
@@ -239,13 +244,6 @@ class TrabalhoController extends Controller
                 'url' => $url
             ]);
         }
-    }
-
-    public function formBusca(Request $request)
-    {
-        $palavra_chave = urlencode($request->palavra_chave);
-
-        return $this->busca($request->tipo, $palavra_chave, $request->area, $request->tag, $request->ordem, $request->offset);
     }
 
     public function show($id)
@@ -297,12 +295,7 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
-        $trabalhos = Trabalho::whereHas('favoritos', function($q) {
-            $q->where('user_id', Auth::guard('web')->user()->id);
-        })
-            ->get();
-
-        return $trabalhos;
+        return url('/') . 'recuperar-senha/check/';
 
         /*\Mail::send('emails.recuperar-senha', ['teste' => 'teste'], function($q) {
             $q->from('no-reply@infochat.com', 'infochat');

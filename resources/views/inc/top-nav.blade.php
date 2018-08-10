@@ -44,9 +44,9 @@
                             <li class="termos">
                                 <a href="#" id="open-contato">Contato</a>
                                 <span>-</span>
-                                <a href="{{ route('termos-uso') }}">Termos</a>
+                                <a href="{{ route('termos-uso') }}" target="_blank">Termos</a>
                                 <span>-</span>
-                                <a href="{{ route('termos-privacidade') }}">Privacidade</a>
+                                <a href="{{ route('termos-privacidade') }}" target="_blank">Privacidade</a>
                             </li>
                         </ul>
                     </li>

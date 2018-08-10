@@ -202,7 +202,7 @@ a {
 			}
 		}
 
-        .senha-invalida {
+        .invalid-field {
             font-size: 14.5px;
             color: rgb(240, 108, 108);
             margin-right: 25px;
@@ -281,3 +281,4 @@ a {
 @import 'resultados.scss';
 @import 'chat.scss';
 @import 'termos.scss';
+@import 'recuperar-senha.scss';

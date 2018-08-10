@@ -680,6 +680,44 @@ $(document).ready(function() {
 
     ////////////////////////////// MODAL LOGIN E CADASTRO //////////////////////////////
 
+    $(document).on('click', '#recuperar-senha', function(e) {
+        e.preventDefault();
+
+        modalAlert("Informe o e-mail cadastrado.<input type='email' name='email' placeholder='digite aqui' />", 'Enviar');
+
+        var modal = $('#modal-alert');
+
+        modal.find('.modal-footer .btn').addClass('btn-confirmar');
+
+        modal.find('.modal-footer .btn-confirmar').unbind().on('click', function() {
+            $.ajax({
+                url: '/recuperar-senha/solicitar',
+                method: 'POST',
+                dataType: 'json',
+                data: 'email=' + modal.find('input[name=email]').val(),
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (data) {
+                    modal.find('.modal-footer .invalid-field').remove();
+
+                    if(data.status) {
+                        modal.find('.modal-body').html('Clique no link que enviamos para o seu e-mail para recuperar a sua conta.');
+                        modal.find('.modal-footer .btn').text('OK').removeClass('btn-confirmar');
+
+                        modal.find('.modal-footer .btn').unbind().on('click', function() {
+                            return true;
+                        });
+                    } else {
+                        modal.find('.modal-footer').prepend("<span class='invalid-field'>E-mail não cadastrado</span>");
+                    }
+                }
+            });
+
+            return false;
+        });
+    });
+
     $('#form-login-usuario').on('submit', function(e) {
         e.preventDefault();
 
@@ -779,8 +817,8 @@ $(document).ready(function() {
                     if(data.status) {
                         window.location = '/';
                     } else {
-                        modal.find('.modal-footer .senha-invalida').remove();
-                        modal.find('.modal-footer').prepend("<span class='senha-invalida'>Senha inválida</span>");
+                        modal.find('.modal-footer .invalid-field').remove();
+                        modal.find('.modal-footer').prepend("<span class='invalid-field'>Senha inválida</span>");
                     }
                 }
             });
@@ -851,7 +889,7 @@ $(document).ready(function() {
                                 contentType: false,
                                 processData: false,
                                 success: function (data) {
-                                    modal.find('.modal-footer .senha-invalida').remove();
+                                    modal.find('.modal-footer .invalid-field').remove();
 
                                     if(data.status == '0' || data.status == '1') {
                                         modal.find('.modal-body').html(data.msg);
@@ -867,7 +905,7 @@ $(document).ready(function() {
                                     }
 
                                     if(data.status == '2') {
-                                        modal.find('.modal-footer').prepend("<span class='senha-invalida'>Senha inválida</span>");
+                                        modal.find('.modal-footer').prepend("<span class='invalid-field'>Senha inválida</span>");
                                     }
                                 }
                             });

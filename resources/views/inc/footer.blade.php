@@ -69,7 +69,7 @@
                         </div>
 
                         <div class="modal-footer">
-                            <p><a href="#">Recuperar senha</a></p>
+                            <p><a href="#" id="recuperar-senha">Recuperar senha</a></p>
                         </div>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
