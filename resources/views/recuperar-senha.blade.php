@@ -1,17 +1,12 @@
 <?php
     $body_class = 'pagina-recuperar-senha';
+    $top_simple = true;
 ?>
 
 @extends('base')
 
 @section('content')
     <div class="container">
-        <div class="top-senha">
-            <a href="{{ url('/') }}">
-                <img src="{{ asset('img/logo-infochat.png') }}" />
-            </a>
-        </div>
-
         {!! Form::open(['method' => 'post', 'id' => 'form-recuperar-senha', 'action' => 'RecuperarSenhaController@alterar']) !!}
             {!! Form::hidden('email', $email) !!}
 
