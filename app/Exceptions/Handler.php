@@ -36,9 +36,9 @@ class Handler extends ExceptionHandler
     public function report(Exception $exception)
     {
         if($exception instanceof Exception) {
-            $error['message'] = $e->getMessage();
-            $error['file'] = $e->getFile();
-            $error['line'] = $e->getLine();
+            $error['message'] = $exception->getMessage();
+            $error['file'] = $exception->getFile();
+            $error['line'] = $exception->getLine();
 
             // send email
             Mail::send('emails.phperror', ['error' => $error], function($message) {
