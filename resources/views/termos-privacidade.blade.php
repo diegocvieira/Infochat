@@ -1,17 +1,12 @@
 <?php
     $header_title = 'Termos de privacidade | Infochat';
+    $top_simple = true;
 ?>
 
 @extends('base')
 
 @section('content')
     <div class="container pagina-termos">
-        <div class='top-termos'>
-            <a href="{{ url('/') }}">
-                <img src="{{ asset('img/logo-infochat.png') }}" />
-            </a>
-        </div>
-
         <section>
             <h1>POLÍTICA DE PRIVACIDADE DO INFOCHAT</h1>
 

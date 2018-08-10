@@ -91,10 +91,10 @@ class GlobalController extends Controller
         $categorias = Categoria::whereHas('area', function($q) use($slug) {
                 $q->where('slug', $slug);
             })
-            ->join('subcategorias', 'subcategorias.categoria_id', 'categorias.id')
-            ->where(DB::raw("(SELECT COUNT(*) FROM tags WHERE tags.tag LIKE CONCAT('%', categorias.titulo, '%') OR tags.tag LIKE CONCAT('%', subcategorias.titulo, '%'))"), '>=', 5)
-            ->orderBy('categorias.titulo', 'asc')
-            ->select('categorias.titulo', 'categorias.slug')
+            ->where(DB::raw("(SELECT COUNT(*) FROM tags WHERE tags.tag LIKE CONCAT('%', categorias.titulo, '%'))"), '>=', 5)
+            ->orderBy('titulo', 'asc')
+            ->select('titulo', 'slug')
+            ->distinct();
             ->get();
 
         return json_encode(['categorias' => $categorias]);
@@ -108,6 +108,7 @@ class GlobalController extends Controller
         ->where(DB::raw("(SELECT COUNT(*) FROM tags WHERE tags.tag LIKE CONCAT('%', subcategorias.titulo, '%'))"), '>=', 5)
         ->orderBy('titulo', 'asc')
         ->select('titulo', 'slug')
+        ->distinct();
         ->get();
 
         return json_encode(['subcategorias' => $subcategorias]);

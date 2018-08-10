@@ -1,17 +1,12 @@
 <?php
     $header_title = 'Termos de uso | Infochat';
+    $top_simple = true;
 ?>
 
 @extends('base')
 
 @section('content')
     <div class="container pagina-termos">
-        <div class='top-termos'>
-            <a href="{{ url('/') }}">
-                <img src="{{ asset('img/logo-infochat.png') }}" />
-            </a>
-        </div>
-
         <section>
             <h1>TERMOS E CONDIÇÕES DE USO DO INFOCHAT</h1>
 

@@ -295,7 +295,7 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
-        return url('/') . 'recuperar-senha/check/';
+        echo $teste;
 
         /*\Mail::send('emails.recuperar-senha', ['teste' => 'teste'], function($q) {
             $q->from('no-reply@infochat.com', 'infochat');
