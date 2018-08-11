@@ -80,7 +80,7 @@ $(document).ready(function() {
     };
 
     // Fazer validate ignorar campos ocultos
-    $.validator.setDefaults({ ignore: ":hidden:not(.selectpicker)" });
+    $.validator.setDefaults({ ignore: "" });
 
     // Remover class de erro ao selecionar um valor valido
     $(document).on('change', 'select.selectpicker', function() {
@@ -173,12 +173,15 @@ $(document).ready(function() {
     $('#categorias').on('click', '.tipo', function(e) {
         e.preventDefault();
 
-        $('#form-search-palavra-chave').val('');
+        $('#form-search-palavra-chave, #form-search-area, #form-search-tag').val('');
 
         $('#categorias').find('.tipo').removeClass('active');
         $(this).addClass('active');
 
-        var tipo = $(this).data('search');
+        var tipo = $(this).data('search'),
+            placeholder = (tipo == 'estabelecimentos' || tipo == 'profissionais') ? 'Pesquise em ' + tipo : 'Pesquise aqui';
+
+        $('#form-search-palavra-chave').attr('placeholder', placeholder);
 
         if(!logged && tipo == 'favoritos') {
             modalAlert('Faça login para acessar seus favoritos.', 'OK');
@@ -1217,7 +1220,7 @@ $(document).ready(function() {
             modalAlert('Seu perfil de trabalho ficará visivel no infochat e os usuários poderão entrar em contato com você.', 'Ativar');
         }
 
-        modal.find('.btn').addClass('btn-confirmar');
+        modal.find('.btn:last').addClass('btn-confirmar');
 
         modal.find('.modal-footer .btn-confirmar').unbind().on('click',function(e) {
             var status = input.is(':checked') ? '0' : '1';
@@ -1231,18 +1234,13 @@ $(document).ready(function() {
                 },
                 dataType: 'json',
                 success: function (data) {
-                    if(data.status == true) {
-                        if(status == '0') {
-                            input.prop('checked', false);
-                        } else {
-                            input.prop('checked', true);
-
-                            modal.find('.modal-footer .btn').removeClass('btn-confirmar').text('OK');
-                            modal.find('.modal-body').text('Mantenha o infochat aberto. Se sair fique atento ao seu e-mail, avisaremos por lá quando tiver mensagem para você (se necessário tire o infochat da lista de spam).');
-                        }
+                    if(status == '0') {
+                        input.prop('checked', false);
                     } else {
+                        input.prop('checked', true);
+
                         modal.find('.modal-footer .btn').removeClass('btn-confirmar').text('OK');
-                        modal.find('.modal-body').text(data.msg);
+                        modal.find('.modal-body').text('Mantenha o infochat aberto. Se sair fique atento ao seu e-mail, avisaremos por lá quando tiver mensagem para você (se necessário tire o infochat da lista de spam).');
                     }
 
                     modal.find('.modal-footer .btn').unbind().on('click',function(e) {

@@ -39,37 +39,6 @@
     </div>
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <div class="row" style="padding-left: 15px;">
     <div class="abas col-xs-12">
         <a href="#" class="active" data-type="sobre">Sobre</a>

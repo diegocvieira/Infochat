@@ -109,7 +109,13 @@ class MensagemController extends Controller
 
     public function chat($id, $tipo)
     {
-        $chat = $tipo == 'trabalho' ? Trabalho::find($id) : User::find($id);
+        if($tipo == 'trabalho') {
+            $chat = Trabalho::find($id);
+
+            pageview($chat->id);
+        } else {
+            $chat = User::find($id);
+        }
 
         if(Auth::guard('web')->check()) {
             $user_id = Auth::guard('web')->user()->id;

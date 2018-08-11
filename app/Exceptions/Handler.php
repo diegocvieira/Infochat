@@ -5,7 +5,6 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Mail;
-use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -36,6 +35,17 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+        if($exception instanceof Exception) {
+            $error['message'] = $exception->getMessage();
+            $error['file'] = $exception->getFile();
+            $error['line'] = $exception->getLine();
+
+            // send email
+            Mail::send('emails.phperror', ['error' => $error], function($message) {
+                $message->to('diegovc10@hotmail.com')->cc('felipeoreis11@gmail.com')->subject('GENERAL ERROR: - ' . date('d/m/Y').' ' . date('H:i').'h');
+            });
+        }
+
         parent::report($exception);
     }
 
@@ -48,17 +58,6 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        if(!($exception instanceof ValidationException)) {
-            $error['message'] = $exception->getMessage();
-            $error['file'] = $exception->getFile();
-            $error['line'] = $exception->getLine();
-
-            // send email
-            Mail::send('emails.phperror', ['error' => $error], function($message) {
-                $message->to('diegovc10@hotmail.com')->subject('GENERAL ERROR: - ' . date('d/m/Y').' ' . date('H:i').'h');
-            });
-        }
-
         return parent::render($request, $exception);
     }
 }

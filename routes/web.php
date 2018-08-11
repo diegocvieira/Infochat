@@ -13,38 +13,31 @@
 
 Route::get('/', 'GlobalController@inicial')->name('inicial');
 
+// Listar e setar cidade
 Route::post('cidades/get', 'GlobalController@getCidade');
 Route::get('cidades/set/{id}', 'GlobalController@setCidade');
 
-Route::post('categorias/busca', 'GlobalController@buscaCategorias');
-
+// Listar categorias admin
 Route::get('subcategorias/get/{categoria}', 'GlobalController@getSubcategorias');
 Route::get('categorias/get/{area}', 'GlobalController@getCategorias');
 Route::get('areas/get/{tipo}', 'GlobalController@getAreas');
 
-
-Route::get('teste/teste', 'TrabalhoController@teste');
-
-
+// Aside categorias
 Route::get('aside/categorias/{slug}', 'GlobalController@asideCategorias');
 Route::get('aside/subcategorias/{slug}', 'GlobalController@asideSubcategorias');
 Route::get('aside/areas/{tipo}', 'GlobalController@asideAreas');
+Route::post('categorias/busca', 'GlobalController@buscaCategorias');
 
-
-
-
+// Busca
 Route::post('trabalhos/busca', 'TrabalhoController@formBusca');
 Route::any('busca/{tipo?}/{palavra_chave?}/{area?}/{tag?}', 'TrabalhoController@busca');
-
-
 
 Route::get('termos/uso', function() {
     return view('termos-uso');
 })->name('termos-uso');
-Route::get('termos/privacidade', function() {
+Route::get('politica/privacidade', function() {
     return view('termos-privacidade');
 })->name('termos-privacidade');
-
 
 Route::group(['prefix' => 'mensagem'], function() {
     // Enviar
@@ -94,3 +87,9 @@ Route::group(['prefix' => 'recuperar-senha'], function() {
     Route::get('check/{token}', 'RecuperarSenhaController@check');
     Route::post('alterar', 'RecuperarSenhaController@alterar');
 });
+
+
+
+
+
+Route::get('teste/teste', 'TrabalhoController@teste');

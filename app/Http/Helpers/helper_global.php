@@ -96,12 +96,26 @@ function diaSemana($data)
     } else if($data == date('Y-m-d', strtotime('-1 day'))) {
         $dia = 'ONTEM';
     } else {
-        $dia = strftime('%A', strtotime($data));
+        if(date('Y-m-d', strtotime('-7 day')) > $data) {
+            $dia = date('d/m/Y', strtotime($data));
+        } else {
+            $dia = strftime('%A', strtotime($data));
 
-        if($dia != 'sábado' || 'domingo') {
-            $dia = $dia . '-feira';
+            if($dia != 'sábado' && $dia != 'domingo') {
+                $dia = $dia . '-feira';
+            }
         }
     }
 
     return $dia;
+}
+
+// Contabilizar pageview
+function pageview($id)
+{
+    $trabalho = \App\Trabalho::find($id);
+
+    $trabalho->pageviews = $trabalho->pageviews + 1;
+
+    $trabalho->save();
 }

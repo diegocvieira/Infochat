@@ -56,103 +56,97 @@ class TrabalhoController extends Controller
 
     public function setConfig(Request $request)
     {
-        $user_id = Auth::guard('web')->user()->id;
-        $slug = str_slug($request->slug, '-');
+        $validator = \Validator::make($request->all(), $this->trabalhoRules(), $this->customMessages());
 
-        // Validar o slug
-        $slug_validate = Trabalho::where('slug', $slug)->where('user_id', '!=', $user_id)->count();
+         if($validator->fails()) {
+             $return['msg'] = $validator->errors()->first();
+         } else {
+             $user_id = Auth::guard('web')->user()->id;
 
-        if($slug_validate == 0 && $request->nome && $slug && $request->area_id && $request->tipo) {
-            // Verificar se o trabalho ja existe
-            $t = Trabalho::where('user_id', $user_id)->first();
+             // Verificar se o trabalho ja existe
+             $trabalho = Trabalho::firstOrNew(['user_id' => $user_id]);
 
-            // Escolher entre create e update
-            if(isset($t)) {
-                $msg = 'Informações alteradas com sucesso!';
-                $trabalho = $t;
-            } else {
-                $msg = 'Perfil criado com sucesso!';
-                $trabalho = new Trabalho;
-            }
+             // Buscar a cidade no banco
+             $cidade = Cidade::whereHas('estado', function($q) use($request) {
+                 $q->where('letter', $request->estado);
+             })->where('title', 'LIKE', '%' . $request->cidade . '%')->select('id')->first();
+         	$cidade_id = $cidade ? $cidade->id : null;
 
-            // Buscar a cidade no banco
-            $cidade = Cidade::whereHas('estado', function($q) use($request) {
-                $q->where('letter', $request->estado);
-            })->where('title', 'LIKE', '%' . $request->cidade . '%')->select('id')->first();
-        	$cidade_id = $cidade ? $cidade->id : null;
+             $trabalho->cidade_id = $cidade_id;
+             $trabalho->user_id = $user_id;
+             $trabalho->slug = str_slug($request->slug, '-');
+             $trabalho->tipo = $request->tipo;
+             $trabalho->nome = $request->nome;
+             $trabalho->descricao = $request->descricao;
+             $trabalho->logradouro = $request->logradouro;
+             $trabalho->numero = $request->numero;
+             $trabalho->bairro = $request->bairro;
+             $trabalho->complemento = $request->complemento;
+             $trabalho->area_id = $request->area_id;
+             $trabalho->cep = $request->cep;
+             $trabalho->email = $request->email;
+             $trabalho->status = isset($request->status) ? 1 : 0;
 
-            $trabalho->cidade_id = $cidade_id;
-            $trabalho->user_id = $user_id;
-            $trabalho->slug = $slug;
-            $trabalho->tipo = $request->tipo;
-            $trabalho->nome = $request->nome;
-            $trabalho->descricao = $request->descricao;
-            $trabalho->logradouro = $request->logradouro;
-            $trabalho->numero = $request->numero;
-            $trabalho->bairro = $request->bairro;
-            $trabalho->complemento = $request->complemento;
-            $trabalho->area_id = $request->area_id;
-            $trabalho->cep = $request->cep;
-            $trabalho->email = $request->email;
+             if(!empty($request->img)) {
+                 if(isset($t) && $t->imagem) {
+                     unlink('uploads/perfil/' . $t->imagem);
+                 }
 
-            if(!empty($request->img)) {
-                if(isset($t) && $t->imagem) {
-                    unlink('uploads/perfil/' . $t->imagem);
-                }
+                 // Move  a imagem para a pasta
+                 $file = $request->img;
+                 $fileName = date('YmdHis') . microtime(true) . rand(111111111, 999999999) . '.' . $file->getClientOriginalExtension(); // Renomear
+                 $file->move('uploads/perfil', $fileName); // Mover para a pasta
 
-                // Move  a imagem para a pasta
-                $file = $request->img;
-                $fileName = date('YmdHis') . microtime(true) . rand(111111111, 999999999) . '.' . $file->getClientOriginalExtension(); // Renomear
-                $file->move('uploads/perfil', $fileName); // Mover para a pasta
+                 $trabalho->imagem = $fileName;
+             }
 
-                $trabalho->imagem = $fileName;
-            }
+             if($trabalho->save()) {
+                 // Telefones
+                 $trabalho->telefones()->delete();
+                 if(isset($request->fone)) {
+                     foreach($request->fone as $fone) {
+                         if(!empty($fone)) {
+                             $trabalho->telefones()->create(['fone' => $fone]);
+                         }
+                     }
+                 }
 
-            $trabalho->save();
+                 // Redes sociais
+                 $trabalho->redes()->delete();
+                 if(isset($request->social)) {
+                     foreach($request->social as $social) {
+                         if(!empty($social)) {
+                             $trabalho->redes()->create(['url' => $social]);
+                         }
+                     }
+                 }
 
-            // Telefones
-            $trabalho->telefones()->delete();
-            if(isset($request->fone)) {
-                foreach($request->fone as $fone) {
-                    if(!empty($fone)) {
-                        $trabalho->telefones()->create(['fone' => $fone]);
-                    }
-                }
-            }
+                 // Tags
+                 $trabalho->tags()->delete();
+                 if(isset($request->tag) && count($request->tag) <= 10) {
+                     foreach($request->tag as $tag) {
+                         $trabalho->tags()->create(['tag' => $tag]);
+                     }
+                 }
 
-            // Redes sociais
-            $trabalho->redes()->delete();
-            if(isset($request->social)) {
-                foreach($request->social as $social) {
-                    if(!empty($social)) {
-                        $trabalho->redes()->create(['url' => $social]);
-                    }
-                }
-            }
+                 // Horarios de atendimento
+                 $trabalho->horarios()->delete();
+                 $horarios = array_map(function($d, $dm, $at, $dt, $an) {
+                     return array('dia' => $d, 'de_manha' => $dm, 'ate_tarde' => $at, 'de_tarde' => $dt, 'ate_noite' => $an);
+                 }, $request->dia, $request->de_manha, $request->ate_tarde, $request->de_tarde, $request->ate_noite);
+                 foreach($horarios as $horario) {
+                     if($horario['dia'] && ($horario['de_manha'] || $horario['ate_tarde'] && $horario['de_tarde'] || $horario['ate_noite'])) {
+                         $trabalho->horarios()->create($horario);
+                     }
+                 }
 
-            // Tags
-            $trabalho->tags()->delete();
-            if(isset($request->tag)) {
-                foreach($request->tag as $tag) {
-                    $trabalho->tags()->create(['tag' => $tag]);
-                }
-            }
+                 $return['msg'] = 'Informações salvas com sucesso!';
+             } else {
+                 $return['msg'] = 'Ocorreu um erro inesperado. Tente novamente.';
+             }
+         }
 
-            // Horarios de atendimento
-            $trabalho->horarios()->delete();
-            $horarios = array_map(function($d, $dm, $at, $dt, $an) {
-                return array('dia' => $d, 'de_manha' => $dm, 'ate_tarde' => $at, 'de_tarde' => $dt, 'ate_noite' => $an);
-            }, $request->dia, $request->de_manha, $request->ate_tarde, $request->de_tarde, $request->ate_noite);
-            foreach($horarios as $horario) {
-                if($horario['dia'] && ($horario['de_manha'] || $horario['ate_tarde'] && $horario['de_tarde'] || $horario['ate_noite'])) {
-                    $trabalho->horarios()->create($horario);
-                }
-            }
-        } else {
-            $msg = 'Esta url já está em uso. Escolha outro e tente novamente.';
-        }
-
-        return json_encode(['msg' => $msg]);
+        return json_encode($return);
     }
 
     public function setStatus(Request $request)
@@ -162,14 +156,10 @@ class TrabalhoController extends Controller
         if(count($trabalho) > 0) {
             $trabalho->status = $request->status;
 
-            if($trabalho->save()) {
-                return json_encode(['status' => true]);
-            } else {
-                return json_encode(['status' => false, 'msg' => 'Ocorreu um erro. Atualize a página e tente novamente.']);
-            }
-        } else {
-            return json_encode(['status' => false, 'msg' => 'É necessário primeiro criar o seu perfil de trabalho para depois poder ativá-lo.']);
+            $trabalho->save();
         }
+
+        return json_encode(true);
     }
 
     public function formBusca(Request $request)
@@ -253,6 +243,8 @@ class TrabalhoController extends Controller
     {
         $trabalho = Trabalho::find($id);
 
+        pageview($trabalho->id);
+
         if(Auth::guard('web')->check()) {
             $avaliacao_usuario = Avaliar::where('trabalho_id', $id)
                 ->where('user_id', Auth::guard('web')->user()->id)
@@ -287,6 +279,49 @@ class TrabalhoController extends Controller
         return json_encode(true);
     }
 
+    private function trabalhoRules()
+    {
+        $trabalho = Auth::guard('web')->user()->trabalho ? Auth::guard('web')->user()->trabalho->id : '';
+
+        return [
+            'slug' => 'required|max:100|unique:trabalhos,slug,' . $trabalho,
+            'nome' => 'required|max:100',
+            'area_id' => 'required',
+            'tipo' => 'required',
+            'cep' => 'required|max:10',
+            'logradouro' => 'required|max:100',
+            'bairro' => 'required|max:50',
+            'numero' => 'required|max:10',
+            'cidade' => 'required',
+            'estado' => 'required',
+            'img' => 'image|max:5000'
+        ];
+    }
+
+    private function customMessages()
+    {
+        return [
+            'nome.required' => 'Informe o nome.',
+            'nome.max' => 'O nome deve ter menos de 100 caracteres.',
+            'slug.max' => 'A url deve ter menos de 65 caracteres.',
+            'slug.required' => 'Informe uma url.',
+            'slug.unique' => 'Esta url já está sendo utilizada por outro usuário',
+            'img.image' => 'Imagem inválida',
+            'img.max' => 'A imagem tem que ter no máximo 5mb.',
+            'area_id.required' => 'Selecione uma área.',
+            'tipo.required' => 'Selecione um tipo.',
+            'cep.required' => 'Informe o CEP.',
+            'cep.max' => 'O CEP deve ter menos de 10 caracteres.',
+            'logradouro.required' => 'Informe o logradouro.',
+            'logradouro.max' => 'O logradouro deve ter menos de 100 caracteres.',
+            'bairro.required' => 'Informe o bairro.',
+            'bairro.max' => 'O bairro deve ter menos de 50 caracteres.',
+            'numero.required' => 'Informe o número.',
+            'numero.max' => 'O número deve ter menos de 10 caracteres.',
+            'cidade.required' => 'Informe a cidade.',
+            'estado.required' => 'Informe o estado.'
+        ];
+    }
 
 
 
@@ -298,8 +333,11 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
-        echo $teste;
+        $data = '2018-08-06';
 
+        setlocale(LC_ALL, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+
+        return strftime('%A', strtotime($data));
 
 
         /*\Mail::send('emails.recuperar-senha', ['teste' => 'teste'], function($q) {

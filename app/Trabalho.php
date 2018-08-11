@@ -8,6 +8,7 @@ use App\AvaliarAtendimento;
 use App\Avaliar;
 use DB;
 use Auth;
+use App\Trabalho;
 
 class Trabalho extends Model
 {
@@ -136,6 +137,11 @@ class Trabalho extends Model
                 return $query->orderBy('nome', 'asc');
             } else if($ordem == 'populares') {
                 return $query->orderBy('pageviews', 'desc');
+            } else {
+                return $query->join('avaliacoes', 'avaliacoes.trabalho_id', 'trabalhos.id')
+                            ->select(DB::raw("(SUM(avaliacoes.nota) / COUNT(avaliacoes.id)) as calc_nota"), 'trabalhos.*')
+                            ->orderBy('calc_nota', 'desc')
+                            ->groupBy('trabalhos.id');
             }
         }
     }
