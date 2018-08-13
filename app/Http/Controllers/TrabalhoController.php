@@ -350,13 +350,7 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
-        $count = Mensagem::selectRaw('SUM(CASE WHEN NOT EXISTS (SELECT id FROM mensagens WHERE remetente_id = ' . 3 . ' AND destinatario_id = ' . 1 . ') THEN 1 ELSE 0 END) AS result,
-            SUM(CASE WHEN created_at = (SELECT MAX(created_at) FROM mensagens WHERE remetente_id = ' . 3 . ' AND destinatario_id = ' . 1 . ')
-            AND remetente_id = ' . 3 . ' AND destinatario_id = ' . 1 . '
-            AND TIMESTAMPDIFF(MINUTE, created_at, NOW()) >= 10 THEN 1 ELSE 0 END) AS result2')
-            ->first();
-
-        return $count;
+        return $teste;
 
 
 

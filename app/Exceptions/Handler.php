@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Mail;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -35,14 +36,10 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
-        if($exception instanceof Exception) {
-            $error['message'] = $exception->getMessage();
-            $error['file'] = $exception->getFile();
-            $error['line'] = $exception->getLine();
-
-            // send email
+        if(!($exception instanceof HttpException)) {
             Mail::send('emails.phperror', ['error' => $error], function($message) {
-                $message->to('diegovc10@hotmail.com')->cc('felipeoreis11@gmail.com')->subject('GENERAL ERROR: - ' . date('d/m/Y').' ' . date('H:i').'h');
+                $message->to('diegovc10@hotmail.com')->cc('dvdiegovieiradv@gmail.com')->cc('felipeoreis11@gmail.com')
+                    ->subject('GENERAL ERROR: - ' . date('d/m/Y').' ' . date('H:i').'h');
             });
         }
 
