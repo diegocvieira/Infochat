@@ -7,7 +7,7 @@
 
     	<base href="{{ url('/') }}">
 
-    	<title>{{ $header_title or 'Infochat - Atendimento online da sua cidade' }}</title>
+    	<title>{{ $header_title or 'Infochat - O atendimento online da sua cidade' }}</title>
 
     	<link rel="shortcut icon" href="img/favicon.ico">
 
@@ -24,9 +24,9 @@
 
     	<link rel='canonical' href='{{ $header_canonical or url()->current() }}' />
 
-    	<meta name='description' content='{{ $header_desc or 'Infochat - Atendimento online da sua cidade' }}' />
+    	<meta name='description' content='{{ $header_desc or 'Infochat - O atendimento online da sua cidade' }}' />
     	<meta itemprop='name' content='{{ $header_title or 'Infochat' }}'>
-    	<meta itemprop='description' content='{{ $header_desc or "Infochat - Atendimento online da sua cidade" }}'>
+    	<meta itemprop='description' content='{{ $header_desc or "Infochat - O atendimento online da sua cidade" }}'>
     	<meta itemprop='image' content='{{ $header_image or asset('img/banner-redes-sociais.jpg') }}'>
 
     	<meta name='twitter:card' content='summary_large_image'>
@@ -39,7 +39,7 @@
     	<meta property='og:type' content='website' />
     	<meta property='og:url' content='{{ url()->current() }}' />
     	<meta property='og:image' content='{{ $header_image or asset('img/banner-redes-sociais.jpg')}}' />
-    	<meta property='og:description' content='{{ $header_desc or 'Infochat - Atendimento online da sua cidade' }}' />
+    	<meta property='og:description' content='{{ $header_desc or 'Infochat - O atendimento online da sua cidade' }}' />
     	<meta property='og:site_name' content='Infochat' />
 
         <style>
