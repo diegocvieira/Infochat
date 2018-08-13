@@ -13,4 +13,12 @@ class Area extends Model
     {
         return $this->HasMany('App\Categoria');
     }
+
+    public function scopeOrdered($query)
+    {
+        return $query->select('titulo', 'slug')
+                    ->distinct()
+                    ->orderByRaw("FIELD(titulo, 'Outros'), 'titulo' ASC")
+                    ->orderBy('titulo', 'ASC');
+    }
 }

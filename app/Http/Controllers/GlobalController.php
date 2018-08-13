@@ -125,9 +125,9 @@ class GlobalController extends Controller
         }
 
         if($tipo) {
-            $areas = Area::where('tipo', $tipo)->select('titulo', 'slug')->distinct()->orderBy('titulo', 'asc')->get();
+            $areas = Area::where('tipo', $tipo)->ordered()->get();
         } else {
-            $areas = Area::select('titulo', 'slug')->distinct()->orderBy('titulo', 'asc')->get();
+            $areas = Area::ordered()->get();
         }
 
         return json_encode(['areas' => $areas]);

@@ -9,7 +9,7 @@ class CategoriasComposer
 {
 	public function compose(View $view)
 	{
-        $areas = Area::select('titulo', 'slug')->distinct()->orderBy('titulo', 'asc')->get();
+        $areas = Area::ordered()->get();
 
 		$view->with('areas', $areas);
 	}
