@@ -21,7 +21,7 @@
             <table id="Tabela_01" width="600" height="auto" border="0" cellpadding="0" cellspacing="0" align="center">
                 <tr>
                     <td>
-                        <img style="display: block; margin: auto auto 40px auto; width: 50px;" src="{{ asset('img/icon-logo.png') }}" />
+                        <img style="display: block; margin: 30px auto 30px auto; width: 50px;" src="{{ asset('img/icon-logo.png') }}" />
                     </td>
                 </tr>
 
@@ -38,7 +38,7 @@
                 </tr>
 
                 <tr>
-                    <td style="background-color: #fff; padding: 0 50px 40px 50px;">
+                    <td style="background-color: #fff; padding: 0 50px 40px 50px; margin-bottom: 30px;">
                         <a href="{{ $url }}" style="float: left; font-weight: 700; border-radius: 20px; cursor: pointer; font-size: 14.5; margin-top: 10px; background-color: rgb(241, 240, 240); color: rgb(100, 100, 100); padding: 13px 40px;">CADASTRAR SENHA</a>
                     </td>
                 </tr>
