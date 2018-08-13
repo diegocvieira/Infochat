@@ -18,7 +18,7 @@
     </head>
     <body style="background: rgb(241, 240, 240);" alink="#3f51b5" link="#3f51b5" bgcolor="rgb(241, 240, 240)" text="#FFFFFF">
         <span id="body_style" style="padding: 0; display: block">
-            <table id="Tabela_01" width="600" height="auto" border="0" cellpadding="0" cellspacing="0" align="center">
+            <table id="Tabela_01" width="600" style="margin-bottom: 30px;" height="auto" border="0" cellpadding="0" cellspacing="0" align="center">
                 <tr>
                     <td>
                         <img style="display: block; margin: 30px auto 30px auto; width: 50px;" src="{{ asset('img/icon-logo.png') }}" />
@@ -38,7 +38,7 @@
                 </tr>
 
                 <tr>
-                    <td style="background-color: #fff; padding: 0 50px 40px 50px; margin-bottom: 30px;">
+                    <td style="background-color: #fff; padding: 0 50px 40px 50px;">
                         <a href="{{ $url }}" style="float: left; font-weight: 700; border-radius: 20px; cursor: pointer; font-size: 14.5; margin-top: 10px; background-color: rgb(241, 240, 240); color: rgb(100, 100, 100); padding: 13px 40px;">CADASTRAR SENHA</a>
                     </td>
                 </tr>
