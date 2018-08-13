@@ -101,7 +101,7 @@
                 <div class="modal-content">
                     <a href="#" class="arrow prev" data-position="1"></a>
 
-                    <img src="{{ asset('img/como-funciona/1.png') }}" class="img-responsive" />
+                    <img src="{{ asset('img/como-funciona/1.png') }}" class="img-responsivde" />
 
                     <a href="#" class="arrow next" data-position="1"></a>
 
