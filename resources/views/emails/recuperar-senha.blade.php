@@ -26,19 +26,19 @@
                 </tr>
 
                 <tr>
-                    <td style="background-color: #fff; padding: 40px 30px 0 30px;">
+                    <td style="background-color: #fff; padding: 40px 50px 0 50px;">
                         <span style="display: block; cursor: default; font-size: 25px; color: rgb(49, 49, 49); font-weight: 700">Recuperar acesso do infochat</span>
                     </td>
                 </tr>
 
                 <tr>
-                    <td style="background-color: #fff; padding: 0 30px;">
+                    <td style="background-color: #fff; padding: 0 50px;">
                         <span style="display: block; cursor: default; margin: 10px 0; font-size: 16.6; color: rgb(100, 100, 100);">Clique no botão abaixo para cadastrar uma nova senha de acesso</span>
                     </td>
                 </tr>
 
                 <tr>
-                    <td style="background-color: #fff; padding: 0 30px 40px 30px;">
+                    <td style="background-color: #fff; padding: 0 50px 40px 50px;">
                         <a href="{{ $url }}" style="float: left; font-weight: 700; border-radius: 20px; cursor: pointer; font-size: 14.5; margin-top: 10px; background-color: rgb(241, 240, 240); color: rgb(100, 100, 100); padding: 13px 40px;">CADASTRAR SENHA</a>
                     </td>
                 </tr>

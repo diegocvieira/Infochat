@@ -26,19 +26,19 @@
                 </tr>
 
                 <tr>
-                    <td style="background-color: #fff; padding: 40px 30px 0 30px;">
+                    <td style="background-color: #fff; padding: 40px 50px 0 50px;">
                         <span style="display: block; cursor: default; font-size: 25px; color: rgb(49, 49, 49); font-weight: 700">Tem mensagem para você no infochat</span>
                     </td>
                 </tr>
 
                 <tr>
-                    <td style="background-color: #fff; padding: 0 30px;">
+                    <td style="background-color: #fff; padding: 0 50px;">
                         <span style="display: block; cursor: default; margin: 10px 0; font-size: 16.6; color: rgb(100, 100, 100);">Para visualizar clique no botão abaixo ou acesse sua conta em <a href="{{ url('/') }}" style="color: rgb(118, 145, 198);">infochat.com.br</a></span>
                     </td>
                 </tr>
 
                 <tr>
-                    <td style="background-color: #fff; padding: 0 30px 40px 30px;">
+                    <td style="background-color: #fff; padding: 0 50px 40px 50px;">
                         <a href="{{ url('/') }}" style="float: left; font-weight: 700; border-radius: 20px; cursor: pointer; font-size: 14.5; margin-top: 10px; background-color: rgb(241, 240, 240); color: rgb(100, 100, 100); padding: 13px 40px;">VER MENSAGEM</a>
                     </td>
                 </tr>

@@ -27,7 +27,7 @@ class MensagemController extends Controller
 
             if($mensagem->save()) {
                 $count = Mensagem::selectRaw('SUM(CASE WHEN NOT EXISTS (SELECT id FROM mensagens WHERE remetente_id = ' . $remetente_id . ' AND destinatario_id = ' . $destinatario_id . ') THEN 1 ELSE 0 END) AS result,
-                    SUM(CASE WHEN created_at = (SELECT MAX(created_at) FROM mensagens)
+                    SUM(CASE WHEN created_at = (SELECT MAX(created_at) FROM mensagens WHERE remetente_id = ' . $remetente_id . ' AND destinatario_id = ' . $destinatario_id . ')
                     AND remetente_id = ' . $remetente_id . ' AND destinatario_id = ' . $destinatario_id . '
                     AND TIMESTAMPDIFF(MINUTE, created_at, NOW()) >= 10 THEN 1 ELSE 0 END) AS result2')
                     ->first();
