@@ -119,3 +119,11 @@ function pageview($id)
 
     $trabalho->save();
 }
+
+// Pegar apenas o primeiro nome
+function firstName($name)
+{
+    $array = explode(' ', trim($name));
+
+    return $array[0];
+}

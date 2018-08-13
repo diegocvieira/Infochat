@@ -134,8 +134,25 @@ class TrabalhoController extends Controller
                  $horarios = array_map(function($d, $dm, $at, $dt, $an) {
                      return array('dia' => $d, 'de_manha' => $dm, 'ate_tarde' => $at, 'de_tarde' => $dt, 'ate_noite' => $an);
                  }, $request->dia, $request->de_manha, $request->ate_tarde, $request->de_tarde, $request->ate_noite);
+                 $count = 0;
                  foreach($horarios as $horario) {
-                     if($horario['dia'] && ($horario['de_manha'] || $horario['ate_tarde'] && $horario['de_tarde'] || $horario['ate_noite'])) {
+                    if($horario['de_manha']) {
+                        $count++;
+                    }
+
+                    if($horario['ate_tarde']) {
+                        $count++;
+                    }
+
+                    if($horario['de_tarde']) {
+                        $count++;
+                    }
+
+                    if($horario['ate_noite']) {
+                        $count++;
+                    }
+
+                     if($horario['dia'] && $count >= 2) {
                          $trabalho->horarios()->create($horario);
                      }
                  }
@@ -333,11 +350,9 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
-        $data = '2018-08-06';
+        $url = 'i';
+        return view('emails.recuperar-senha', compact('url'));
 
-        setlocale(LC_ALL, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
-
-        return strftime('%A', strtotime($data));
 
 
         /*\Mail::send('emails.recuperar-senha', ['teste' => 'teste'], function($q) {

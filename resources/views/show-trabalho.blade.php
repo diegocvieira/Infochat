@@ -148,11 +148,7 @@
 
                 <div class="descricao-comentario">
                     <p>
-                        @if($avaliacao->descricao)
-                            {{ $avaliacao->descricao }}
-                        @else
-                            Este usuario preferiu não fazer um comentário.
-                        @endif
+                        {{ $avaliacao->descricao }}
                     </p>
                 </div>
             </div>

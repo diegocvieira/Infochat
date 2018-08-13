@@ -7,21 +7,43 @@ use App\Mensagem;
 use Auth;
 use App\Trabalho;
 use App\User;
+use DB;
+use Mail;
 
 class MensagemController extends Controller
 {
     // Enviar mensagem
     public function send(Request $request)
     {
-        $mensagem = new Mensagem;
+        $remetente_id = Auth::guard('web')->user()->id;
+        $destinatario_id = $request->destinatario_id;
 
-        $mensagem->remetente_id = Auth::guard('web')->user()->id;
-        $mensagem->destinatario_id = $request->destinatario_id;
-        $mensagem->mensagem = $request->mensagem;
+        if($remetente_id != $destinatario_id) {
+            $mensagem = new Mensagem;
 
-        $mensagem->save();
+            $mensagem->remetente_id = $remetente_id;
+            $mensagem->destinatario_id = $destinatario_id;
+            $mensagem->mensagem = $request->mensagem;
 
-        return json_encode(['hora' => date('H:i'), 'msg' => $request->mensagem]);
+            if($mensagem->save()) {
+                $count = Mensagem::selectRaw('SUM(CASE WHEN NOT EXISTS (SELECT id FROM mensagens WHERE remetente_id = ' . $remetente_id . ' AND destinatario_id = ' . $destinatario_id . ') THEN 1 ELSE 0 END) AS result,
+                    SUM(CASE WHEN created_at = (SELECT MAX(created_at) FROM mensagens)
+                    AND remetente_id = ' . $remetente_id . ' AND destinatario_id = ' . $destinatario_id . '
+                    AND TIMESTAMPDIFF(MINUTE, created_at, NOW()) >= 10 THEN 1 ELSE 0 END) AS result2')
+                    ->first();
+
+                if(count($count->result) > 0 || count($count->result2) > 0) {
+                    $user = User::select('email')->find($destinatario_id);
+
+                    Mail::send('emails.nova_mensagem', [], function($q) use($user) {
+                        $q->from('no-reply@infochat.com.br', 'Infochat');
+                        $q->to($user->email)->subject('Nova mensagem');
+                    });
+                }
+            }
+
+            return json_encode(['hora' => date('H:i'), 'msg' => $request->mensagem]);
+        }
     }
 
     // Listar as mensagens do chat

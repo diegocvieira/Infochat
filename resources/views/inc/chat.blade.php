@@ -21,10 +21,10 @@
 
             {!! Form::hidden('trabalho_id', $chat->id) !!}
 
-            {!! Form::radio('like', '1', (Session::has('atendimento') && session('atendimento') == '1') ? true : false, ['id' => 'like']) !!}
+            {!! Form::radio('like', '1', (Session::has('atendimento') && session('atendimento_' . $chat->id) == '1') ? true : false, ['id' => 'like']) !!}
             {!! Form::label('like', ' ') !!}
 
-            {!! Form::radio('like', '0', (Session::has('atendimento') && session('atendimento') == '0') ? true : false, ['id' => 'dislike']) !!}
+            {!! Form::radio('like', '0', (Session::has('atendimento') && session('atendimento_' . $chat->id) == '0') ? true : false, ['id' => 'dislike']) !!}
             {!! Form::label('dislike', ' ') !!}
         {!! Form::close() !!}
     @endif

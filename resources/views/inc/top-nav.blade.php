@@ -26,7 +26,7 @@
             <ul>
                 @if(Auth::guard('web')->check())
                     <li>
-                        <a href="#" class="open-nav" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ current(str_word_count(Auth::guard('web')->user()->nome, 2)) }}</a>
+                        <a href="#" class="open-nav" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ firstName(Auth::guard('web')->user()->nome) }}</a>
 
                         <ul class="dropdown-menu">
                             <li>
