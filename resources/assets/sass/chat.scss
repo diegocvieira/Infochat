@@ -113,13 +113,15 @@
     }
 
     .mensagens {
+        $height: calc(100% - 130px);
         float: left;
         width: 100%;
-        height: calc(100% - 70px);
-        min-height: calc(100% - 70px);
-        max-height: calc(100% - 70px);
+        height: $height;
+        min-height: $height;
+        max-height: $height;
         overflow: auto;
-        padding: 80px 30px 0 30px;
+        padding: 0 30px;
+        margin-top: 60px;
 
         .error-msg {
             float: right;
