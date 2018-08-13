@@ -287,26 +287,6 @@ $(document).ready(function() {
         return false;
     });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ////////////////////////////// RESULTADOS DAS BUSCAS //////////////////////////////
 
     // Filtrar a ordem dos resultados
@@ -394,12 +374,6 @@ $(document).ready(function() {
         }
     });
 
-
-
-
-
-
-
     // Abrir modal do perfil do trabalho
     $(document).on('click', '.ver-perfil', function(e) {
         e.preventDefault();
@@ -450,6 +424,7 @@ $(document).ready(function() {
         $(this).addClass('active');
     });
 
+    // Avaliar
     $(document).on('mouseover click', '#form-avaliar-trabalho .nota label', function() {
         var nota = $(this).prev().val();
 
@@ -463,7 +438,6 @@ $(document).ready(function() {
 
         $(this).addClass('star-full');
     });
-
     $(document).on('mouseleave', '#form-avaliar-trabalho .nota label', function() {
         var input_checked = $(this).parents('.nota').find('input[type=radio]:checked')
 
@@ -481,7 +455,6 @@ $(document).ready(function() {
             $(this).parents('.nota').find('label').removeClass('star-full');
         }
     });
-
     $(document).on('submit', '#form-avaliar-trabalho', function() {
         if($(this).find('input[type=radio]').is(':checked')) {
             if(logged) {
@@ -511,6 +484,7 @@ $(document).ready(function() {
         return false;
     });
 
+    // Listar Comentarios
     $(document).on('custom-scroll', '.modal-trabalho-perfil .comentarios', function() {
         if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
             var div = $('.modal-trabalho-perfil').find('.comentarios');
@@ -529,13 +503,6 @@ $(document).ready(function() {
             });
         }
     });
-
-
-
-
-
-
-
 
     ////////////////////////////// CHAT //////////////////////////////
 
@@ -590,10 +557,10 @@ $(document).ready(function() {
         }
     });
 
+    // Avaliar atendimento
     $(document).on('change', '#form-avaliar input[type=radio]', function() {
         $('#form-avaliar').submit();
     });
-
     $(document).on('submit', '#form-avaliar', function() {
         $.ajax({
             url: $(this).attr('action'),
@@ -607,27 +574,33 @@ $(document).ready(function() {
         return false;
     });
 
+    // Enviar mensagem
     $(document).on('submit', '#form-enviar-msg', function() {
         var input = $(this).find('input[type=text]');
 
-        if(input.val()){
+        if(input.val()) {
+            $('.chat').find('.sem-mensagens').remove();
+
+            var div = $('.chat').find('.mensagens'),
+                date = new Date();
+
+            div.append("<div class='row enviada'><div class='msg'><p>" + input.val() + "</p><span>" + date.getHours() + ":" + date.getMinutes() + "</span></div></div>");
+
+            div.scrollTop(div[0].scrollHeight);
+
             $.ajax({
                 url: $(this).attr('action'),
                 method: 'POST',
                 dataType:'json',
                 data: $(this).serialize(),
                 success: function(data) {
-                    $('.chat').find('.sem-mensagens').remove();
-
-                    var div = $('.chat').find('.mensagens');
-
-                    div.append("<div class='row enviada'><div class='msg'><p>" + data.msg + "</p><span>" + data.hora + "</span></div></div>");
-
-                    div.scrollTop(div[0].scrollHeight);
-
-                    input.val('');
+                    if(!data.status) {
+                        div.find('.enviada:last').append("<span class='error-msg'>Erro</span>");
+                    }
                 }
             });
+
+            input.val('');
         }
 
         return false;
@@ -656,45 +629,6 @@ $(document).ready(function() {
             });
         }
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     ////////////////////////////// MODAL LOGIN E CADASTRO //////////////////////////////
 

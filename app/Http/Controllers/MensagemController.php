@@ -25,12 +25,14 @@ class MensagemController extends Controller
             $mensagem->destinatario_id = $destinatario_id;
             $mensagem->mensagem = $request->mensagem;
 
+            $count = Mensagem::selectRaw('SUM(CASE WHEN NOT EXISTS (SELECT id FROM mensagens WHERE remetente_id = ' . $remetente_id . ' AND destinatario_id = ' . $destinatario_id . ') THEN 1 ELSE 0 END) AS result,
+                SUM(CASE WHEN created_at = (SELECT MAX(created_at) FROM mensagens WHERE remetente_id = ' . $remetente_id . ' AND destinatario_id = ' . $destinatario_id . ')
+                AND remetente_id = ' . $remetente_id . ' AND destinatario_id = ' . $destinatario_id . '
+                AND TIMESTAMPDIFF(MINUTE, created_at, NOW()) >= 10 THEN 1 ELSE 0 END) AS result2')
+                ->first();
+
             if($mensagem->save()) {
-                $count = Mensagem::selectRaw('SUM(CASE WHEN NOT EXISTS (SELECT id FROM mensagens WHERE remetente_id = ' . $remetente_id . ' AND destinatario_id = ' . $destinatario_id . ') THEN 1 ELSE 0 END) AS result,
-                    SUM(CASE WHEN created_at = (SELECT MAX(created_at) FROM mensagens WHERE remetente_id = ' . $remetente_id . ' AND destinatario_id = ' . $destinatario_id . ')
-                    AND remetente_id = ' . $remetente_id . ' AND destinatario_id = ' . $destinatario_id . '
-                    AND TIMESTAMPDIFF(MINUTE, created_at, NOW()) >= 10 THEN 1 ELSE 0 END) AS result2')
-                    ->first();
+                $return['status'] = true;
 
                 if(count($count->result) > 0 || count($count->result2) > 0) {
                     $user = User::select('email')->find($destinatario_id);
@@ -40,9 +42,11 @@ class MensagemController extends Controller
                         $q->to($user->email)->subject('Nova mensagem');
                     });
                 }
+            } else {
+                $return['status'] = false;
             }
 
-            return json_encode(['hora' => date('H:i'), 'msg' => $request->mensagem]);
+            return json_encode($return);
         }
     }
 

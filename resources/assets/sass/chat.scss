@@ -121,6 +121,13 @@
         overflow: auto;
         padding: 80px 30px 0 30px;
 
+        .error-msg {
+            float: right;
+            margin: 7px 10px 0 0;
+            font-size: 13.7px;
+            color: rgb(240, 108, 108);
+        }
+
         .row {
             width: 100%;
             float: left;
