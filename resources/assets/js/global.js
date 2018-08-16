@@ -553,7 +553,6 @@ $(document).ready(function() {
         });
     });
 
-
     $(document).on('click', '.open-chat', function(e) {
         e.preventDefault();
 
@@ -742,7 +741,7 @@ $(document).ready(function() {
             dataType: 'json',
             data: $(this).serialize(),
             success: function (data) {
-                if(data.status == true) {
+                if(data.status) {
                     window.location = '/';
                 } else {
                     modalAlert(data.msg);
@@ -953,17 +952,15 @@ $(document).ready(function() {
     ////////////////////////////// MODAL DAS CONFIGURACOES DO TRABALHO //////////////////////////////
 
     function insertTag(value) {
-        $('#insert-tag').before("<div class='new-tag'><span>" + value + "</span><input style='display: none; width:" + ((value.length + 1) * 10) + "px;' type='text' name='tag[]' value='" + value + "' /><a href='#'></a></div>");
-
-        $('#insert-tag').val('');
-        $('select.categoria, select.subcategoria').val('').selectpicker('refresh');
-
         var count = parseInt($('.tags').find('.count-tag').text());
 
-        $('.tags').find('.count-tag').text(count - 1);
+        if(count > 0) {
+            $('#insert-tag').before("<div class='new-tag'><span>" + value + "</span><input style='display: none; width:" + ((value.length + 1) * 10) + "px;' type='text' name='tag[]' value='" + value + "' /><a href='#'></a></div>");
 
-        if(count == 1) {
-            $(this).remove();
+            $('#insert-tag').val('');
+            $('select.categoria, select.subcategoria').val('').selectpicker('refresh');
+
+            $('.tags').find('.count-tag').text(count - 1);
         }
     }
 
