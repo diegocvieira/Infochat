@@ -27,11 +27,21 @@ class AvaliarController extends Controller
                 $avaliar->dislikes = 1;
             }
 
-            $avaliar->save();
+            if($avaliar->save()) {
+                session(['atendimento' => true]);
+                session(['atendimento_' . $trabalho->id => $request->like]);
 
-            session(['atendimento' => true]);
-            session(['atendimento_' . $trabalho->id => $request->like]);
+                $return['status'] = true;
+            } else {
+                $return['status'] = false;
+                $return['msg'] = 'Ocorreu um erro. Atualize a página e tente novamente.';
+            }
+        } else {
+            $return['status'] = false;
+            $return['msg'] = 'Não é possível avaliar você mesmo.';
         }
+
+        return json_encode($return);
     }
 
     public function avaliar(Request $request)
@@ -49,6 +59,7 @@ class AvaliarController extends Controller
 
             if($avaliar->save()) {
                 $return['status'] = true;
+                $return['msg'] = 'Avaliação realizada com sucesso!';
                 $return['nome'] = Auth::guard('web')->user()->nome;
                 $return['imagem'] = Auth::guard('web')->user()->imagem;
                 $return['nota'] = $request->nota;
@@ -56,10 +67,14 @@ class AvaliarController extends Controller
                 $return['descricao'] = $request->descricao;
             } else {
                 $return['status'] = false;
+                $return['msg'] = 'Ocorreu um erro. Atualize a página e tente novamente.';
             }
-
-            return json_encode($return);
+        } else {
+            $return['status'] = false;
+            $return['msg'] = 'Não é possível avaliar você mesmo.';
         }
+
+        return json_encode($return);
     }
 
     public function list($id, $offset)

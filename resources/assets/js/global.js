@@ -464,16 +464,15 @@ $(document).ready(function() {
                     dataType: 'json',
                     data: $(this).serialize(),
                     success: function(data) {
-                        if(data.status == true) {
-                            var msg = 'Avaliação realizada com sucesso!',
-                                imagem = data.imagem ? "<img src='/uploads/perfil/" + data.imagem + "' />" : "<img src='/img/paisagem.png' class='sem-imagem' />";
+                        if(data.status && data.descricao) {
+                            $('.modal-trabalho-perfil').find('.comentarios .sem-resultados').remove();
+
+                            var imagem = data.imagem ? "<img src='/uploads/perfil/" + data.imagem + "' />" : "<img src='/img/paisagem.png' class='sem-imagem' />";
 
                             $('.modal-trabalho-perfil').find('.comentarios').prepend("<div class='comentario'><div class='imagem-user'>" + imagem + "</div><div class='header-comentario'><h4>" + data.nome + "</h4><span class='nota'>" + data.nota + ".0</span><span class='data'>" + data.data + "</span></div><div class='descricao-comentario'><p>" + data.descricao + "</p></div></div>");
-                        } else {
-                            var msg = 'Ocorreu um erro. Atualize a página e tente novamente.';
                         }
 
-                        modalAlert(msg, 'OK');
+                        modalAlert(data.msg, 'OK');
                     }
                 });
             } else {
@@ -624,6 +623,11 @@ $(document).ready(function() {
             dataType: 'json',
             data: $(this).serialize(),
             success: function(data) {
+                if(!data.status) {
+                    $('#form-avaliar').find('input[type=radio]').prop('checked', false);
+
+                    modalAlert(data.msg, 'OK');
+                }
             }
         });
 
