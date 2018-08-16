@@ -60,14 +60,12 @@ class MessageController extends Controller
                     $return['status'] = 1;
 
                     if($check) {
-                        $email = $check->from_id == Auth::guard('web')->user()->id ? $check->user_to->email : $check->user_from->email;
+                        $email = $check->from_id == $user_logged ? $check->user_to->email : $check->user_from->email;
 
-                        echo $email;
-
-                        /*Mail::send('emails.nova_mensagem', [], function($q) use($email) {
+                        Mail::send('emails.nova_mensagem', [], function($q) use($email) {
                             $q->from('no-reply@infochat.com.br', 'Infochat');
                             $q->to($email)->subject('Nova mensagem');
-                        });*/
+                        });
                     }
                 } else {
                     $return['status'] = 2;
