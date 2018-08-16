@@ -37,10 +37,14 @@ class Handler extends ExceptionHandler
     public function report(Exception $exception)
     {
         if(!($exception instanceof HttpException)) {
-            Mail::send('emails.phperror', ['error' => $error], function($message) {
+            $error['message'] = $exception->getMessage();
+            $error['file'] = $exception->getFile();
+            $error['line'] = $exception->getLine();
+
+            /*Mail::send('emails.phperror', ['error' => $error], function($message) {
                 $message->to('diegovc10@hotmail.com')->cc('dvdiegovieiradv@gmail.com')->cc('felipeoreis11@gmail.com')
                     ->subject('GENERAL ERROR: - ' . date('d/m/Y').' ' . date('H:i').'h');
-            });
+            });*/
         }
 
         parent::report($exception);

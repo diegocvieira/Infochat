@@ -3,6 +3,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Auth;
 
 class User extends Authenticatable
 {
@@ -24,5 +25,10 @@ class User extends Authenticatable
     public function favorito($id)
     {
         return $this->hasMany('App\Favoritar')->where('trabalho_id', $id)->first();
+    }
+
+    public function blocked()
+    {
+        return $this->hasOne('App\BlockedUser', 'blocked_user_id');
     }
 }

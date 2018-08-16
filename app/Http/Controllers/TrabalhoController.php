@@ -9,11 +9,12 @@ use App\Categoria;
 use App\Subcategoria;
 use App\Cidade;
 use App\AvaliarAtendimento;
-use App\Mensagem;
+use App\Message;
 use DB;
 use App\Avaliar;
 use App\Favoritar;
 use Cookie;
+use App\Chat;
 
 class TrabalhoController extends Controller
 {
@@ -350,8 +351,36 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
-        return $teste;
+        /*$user_id = 2;
 
+        $chat = Chat::with('user_from', 'user_to')
+            ->whereDoesntHave('messages')
+            ->where('id', 1)
+            ->orWhereHas('messages', function($q) use($user_id) {
+                $q->whereRaw('created_at = (SELECT MAX(created_at) FROM messages) AND TIMESTAMPDIFF(MINUTE, created_at, NOW()) >= 10');
+            })
+            ->where('id', 1)
+            ->select('from_id', 'to_id')
+            ->first();
+
+        if($chat) {
+            $email = $chat->from_id == 4 ? $chat->user_to->email : $chat->user_from->email;
+
+            return $email;
+        } else {
+            return 'sem intervalo';
+        }*/
+
+
+
+        $check = Chat::whereHas('messages', function($q) {
+                $q->whereRaw('created_at = (SELECT MAX(created_at) FROM messages) AND TIMESTAMPDIFF(MINUTE, created_at, NOW()) >= 10');
+            })
+            ->where('id', 14)
+            ->select('to_id', 'from_id')
+            ->first();
+
+        return $check;
 
 
         /*\Mail::send('emails.recuperar-senha', ['teste' => 'teste'], function($q) {

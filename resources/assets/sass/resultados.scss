@@ -152,6 +152,55 @@
             background-color: rgba(63, 81, 181, 0.102);
         }
 
+        .options {
+            float: right;
+
+            .open-options {
+                width: 25px;
+                height: 25px;
+                background-size: contain;
+                background-image: url('../img/arrow.png');
+                background-repeat: no-repeat;
+                filter: brightness(80%);
+                float: left;
+            }
+
+            .dropdown-menu {
+                right: 50px;
+                border-radius: 5px;
+                background-color: rgb(255, 255, 255);
+                box-shadow: 2.5px 4.33px 19px 1px rgba(100, 100, 100, 0.118);
+                width: 180px;
+                left: auto;
+                height: auto;
+                padding: 10px 0;
+                top: 65px;
+
+                li {
+                    width: 100%;
+                    float: left;
+                    margin: 0;
+                    height: auto;
+
+                    a {
+                        width: 100%;
+                        float: left;
+                        padding: 10px 0 10px 20px;
+                        line-height: normal;
+                        font-size: 14.5px;
+                        color: rgb(150, 150, 150);
+                    }
+                }
+            }
+        }
+
+        .status-chat {
+            float: left;
+            font-size: 13.3px;
+            color: rgb(150, 150, 150);
+            margin-left: 10px;
+        }
+
         .infos {
             padding: 0 10px;
             float: left;

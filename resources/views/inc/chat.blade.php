@@ -1,37 +1,37 @@
 <div class="topo-chat">
-    {!! Form::hidden('user_id', $tipo == 'trabalho' ? $chat->user_id : $chat->id, ['id' => 'user_id']) !!}
+    {!! Form::hidden('user_id', $tipo == 'trabalho' ? $destinatario->user_id : $destinatario->id, ['id' => 'user_id']) !!}
 
     <div class="imagem">
-        @if($chat->imagem)
-            <img src="{{ asset('uploads/perfil/' . $chat->imagem) }}" alt="Foto de perfil de {{ $chat->nome }}" />
+        @if($destinatario->imagem)
+            <img src="{{ asset('uploads/perfil/' . $destinatario->imagem) }}" alt="Foto de perfil de {{ $destinatario->nome }}" />
         @else
-            <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" alt="Foto de perfil de {{ $chat->nome }}" />
+            <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" alt="Foto de perfil de {{ $destinatario->nome }}" />
         @endif
     </div>
 
     @if($tipo == 'trabalho')
-        <a href="#" class="ver-perfil" data-id="{{ $chat->id }}">{{ $chat->nome }}</a>
+        <a href="#" class="ver-perfil" data-id="{{ $destinatario->id }}">{{ $destinatario->nome }}</a>
     @else
-        <a href="#">{{ $chat->nome }}</a>
+        <a href="#">{{ $destinatario->nome }}</a>
     @endif
 
     @if(Auth::guard('web')->check() && $tipo == 'trabalho')
         {!! Form::open(['method' => 'post', 'id' => 'form-avaliar', 'route' => 'avaliar-atendimento']) !!}
             <span>avalie este atendimento</span>
 
-            {!! Form::hidden('trabalho_id', $chat->id) !!}
+            {!! Form::hidden('trabalho_id', $destinatario->id) !!}
 
-            {!! Form::radio('like', '1', (Session::has('atendimento') && session('atendimento_' . $chat->id) == '1') ? true : false, ['id' => 'like']) !!}
+            {!! Form::radio('like', '1', (Session::has('atendimento') && session('atendimento_' . $destinatario->id) == '1') ? true : false, ['id' => 'like']) !!}
             {!! Form::label('like', ' ') !!}
 
-            {!! Form::radio('like', '0', (Session::has('atendimento') && session('atendimento_' . $chat->id) == '0') ? true : false, ['id' => 'dislike']) !!}
+            {!! Form::radio('like', '0', (Session::has('atendimento') && session('atendimento_' . $destinatario->id) == '0') ? true : false, ['id' => 'dislike']) !!}
             {!! Form::label('dislike', ' ') !!}
         {!! Form::close() !!}
     @endif
 </div>
 
 <div class="mensagens">
-    @if(isset($mensagens) && count($mensagens) > 0)
+    @if(isset($chat) && count($chat->messages) > 0)
         @include('inc.list-mensagens-chat')
     @else
         <div class="sem-mensagens">
@@ -42,10 +42,10 @@
 </div>
 
 @if(Auth::guard('web')->check())
-    {!! Form::open(['method' => 'post', 'action' => 'MensagemController@send', 'id' => 'form-enviar-msg']) !!}
-        {!! Form::text('mensagem', null, ['placeholder' => 'Digite uma mensagem']) !!}
+    {!! Form::open(['method' => 'post', 'action' => 'MessageController@send', 'id' => 'form-enviar-msg']) !!}
+        {!! Form::text('message', null, ['placeholder' => 'Digite uma mensagem']) !!}
 
-        {!! Form::hidden('destinatario_id', $tipo == 'trabalho' ? $chat->user->id : $chat->id, ['class' => 'trabalho-id']) !!}
+        {!! Form::hidden('chat_id', $chat->id) !!}
 
         {!! Form::submit('', ['class' => 'button']) !!}
     {!! Form::close() !!}

@@ -1,8 +1,8 @@
 <div class="topo-resultados">
     <div class="abas-resultados">
         <a href="#" data-type="resultado" class="active">RESULTADO</a>
-        <a href="{{ action('MensagemController@pessoal') }}" data-type="pessoal">PESSOAL</a>
-        <a href="{{ action('MensagemController@trabalho') }}" data-type="trabalho">TRABALHO</a>
+        <a href="{{ route('msg-pessoal') }}" data-type="pessoal">PESSOAL</a>
+        <a href="{{ route('msg-trabalho') }}" data-type="trabalho">TRABALHO</a>
     </div>
 
     @if(isset($filtro_ordem))

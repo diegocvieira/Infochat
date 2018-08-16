@@ -506,16 +506,61 @@ $(document).ready(function() {
 
     ////////////////////////////// CHAT //////////////////////////////
 
+    $(document).on('click', '.option-chat', function(e) {
+        e.preventDefault();
+
+        var type = $(this).data('type'),
+            url = $(this).attr('href'),
+            parent = $(this).parent();
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                if(type == 'close') {
+                    parent.find('a').remove();
+                    parent.append("<a href='" + data.route + "' class='option-chat' data-type='open'>Retomar chat</a>");
+                    parent.parents('.result').find('.ver-perfil').after("<span class='status-chat'>" + data.msg + "</span>");
+                } else if(type == 'open') {
+                    parent.find('a').remove();
+                    parent.append("<a href='" + data.route + "' class='option-chat' data-type='close'>Finalizar chat</a>");
+                    parent.parents('.result').find('.status-chat').remove();
+                } else if(type == 'delete') {
+                    parent.parents('.result').remove();
+
+                    if($('.result').length == 0) {
+                        setTimeout(function() {
+                            window.location.reload(true);
+                        }, 100);
+                    } else {
+                        $('.chat').html("<div class='sem-selecao'><img src='/img/icon-logo.png' /><p>Selecione um profissional ou estabelecimento<br>para pedir informações ou tirar dúvidas</p></div>");
+                    }
+                }
+            }
+        });
+    });
+
+
     $(document).on('click', '.open-chat', function(e) {
         e.preventDefault();
 
-        if($(e.target).attr('class') != 'ver-perfil') {
+        var target = $(e.target).attr('class');
+
+        if(target != 'ver-perfil' && target != 'option-chat') {
             $('#form-search-results').find('.result').removeClass('active-trabalho');
 
             $(this).addClass('active-trabalho');
 
+            var chatid = $(this).data('identificador'),
+                url = '/mensagem/chat/show/' + $(this).data('id') + '/' + $(this).data('type');
+
+            if(chatid) {
+                url = url + '/' + chatid;
+            }
+
             $.ajax({
-                url: '/mensagem/chat/' + $(this).data('id') + '/' + $(this).data('type'),
+                url: url,
                 method: 'GET',
                 dataType:'json',
                 success: function(data) {
@@ -532,7 +577,7 @@ $(document).ready(function() {
             });
 
             if(logged == true) {
-                var interval = null;
+                interval = null;
 
                 // Limpar setinterval anterior
                 clearInterval(interval);
@@ -540,9 +585,9 @@ $(document).ready(function() {
                 // Atualizar chat em tempo real
                 interval = setInterval(function() {
                     $.ajax({
-                        url: 'mensagem/list/' + $('.chat').find('#user_id').val() + '/0',
+                        url: 'mensagem/list/' + $('.chat').find('input[name=chat_id]').val() + '/0',
                         method: 'GET',
-                        dataType:'json',
+                        dataType: 'json',
                         success: function(data) {
                             var div = $('.chat').find('.mensagens');
 
@@ -565,7 +610,7 @@ $(document).ready(function() {
         $.ajax({
             url: $(this).attr('action'),
             method: 'POST',
-            dataType:'json',
+            dataType: 'json',
             data: $(this).serialize(),
             success: function(data) {
             }
@@ -591,11 +636,17 @@ $(document).ready(function() {
             $.ajax({
                 url: $(this).attr('action'),
                 method: 'POST',
-                dataType:'json',
+                dataType: 'json',
                 data: $(this).serialize(),
                 success: function(data) {
-                    if(!data.status) {
+                    if(data.status != 1) {
                         div.find('.enviada:last').append("<span class='error-msg'>Erro</span>");
+
+                        if(data.status == 3) {
+                            clearInterval(interval);
+
+                            modalAlert(data.msg, 'OK');
+                        }
                     }
                 }
             });
@@ -612,7 +663,7 @@ $(document).ready(function() {
             var div = $('.chat').find('.mensagens');
 
             $.ajax({
-                url: 'mensagem/list/' + $('.chat').find('.trabalho-id').val() + '/' + div.find('.msg').length,
+                url: 'mensagem/list/' + $('.chat').find('input[name=chat_id]').val() + '/' + div.find('.msg').length,
                 method: 'GET',
                 dataType:'json',
                 success: function(data) {

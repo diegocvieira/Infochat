@@ -41,15 +41,23 @@ Route::get('politica/privacidade', function() {
 
 Route::group(['prefix' => 'mensagem'], function() {
     // Enviar
-    Route::post('send', 'MensagemController@send');
+    Route::post('send', 'MessageController@send');
     // Listar mensagens do chat
-    Route::get('list/{id}/{offset}', 'MensagemController@list');
+    Route::get('list/{id}/{offset}', 'MessageController@list');
     // Exibir chat
-    Route::get('chat/{id}/{tipo}', 'MensagemController@chat')->name('chat');
+    Route::get('chat/show/{id}/{tipo}/{chat_id?}', 'ChatController@show');
     // Listar mensagens pessoais
-    Route::get('list/pessoal', 'MensagemController@pessoal');
+    Route::get('list/pessoal', 'ChatController@pessoal')->name('msg-pessoal');
     // Listar mensagens de trabalho
-    Route::get('list/trabalho', 'MensagemController@trabalho');
+    Route::get('list/trabalho', 'ChatController@trabalho')->name('msg-trabalho');
+    // Finalizar chat
+    Route::get('chat/close/{id}', 'ChatController@close')->name('close-chat');
+    // Retomar chat
+    Route::get('chat/open/{id}', 'ChatController@open')->name('open-chat');
+    // Apagar chat
+    Route::get('chat/delete/{id}', 'ChatController@delete')->name('delete-chat');
+    // Bloquear Usuario
+    Route::get('chat/block/{id}', 'ChatController@blockUser')->name('block-user');
 });
 
 Route::group(['prefix' => 'trabalho'], function() {
