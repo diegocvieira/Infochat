@@ -104,7 +104,6 @@ class ChatController extends Controller
 
         if($chat->save()) {
             $return['status'] = true;
-            $return['msg'] = 'CHAT FINALIZADO';
             $return['route'] = route('open-chat', $id);
         } else {
             $return['status'] = false;
@@ -153,6 +152,29 @@ class ChatController extends Controller
         $block->user_id = Auth::guard('web')->user()->id;
         $block->blocked_user_id = $id;
 
-        $block->save();
+        if($block->save()) {
+            $return['status'] = true;
+            $return['route'] = route('unblock-user', $id);
+        } else {
+            $return['status'] = false;
+        }
+
+        return json_encode($return);
+    }
+
+    public function unblockUser($id)
+    {
+        $block = BlockedUser::where('user_id', Auth::guard('web')->user()->id)
+            ->where('blocked_user_id', $id)
+            ->first();
+
+        if($block->delete()) {
+            $return['status'] = true;
+            $return['route'] = route('block-user', $id);
+        } else {
+            $return['status'] = false;
+        }
+
+        return json_encode($return);
     }
 }

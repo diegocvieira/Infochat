@@ -58,6 +58,8 @@ Route::group(['prefix' => 'mensagem'], function() {
     Route::get('chat/delete/{id}', 'ChatController@delete')->name('delete-chat');
     // Bloquear Usuario
     Route::get('chat/block/{id}', 'ChatController@blockUser')->name('block-user');
+    // Desbloquear Usuario
+    Route::get('chat/unblock/{id}', 'ChatController@unblockUser')->name('unblock-user');
 });
 
 Route::group(['prefix' => 'trabalho'], function() {

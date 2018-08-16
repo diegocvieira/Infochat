@@ -140,6 +140,10 @@
         padding: 10px 0;
         cursor: pointer;
 
+        &.work-tab .status-chat {
+            margin: 0 10px 0 0;
+        }
+
         &:last-child {
             border-bottom: none;
         }

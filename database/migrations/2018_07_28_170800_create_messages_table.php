@@ -22,7 +22,7 @@ class CreateMessagesTable extends Migration
             $table->dateTime('read_at')->nullable();
             $table->string('message', 5000);
             $table->dateTime('created_at');
-            $table->integer('deleted');
+            $table->integer('deleted')->nullable();
         });
     }
 

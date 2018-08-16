@@ -518,24 +518,36 @@ $(document).ready(function() {
             method: 'GET',
             dataType: 'json',
             success: function(data) {
-                if(type == 'close') {
-                    parent.find('a').remove();
-                    parent.append("<a href='" + data.route + "' class='option-chat' data-type='open'>Retomar chat</a>");
-                    parent.parents('.result').find('.ver-perfil').after("<span class='status-chat'>" + data.msg + "</span>");
-                } else if(type == 'open') {
-                    parent.find('a').remove();
-                    parent.append("<a href='" + data.route + "' class='option-chat' data-type='close'>Finalizar chat</a>");
-                    parent.parents('.result').find('.status-chat').remove();
-                } else if(type == 'delete') {
-                    parent.parents('.result').remove();
+                if(data.status) {
+                    if(type == 'close') {
+                        parent.find('a').remove();
+                        parent.append("<a href='" + data.route + "' class='option-chat' data-type='open'>Retomar chat</a>");
+                        parent.parents('.result').find('.options').before("<span class='status-chat status-close'>CHAT FINALIZADO</span>");
+                    } else if(type == 'open') {
+                        parent.find('a').remove();
+                        parent.append("<a href='" + data.route + "' class='option-chat' data-type='close'>Finalizar chat</a>");
+                        parent.parents('.result').find('.status-close').remove();
+                    } else if(type == 'delete') {
+                        parent.parents('.result').remove();
 
-                    if($('.result').length == 0) {
-                        setTimeout(function() {
-                            window.location.reload(true);
-                        }, 100);
-                    } else {
-                        $('.chat').html("<div class='sem-selecao'><img src='/img/icon-logo.png' /><p>Selecione um profissional ou estabelecimento<br>para pedir informações ou tirar dúvidas</p></div>");
+                        if($('.result').length == 0) {
+                            setTimeout(function() {
+                                window.location.reload(true);
+                            }, 100);
+                        } else {
+                            $('.chat').html("<div class='sem-selecao'><img src='/img/icon-logo.png' /><p>Selecione um profissional ou estabelecimento<br>para pedir informações ou tirar dúvidas</p></div>");
+                        }
+                    } else if(type == 'block') {
+                        parent.find('a').remove();
+                        parent.append("<a href='" + data.route + "' class='option-chat' data-type='unblock'>Desbloquear usuário</a>");
+                        parent.parents('.result').find('.options').before("<span class='status-chat status-block'>USUÁRIO BLOQUEADO</span>");
+                    } else if(type == 'unblock') {
+                        parent.find('a').remove();
+                        parent.append("<a href='" + data.route + "' class='option-chat' data-type='unblock'>Bloquear usuário</a>");
+                        parent.parents('.result').find('.status-block').remove();
                     }
+                } else {
+                    modalAlert('Ocorreu um erro inesperado. Atualize a página e tente novamente.', 'OK');
                 }
             }
         });

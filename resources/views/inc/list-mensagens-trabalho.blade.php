@@ -1,6 +1,6 @@
 @if(isset($chats) && count($chats) > 0)
     @foreach($chats as $chat)
-        <div class="result open-chat" data-type="pessoal" data-id="{{ $chat->user_from->id }}" data-identificador="{{ $chat->id }}">
+        <div class="result open-chat work-tab" data-type="pessoal" data-id="{{ $chat->user_from->id }}" data-identificador="{{ $chat->id }}">
             <div class="imagem">
                 @if($chat->user_from->imagem)
                     <img src="{{ asset('uploads/perfil/' . $chat->user_from->imagem) }}" alt="Foto de perfil de {{ $chat->user_from->nome }}" />
@@ -13,11 +13,11 @@
                 <h2 class="usuario">{{ $chat->user_from->nome }}</h2>
 
                 @if($chat->close)
-                    <span class="status-chat">CHAT FINALIZADO</span>
+                    <span class="status-chat status-close">CHAT FINALIZADO</span>
                 @endif
 
                 @if($chat->user_from->blocked)
-                    asdsad
+                    <span class="status-chat status-block">USUÁRIO BLOQUEADO</span>
                 @endif
 
                 <ul class="options">
@@ -36,7 +36,11 @@
                             @endif
 
                             <li>
-                                <a href="{{ route('block-user', $chat->to_id) }}" class="option-chat" data-type="block">Bloquear usuário</a>
+                                @if($chat->user_from->blocked)
+                                    <a href="{{ route('unblock-user', $chat->from_id) }}" class="option-chat" data-type="unblock">Desbloquear usuário</a>
+                                @else
+                                    <a href="{{ route('block-user', $chat->from_id) }}" class="option-chat" data-type="block">Bloquear usuário</a>
+                                @endif
                             </li>
 
                             <li>
