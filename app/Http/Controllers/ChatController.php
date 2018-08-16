@@ -68,8 +68,13 @@ class ChatController extends Controller
     public function pessoal()
     {
         if(Auth::guard('web')->check()) {
-            $chats = Chat::where('from_id', Auth::guard('web')->user()->id)
-                ->has('messages')
+            $user_id = Auth::guard('web')->user()->id;
+
+            $chats = Chat::where('from_id', $user_id)
+                ->whereHas('messages', function($q) use($user_id) {
+                    $q->where('deleted', '!=', $user_id)
+                        ->orWhereNull('deleted');
+                })
                 ->get();
         }
 
@@ -84,8 +89,13 @@ class ChatController extends Controller
     public function trabalho()
     {
         if(Auth::guard('web')->check()) {
-            $chats = Chat::where('to_id', Auth::guard('web')->user()->id)
-                ->has('messages')
+            $user_id = Auth::guard('web')->user()->id;
+
+            $chats = Chat::where('to_id', $user_id)
+                ->whereHas('messages', function($q) use($user_id) {
+                    $q->where('deleted', '!=', $user_id)
+                        ->orWhereNull('deleted');
+                })
                 ->get();
         }
 
