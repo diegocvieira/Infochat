@@ -111,17 +111,18 @@
 
                     <div class="hora">
                         <p>
-                            {{ format_horario($horario->de_manha) }}
-                            @if($horario->de_manha && $horario->ate_tarde)
-                                -
+                            @if($horario->de_manha)
+                                <span>{{ format_horario($horario->de_manha) }}</span>
                             @endif
-                            {{ format_horario($horario->ate_tarde) }}
-                            |
-                            {{ format_horario($horario->de_tarde) }}
-                            @if($horario->de_tarde && $horario->ate_noite)
-                                -
+                            @if($horario->ate_tarde)
+                                <span>{{ format_horario($horario->ate_tarde) }}</span>
                             @endif
-                            {{ format_horario($horario->ate_noite) }}
+                            @if($horario->de_tarde)
+                                <span>{{ format_horario($horario->de_tarde) }}</span>
+                            @endif
+                            @if($horario->ate_noite)
+                                <span>{{ format_horario($horario->ate_noite) }}</span>
+                            @endif
                         </p>
                     </div>
                 @endforeach

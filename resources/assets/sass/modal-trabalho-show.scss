@@ -298,6 +298,32 @@
                         float: left;
                         width: calc(100% - 80px);
                         margin-bottom: 5px;
+
+                        span {
+                            position: relative;
+
+                            &:nth-child(2), &:last-child {
+                                padding-left: 8px;
+
+                                &:before {
+                                    content: '-';
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                }
+                            }
+
+                            &:nth-child(3) {
+                                padding-left: 10px;
+
+                                &:before {
+                                    content: '|';
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                }
+                            }
+                        }
                     }
                 }
             }
