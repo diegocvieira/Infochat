@@ -73,12 +73,11 @@
         </div>
     </div>
 
-
     <div class="row" style="padding-left: 15px;">
         <div class="abas col-xs-9">
             <a href="#" class="active" data-type="sobre">Sobre</a>
             <a href="#" data-type="informacoes">Mais informações</a>
-            <a href="#" data-type="dados">Dados</a>
+            <?php /*<a href="#" data-type="dados">Dados</a>*/ ?>
         </div>
 
         <div class="btn-ativar col-xs-3">
@@ -218,7 +217,7 @@
             </div>
         </div>
 
-        <div class="dados aba-aberta">
+        <?php /*<div class="dados aba-aberta">
             <div class="row">
                 <div class="col-xs-6">
                     <div class="dado like">
@@ -272,6 +271,6 @@
                     <p>Número de usuários do infochat que<br>entraram em contato com você</p>
                 </div>
             </div>
-        </div>
+        </div>*/ ?>
     </div>
 {!! Form::close() !!}
