@@ -1,5 +1,5 @@
 <?php
-    $header_title = 'Termos de privacidade | Infochat';
+    $header_title = 'Política de privacidade | Infochat';
     $top_simple = true;
 ?>
 
