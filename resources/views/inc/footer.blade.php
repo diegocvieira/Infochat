@@ -36,7 +36,7 @@
                         </div>
 
                         <div class="modal-footer">
-                            <p>Ao se cadastrar você concorda com os <a href="#">termos<br>e condições</a> do infochat.com.br</p>
+                            <p>Ao se cadastrar você concorda com os <a href="{{ route('termos-uso') }}" target="_blank">termos de uso</a><br>e a <a href="{{ route('termos-privacidade') }}" target="_blank">política de privacidade</a> do infochat.com.br</p>
                         </div>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
