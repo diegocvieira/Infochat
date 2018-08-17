@@ -351,43 +351,6 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
-        /*$user_id = 2;
-
-        $chat = Chat::with('user_from', 'user_to')
-            ->whereDoesntHave('messages')
-            ->where('id', 1)
-            ->orWhereHas('messages', function($q) use($user_id) {
-                $q->whereRaw('created_at = (SELECT MAX(created_at) FROM messages) AND TIMESTAMPDIFF(MINUTE, created_at, NOW()) >= 10');
-            })
-            ->where('id', 1)
-            ->select('from_id', 'to_id')
-            ->first();
-
-        if($chat) {
-            $email = $chat->from_id == 4 ? $chat->user_to->email : $chat->user_from->email;
-
-            return $email;
-        } else {
-            return 'sem intervalo';
-        }*/
-
-
-
-        $check = Chat::whereHas('messages', function($q) {
-                $q->whereRaw('created_at = (SELECT MAX(created_at) FROM messages) AND TIMESTAMPDIFF(MINUTE, created_at, NOW()) >= 10');
-            })
-            ->where('id', 14)
-            ->select('to_id', 'from_id')
-            ->first();
-
-        return $check;
-
-
-        /*\Mail::send('emails.recuperar-senha', ['teste' => 'teste'], function($q) {
-            $q->from('no-reply@infochat.com', 'infochat');
-            $q->to('diegovc10@hotmail.com')->subject('Teste envio');
-        });*/
-
         /*$mensagem = Mensagem::selectRaw("CONCAT(FLOOR(sum(diferenca)/60),'h',MOD(sum(diferenca),60),'m') as tempo")
     ->whereIn('id', function($query) {
      $query->selectRaw('TIMESTAMPDIFF(MINUTE, m1.created_at, min(m2.created_at)) as diferenca')
