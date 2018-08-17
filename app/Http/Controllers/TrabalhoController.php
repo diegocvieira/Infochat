@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -15,6 +16,7 @@ use App\Avaliar;
 use App\Favoritar;
 use Cookie;
 use App\Chat;
+use App\Estado;
 
 class TrabalhoController extends Controller
 {
@@ -183,25 +185,45 @@ class TrabalhoController extends Controller
     public function formBusca(Request $request)
     {
         $palavra_chave = urlencode($request->palavra_chave);
+        $city = Cookie::get('sessao_cidade_slug');
+        $state = Cookie::get('sessao_estado_letter_lc');
 
-        return $this->busca($request->tipo, $palavra_chave, $request->area, $request->tag, $request->ordem, $request->offset);
+        return $this->busca($city, $state, $request->tipo, $palavra_chave, $request->area, $request->tag, $request->ordem, $request->offset);
     }
 
-    public function busca($tipo = null, $palavra_chave = null, $area = null, $tag = null, $ordem = null, $offset = null)
+    public function busca($city_slug, $state_letter_lc, $tipo = null, $palavra_chave = null, $area = null, $tag = null, $ordem = null, $offset = null)
     {
+        // Verifica e seta a requisicao se for uma cidade diferente
+        if($city_slug != Cookie::get('sessao_cidade_slug') || $state_letter_lc != Cookie::get('sessao_estado_letter_lc')) {
+            $city = Cidade::where('slug', $city_slug)
+                ->whereHas('estado', function($q) use($state_letter_lc) {
+                    $q->where('letter_lc', $state_letter_lc);
+                })->first();
+
+            if(count($city) > 0) {
+                _setCidade($city, $force = true);
+
+                return redirect(action('TrabalhoController@busca', [$city_slug, $state_letter_lc, $tipo, $palavra_chave, $area, $tag]));
+            } else {
+                return view('errors.404');
+            }
+        }
+
+        // Desformatar para pesquisar
         $palavra_chave = urldecode($palavra_chave);
         $tag = urldecode($tag);
 
         $offset = $offset ? $offset : 0;
 
         $trabalhos = Trabalho::filtroStatus()
-                            ->filtroCidade()
-                            ->filtroArea($area)
-                            ->filtroTag($tag)
-                            ->filtroTipo($tipo)
-                            ->filtroOrdem($ordem);
+            ->filtroCidade()
+            ->filtroArea($area)
+            ->filtroTag($tag)
+            ->filtroTipo($tipo)
+            ->filtroOrdem($ordem);
 
         if($palavra_chave && $palavra_chave != 'area') {
+            // SEO
             $header_title = $palavra_chave .' em ' . Cookie::get('sessao_cidade_title') . ' - ' . Cookie::get('sessao_estado_letter') . ' | Infochat';
             $header_desc = 'Clique para ver ' . $palavra_chave . ' em ' . Cookie::get('sessao_cidade_title') . ' - ' . Cookie::get('sessao_estado_letter') . ' no site infochat.com.br';
 
@@ -230,7 +252,7 @@ class TrabalhoController extends Controller
         if(!$palavra_chave && $area) {
             $palavra_chave = 'area';
         }
-        $url = '/busca/' . $tipo;
+        $url = '/busca/' . $city_slug . '/' . $state_letter_lc . '/' . $tipo;
         if($area || $palavra_chave) {
             $url =  $url . '/' . urlencode($palavra_chave);
         }
@@ -247,7 +269,7 @@ class TrabalhoController extends Controller
         }
 
         // Detecta se foi acessado por url ou ajax
-        if($_SERVER['REQUEST_METHOD'] == 'GET') {
+        if(!\Request::ajax()) {
             return view('pagina-inicial', compact('trabalhos', 'palavra_chave', 'tipo', 'area', 'tag', 'filtro_ordem', 'header_title', 'header_desc'));
         } else {
             return response()->json([
@@ -355,7 +377,6 @@ class TrabalhoController extends Controller
             $q->from('no-reply@infochat.com.br', 'Infochat');
             $q->to('diegovc10@hotmail.com')->subject('Teste hotmail');
         });
-
 
         /*$mensagem = Mensagem::selectRaw("CONCAT(FLOOR(sum(diferenca)/60),'h',MOD(sum(diferenca),60),'m') as tempo")
     ->whereIn('id', function($query) {
