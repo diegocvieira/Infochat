@@ -123,6 +123,21 @@
                 border-left: none;
                 border-right: none;
             }
+
+            span {
+                display: inline-block;
+                font-size: 12.5px;
+                color: rgb(255, 255, 255);
+                border-radius: 50%;
+                background-color: rgb(132, 206, 111);
+                width: 20px;
+                height: 20px;
+                text-align: center;
+                overflow: hidden;
+                line-height: normal;
+                top: 5px;
+                position: relative;
+            }
         }
     }
 
@@ -139,9 +154,18 @@
         width: 100%;
         padding: 10px 0;
         cursor: pointer;
+        position: relative;
 
-        &.work-tab .status-chat {
-            margin: 0 10px 0 0;
+        &.work-tab {
+            .status-chat {
+                margin: 0 10px 0 0;
+            }
+
+            .new-messages {
+                right: 10px;
+                position: absolute;
+                top: 0;
+            }
         }
 
         &:last-child {
@@ -154,55 +178,6 @@
 
         .active {
             background-color: rgba(63, 81, 181, 0.102);
-        }
-
-        .options {
-            float: right;
-
-            .open-options {
-                width: 25px;
-                height: 25px;
-                background-size: contain;
-                background-image: url('../img/arrow.png');
-                background-repeat: no-repeat;
-                filter: brightness(80%);
-                float: left;
-            }
-
-            .dropdown-menu {
-                right: 50px;
-                border-radius: 5px;
-                background-color: rgb(255, 255, 255);
-                box-shadow: 2.5px 4.33px 19px 1px rgba(100, 100, 100, 0.118);
-                width: 180px;
-                left: auto;
-                height: auto;
-                padding: 10px 0;
-                top: 65px;
-
-                li {
-                    width: 100%;
-                    float: left;
-                    margin: 0;
-                    height: auto;
-
-                    a {
-                        width: 100%;
-                        float: left;
-                        padding: 10px 0 10px 20px;
-                        line-height: normal;
-                        font-size: 14.5px;
-                        color: rgb(150, 150, 150);
-                    }
-                }
-            }
-        }
-
-        .status-chat {
-            float: left;
-            font-size: 13.3px;
-            color: rgb(150, 150, 150);
-            margin-left: 10px;
         }
 
         .infos {
@@ -255,11 +230,11 @@
         }
 
         .tags {
-            width: 100%;
+            width: 85%;
             height: 20px;
             float: left;
             overflow: hidden;
-            margin: 5px 0 5px 0;
+            margin-bottom: 5px;
 
             p {
                 font-size: 12.5px;
@@ -272,30 +247,101 @@
             }
         }
 
-        .ver-perfil {
-            font-size: 13.3px;
-            color: rgb(150, 150, 150);
-            position: relative;
-            padding-left: 17px;
+        .new-messages {
             float: left;
+            width: 15%;
 
-            &:after {
-                content: '';
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 25px;
-                height: 25px;
-                background-position: 2px -5px;
-                background-size: contain;
-                background-image: url('../img/arrow.png');
-                background-repeat: no-repeat;
-                -webkit-transform: rotate(270deg);
-                -moz-transform: rotate(270deg);
-                -ms-transform: rotate(270deg);
-                -o-transform: rotate(270deg);
-                transform: rotate(270deg);
-                filter: brightness(80%);
+            span {
+                float: right;
+                font-size: 12.5px;
+                color: rgb(255, 255, 255);
+                border-radius: 50%;
+                background-color: rgb(132, 206, 111);
+                width: 20px;
+                height: 20px;
+                text-align: center;
+                overflow: hidden;
+            }
+        }
+
+        .result-bottom {
+            float: left;
+            width: 100%;
+
+            .options {
+                float: right;
+
+                .open-options {
+                    width: 25px;
+                    height: 25px;
+                    background-size: contain;
+                    background-image: url('../img/arrow.png');
+                    background-repeat: no-repeat;
+                    filter: brightness(80%);
+                    float: left;
+                }
+
+                .dropdown-menu {
+                    right: 50px;
+                    border-radius: 5px;
+                    background-color: rgb(255, 255, 255);
+                    box-shadow: 2.5px 4.33px 19px 1px rgba(100, 100, 100, 0.118);
+                    width: 180px;
+                    left: auto;
+                    height: auto;
+                    padding: 10px 0;
+                    top: 65px;
+
+                    li {
+                        width: 100%;
+                        float: left;
+                        margin: 0;
+                        height: auto;
+
+                        a {
+                            width: 100%;
+                            float: left;
+                            padding: 10px 0 10px 20px;
+                            line-height: normal;
+                            font-size: 14.5px;
+                            color: rgb(150, 150, 150);
+                        }
+                    }
+                }
+            }
+
+            .status-chat {
+                float: left;
+                font-size: 13.3px;
+                color: rgb(150, 150, 150);
+                margin-left: 10px;
+            }
+
+            .ver-perfil {
+                font-size: 13.3px;
+                color: rgb(150, 150, 150);
+                position: relative;
+                padding-left: 17px;
+                float: left;
+
+                &:after {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 25px;
+                    height: 25px;
+                    background-position: 2px -5px;
+                    background-size: contain;
+                    background-image: url('../img/arrow.png');
+                    background-repeat: no-repeat;
+                    -webkit-transform: rotate(270deg);
+                    -moz-transform: rotate(270deg);
+                    -ms-transform: rotate(270deg);
+                    -o-transform: rotate(270deg);
+                    transform: rotate(270deg);
+                    filter: brightness(80%);
+                }
             }
         }
     }

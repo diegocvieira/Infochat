@@ -16,6 +16,10 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer(
             ['inc.aside-categorias'], 'App\Http\ViewComposers\CategoriasComposer'
         );
+
+        view()->composer(
+            ['inc.abas-resultados'], 'App\Http\ViewComposers\NewMessagesComposer'
+        );
     }
 
     /**

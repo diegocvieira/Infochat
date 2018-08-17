@@ -60,6 +60,8 @@ Route::group(['prefix' => 'mensagem'], function() {
     Route::get('chat/block/{id}', 'ChatController@blockUser')->name('block-user');
     // Desbloquear Usuario
     Route::get('chat/unblock/{id}', 'ChatController@unblockUser')->name('unblock-user');
+    // Count novas mensagens trabalho/pessoal
+    Route::post('new-messages', 'MessageController@newMessages');
 });
 
 Route::group(['prefix' => 'trabalho'], function() {

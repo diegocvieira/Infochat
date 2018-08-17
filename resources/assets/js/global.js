@@ -13,6 +13,60 @@ $(document).ready(function() {
         });
     }
 
+    // Atualizar as abas de mensagens em tempo real
+    if(logged) {
+        setInterval(function() {
+            $.ajax({
+                url: 'mensagem/new-messages',
+                method: 'POST',
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    newMessagesPessoal(data.pessoal);
+                    newMessagesTrabalho(data.trabalho);
+                }
+            });
+        }, 20000);
+    }
+
+    // Atualizar count aba trabalho
+    function newMessagesTrabalho(count) {
+        var trabalho = $('.resultados').find('.abas-resultados a[data-type=trabalho]');
+
+        if(count) {
+            if(trabalho.find('span').length) {
+                if(count != parseInt(trabalho.find('span').text())) {
+                    trabalho.find('span').text(count);
+
+                    $('#alert-new-message')[0].play();
+                }
+            } else {
+                trabalho.append("<span>" + count + "</span>");
+
+                $('#alert-new-message')[0].play();
+            }
+        } else {
+            trabalho.find('span').remove();
+        }
+    }
+
+    // Atualizar count aba pessoal
+    function newMessagesPessoal(count) {
+        var pessoal = $('.resultados').find('.abas-resultados a[data-type=pessoal]');
+
+        if(count) {
+            if(pessoal.find('span').length) {
+                pessoal.find('span').text(count);
+            } else {
+                pessoal.append("<span>" + count + "</span>");
+            }
+        } else {
+            pessoal.find('span').remove();
+        }
+    }
+
     // Passar imagens do modal nas flechas do teclado
     $('#modal-como-funciona').on('keydown', function(e) {
         var position = parseInt($('#modal-como-funciona').find('.position .active').data('position'));
@@ -562,6 +616,9 @@ $(document).ready(function() {
 
             $(this).addClass('active-trabalho');
 
+            // Remover numero de novas mensagens
+            $(this).find('.new-messages').remove();
+
             var chatid = $(this).data('identificador'),
                 url = '/mensagem/chat/show/' + $(this).data('id') + '/' + $(this).data('type');
 
@@ -583,6 +640,12 @@ $(document).ready(function() {
                     listenForScrollEvent($('.chat .mensagens'));
 
                     $('#form-enviar-msg').find('input[type=text]').focus();
+
+                    // Atualizar count da aba trabalho
+                    newMessagesTrabalho(data.new_messages_trabalho);
+
+                    // Atualizar count da aba pessoal
+                    newMessagesPessoal(data.new_messages_pessoal);
                 }
             });
 

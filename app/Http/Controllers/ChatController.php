@@ -48,8 +48,8 @@ class ChatController extends Controller
                 }
             }
 
-            $chat = Chat::with(['messages' => function($q) {
-                    $q->where('deleted', '!=', Auth::guard('web')->user()->id)
+            $chat = Chat::with(['messages' => function($q) use($user_id) {
+                    $q->where('deleted', '!=', $user_id)
                         ->orWhereNull('deleted')
                         ->limit(20)
                         ->orderBy('created_at', 'desc');
@@ -57,10 +57,20 @@ class ChatController extends Controller
 
             // Visualizar as mensagens
             app('App\Http\Controllers\MessageController')->read($chat_id);
+
+            // Count mensagens aba trabalho/pessoal
+            $new_messages = app('App\Http\Controllers\MessageController')->newMessages();
+            $new_messages_pessoal = $new_messages['pessoal'];
+            $new_messages_trabalho = $new_messages['trabalho'];
+        } else {
+            $new_messages_trabalho = null;
+            $new_messages_pessoal = null;
         }
 
         return response()->json([
-            'trabalho' => view('inc.chat', compact('destinatario', 'chat', 'tipo'))->render()
+            'trabalho' => view('inc.chat', compact('destinatario', 'chat', 'tipo'))->render(),
+            'new_messages_trabalho' => $new_messages_trabalho,
+            'new_messages_pessoal' => $new_messages_pessoal
         ]);
     }
 

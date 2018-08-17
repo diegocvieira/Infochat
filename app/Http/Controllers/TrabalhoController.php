@@ -351,6 +351,11 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
+        $new_messages = app('App\Http\Controllers\MessageController')->newMessages();
+
+        return $new_messages['pessoal'];
+
+
         /*$mensagem = Mensagem::selectRaw("CONCAT(FLOOR(sum(diferenca)/60),'h',MOD(sum(diferenca),60),'m') as tempo")
     ->whereIn('id', function($query) {
      $query->selectRaw('TIMESTAMPDIFF(MINUTE, m1.created_at, min(m2.created_at)) as diferenca')

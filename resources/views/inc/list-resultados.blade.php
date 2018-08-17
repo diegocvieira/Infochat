@@ -17,7 +17,9 @@
                 @endforeach
             </div>
 
-            <a href="#" class="ver-perfil" data-id="{{ $trabalho->id }}">ver perfil</a>
+            <div class="result-bottom">
+                <a href="#" class="ver-perfil" data-id="{{ $trabalho->id }}">ver perfil</a>
+            </div>
         </div>
     </div>
 @endforeach

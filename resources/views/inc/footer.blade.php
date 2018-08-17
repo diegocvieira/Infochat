@@ -128,6 +128,8 @@
             <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.8/jquery.mask.min.js"></script>
         @endif
 
+        <audio src="{{ asset('img/sound.mp3') }}" id="alert-new-message"></audio>
+
         <script>
             @if(Auth::guard('web')->check())
                 var logged = true;

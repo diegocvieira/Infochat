@@ -18,33 +18,41 @@
                     @endforeach
                 </div>
 
-                <a href="#" class="ver-perfil" data-id="{{ $chat->user_to->trabalho->id }}">ver perfil</a>
-
-                @if($chat->close)
-                    <span class="status-chat">CHAT FINALIZADO</span>
+                @if($chat->count_new_messages() > 0)
+                    <div class="new-messages">
+                        <span>{{ $chat->count_new_messages() }}</span>
+                    </div>
                 @endif
 
-                <ul class="options">
-                    <li>
-                        <a href="#" class="open-options" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"></a>
+                <div class="result-bottom">
+                    <a href="#" class="ver-perfil" data-id="{{ $chat->user_to->trabalho->id }}">ver perfil</a>
 
-                        <ul class="dropdown-menu">
-                            @if(!$chat->close || $chat->close && $chat->close == Auth::guard('web')->user()->id)
+                    @if($chat->close)
+                        <span class="status-chat">CHAT FINALIZADO</span>
+                    @endif
+
+                    <ul class="options">
+                        <li>
+                            <a href="#" class="open-options" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"></a>
+
+                            <ul class="dropdown-menu">
+                                @if(!$chat->close || $chat->close && $chat->close == Auth::guard('web')->user()->id)
+                                    <li>
+                                        @if($chat->close)
+                                            <a href="{{ route('open-chat', $chat->id) }}" class="option-chat" data-type="open">Retomar chat</a>
+                                        @else
+                                            <a href="{{ route('close-chat', $chat->id) }}" class="option-chat" data-type="close">Finalizar chat</a>
+                                        @endif
+                                    </li>
+                                @endif
+
                                 <li>
-                                    @if($chat->close)
-                                        <a href="{{ route('open-chat', $chat->id) }}" class="option-chat" data-type="open">Retomar chat</a>
-                                    @else
-                                        <a href="{{ route('close-chat', $chat->id) }}" class="option-chat" data-type="close">Finalizar chat</a>
-                                    @endif
+                                    <a href="{{ route('delete-chat', $chat->id) }}" class="option-chat" data-type="delete">Apagar chat</a>
                                 </li>
-                            @endif
-
-                            <li>
-                                <a href="{{ route('delete-chat', $chat->id) }}" class="option-chat" data-type="delete">Apagar chat</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     @endforeach

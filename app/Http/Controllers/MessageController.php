@@ -99,17 +99,54 @@ class MessageController extends Controller
             ->orderBy('created_at', 'desc')
             ->first();
 
+        // Visualizar as mensagens
+        $this->read($chat->id);
+
         return response()->json([
             'mensagens' => view('inc.list-mensagens-chat', compact('chat'))->render(),
             'last_msg' => isset($last_msg) ? $last_msg->mensagem : ''
         ]);
     }
 
+    // Ler mensagens
     public function read($chat_id)
     {
         Message::whereNull('read_at')
             ->where('chat_id', $chat_id)
             ->where('user_id', '!=', Auth::guard('web')->user()->id)
             ->update(['read_at' => date('Y-m-d H:i:s')]);
+    }
+
+    public function newMessages()
+    {
+        $user_id = Auth::guard('web')->user()->id;
+
+        $return['pessoal'] = Message::whereHas('chat', function($q) use($user_id) {
+                $q->where('from_id', $user_id);
+            })
+            ->where(function($q) use($user_id) {
+                $q->where('deleted', '!=', $user_id)
+                    ->orWhereNull('deleted');
+            })
+            ->whereNull('read_at')
+            ->where('user_id', '!=', $user_id)
+            ->count();
+
+        $return['trabalho'] = Message::whereHas('chat', function($q) use($user_id) {
+                $q->where('to_id', $user_id);
+            })
+            ->where(function($q) use($user_id) {
+                $q->where('deleted', '!=', $user_id)
+                    ->orWhereNull('deleted');
+            })
+            ->whereNull('read_at')
+            ->where('user_id', '!=', $user_id)
+            ->count();
+
+        if($_SERVER['REQUEST_METHOD'] == 'GET') {
+            return $return;
+        } else {
+            return json_encode($return);
+        }
     }
 }
