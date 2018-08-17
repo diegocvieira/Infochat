@@ -75,6 +75,7 @@ class ChatController extends Controller
                     $q->where('deleted', '!=', $user_id)
                         ->orWhereNull('deleted');
                 })
+                ->orderBy('created_at', 'desc')
                 ->get();
         }
 
@@ -96,6 +97,7 @@ class ChatController extends Controller
                     $q->where('deleted', '!=', $user_id)
                         ->orWhereNull('deleted');
                 })
+                ->orderBy('created_at', 'desc')
                 ->get();
         }
 
@@ -140,15 +142,17 @@ class ChatController extends Controller
 
     public function delete($id)
     {
-        $chat = Chat::with(['messages' => function($q) {
-            $q->whereNull('deleted');
-        }])->find($id);
+        $user_id = Auth::guard('web')->user()->id;
 
-        if(count($chat->messages) > 0) {
-            $chat->messages()->update(['deleted' => Auth::guard('web')->user()->id]);
-        } else {
-            $chat->delete();
-        }
+        $chat = Chat::where('id', $id)
+            ->where(function($q) use($user_id) {
+                $q->where('from_id', $user_id)
+                    ->orWhere('to_id', $user_id);
+            })
+            ->first();
+
+        $chat->messages()->whereNotNull('deleted')->delete();
+        $chat->messages()->whereNull('deleted')->update(['deleted' => $user_id]);
 
         $return['status'] = true;
 
