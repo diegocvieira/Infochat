@@ -223,7 +223,7 @@ class TrabalhoController extends Controller
         }
 
         $trabalhos = $trabalhos->offset($offset)
-            ->limit(4)
+            ->limit(20)
             ->get();
 
         // Gera a URL
@@ -351,9 +351,10 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
-        $new_messages = app('App\Http\Controllers\MessageController')->newMessages();
-
-        return $new_messages['pessoal'];
+        \Mail::send('emails.nova_mensagem', [], function($q) {
+            $q->from('no-reply@infochat.com.br', 'Infochat');
+            $q->to('diegovc10@hotmail.com')->subject('Teste hotmail');
+        });
 
 
         /*$mensagem = Mensagem::selectRaw("CONCAT(FLOOR(sum(diferenca)/60),'h',MOD(sum(diferenca),60),'m') as tempo")
