@@ -28,8 +28,12 @@ class MessageController extends Controller
         if($chat) {
             $user_id = $chat->from_id == $user_logged ? $chat->to_id : $chat->from_id; // User que nao iniciou a conversa
 
-            $chat_close = Chat::whereNotNull('close')->find($chat->id); // Verifica se a conversa esta fechada
-            $user_blocked = BlockedUser::where('user_id', $user_logged)->where('blocked_user_id', $user_id)->first(); // Verifica se o user esta bloqueado
+            // Verifica se a conversa esta fechada
+            $chat_close = Chat::whereNotNull('close')->find($chat->id);
+            // Verifica se o user esta bloqueado
+            $user_blocked = BlockedUser::where('user_id', $user_id)
+                ->where('blocked_user_id', $user_logged)
+                ->first();
 
             if($chat_close) {
                 $return['status'] = 3;
