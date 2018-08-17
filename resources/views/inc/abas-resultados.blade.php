@@ -20,7 +20,7 @@
 </div>
 
 <div id="form-search-results">
-    @if(count($trabalhos) > 0)
+    @if(isset($trabalhos) && count($trabalhos) > 0)
         @include('inc.list-resultados')
     @else
         <div class="sem-resultados">

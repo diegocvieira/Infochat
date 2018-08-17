@@ -9,8 +9,8 @@ use App\Area;
 use App\Trabalho;
 use Cookie;
 use DB;
-use App\Mensagem;
 use Auth;
+use App\Chat;
 
 class GlobalController extends Controller
 {

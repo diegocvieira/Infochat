@@ -9,6 +9,7 @@ use App\Trabalho;
 use Auth;
 use App\Message;
 use App\BlockedUser;
+use Cookie;
 
 class ChatController extends Controller
 {
@@ -52,7 +53,7 @@ class ChatController extends Controller
                     $q->where('deleted', '!=', $user_id)
                         ->orWhereNull('deleted')
                         ->limit(20)
-                        ->orderBy('created_at', 'desc');
+                        ->orderBy('id', 'desc');
                 }])->find($chat_id);
 
             // Visualizar as mensagens
@@ -72,6 +73,68 @@ class ChatController extends Controller
             'new_messages_trabalho' => $new_messages_trabalho,
             'new_messages_pessoal' => $new_messages_pessoal
         ]);
+    }
+
+    public function showChatUrl($slug)
+    {
+        $trabalhos = Trabalho::filtroStatus()->where('slug', $slug)->get();
+
+        if(count($trabalhos) > 0) {
+            if(Cookie::get('sessao_cidade_id') != $trabalhos->first()->cidade_id || Cookie::get('sessao_estado_letter_lc') != $trabalhos->first()->cidade->estado->letter_lc) {
+                _setCidade($trabalhos->first()->cidade, $force = true);
+
+                return redirect(action('ChatController@showChatUrl', $slug));
+            }
+
+            // SEO
+            $header_title = $trabalhos->first()->nome . ' - ' . Cookie::get('sessao_cidade_title') . '/' . Cookie::get('sessao_estado_letter') . ' | Infochat';
+            $header_desc = 'Clique para ver o perfil de ' . $trabalhos->first()->nome . ' em ' . Cookie::get('sessao_cidade_title') . '/' . Cookie::get('sessao_estado_letter') . ' no site infochat.com.br';
+
+            $destinatario = $trabalhos->first();
+            $palavra_chave = $trabalhos->first()->nome;
+            $chat_id = null;
+            $tipo = 'trabalho';
+            $destinatario_id = $trabalhos->first()->user_id;
+
+            pageview($trabalhos->first()->id);
+
+            if(Auth::guard('web')->check()) {
+                $user_id = Auth::guard('web')->user()->id;
+
+                if(!$chat_id) {
+                    $count = Chat::where('from_id', $user_id)
+                        ->where('to_id', $destinatario_id)
+                        ->whereNull('close')
+                        ->first();
+
+                    if(!$count) {
+                        $c = new Chat;
+                        $c->from_id = $user_id;
+                        $c->to_id = $destinatario_id;
+                        $c->created_at = date('Y-m-d H:i:s');
+                        $c->save();
+
+                        $chat_id = $c->id;
+                    } else {
+                        $chat_id = $count->id;
+                    }
+                }
+
+                $chat = Chat::with(['messages' => function($q) use($user_id) {
+                        $q->where('deleted', '!=', $user_id)
+                            ->orWhereNull('deleted')
+                            ->limit(20)
+                            ->orderBy('id', 'desc');
+                    }])->find($chat_id);
+
+                // Visualizar as mensagens
+                app('App\Http\Controllers\MessageController')->read($chat_id);
+            }
+
+            return view('show-chat-url', compact('palavra_chave', 'trabalhos', 'chat', 'tipo', 'destinatario', 'header_desc', 'header_title'));
+        } else {
+            return view('errors.404');
+        }
     }
 
     // Listar os ultimos trabalhos que enviaram uma mensagem
