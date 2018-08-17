@@ -86,17 +86,20 @@ class MessageController extends Controller
     // Listar as mensagens do chat
     public function list($id, $offset)
     {
-        $chat = Chat::with(['messages' => function($q) use($offset) {
-                $q->where('deleted', '!=', Auth::guard('web')->user()->id)
+        $user_id = Auth::guard('web')->user()->id;
+
+        $chat = Chat::with(['messages' => function($q) use($offset, $user_id) {
+                $q->where('deleted', '!=', $user_id)
                     ->orWhereNull('deleted')
                     ->offset($offset)
                     ->limit(20)
-                    ->orderBy('created_at', 'desc');
+                    ->orderBy('id', 'desc');
             }])->find($id);
 
         $last_msg = Message::where('chat_id', $id)
+            ->where('user_id', '!=', $user_id)
             ->select('message')
-            ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
             ->first();
 
         // Visualizar as mensagens
@@ -104,7 +107,7 @@ class MessageController extends Controller
 
         return response()->json([
             'mensagens' => view('inc.list-mensagens-chat', compact('chat'))->render(),
-            'last_msg' => isset($last_msg) ? $last_msg->mensagem : ''
+            'last_msg' => isset($last_msg) ? $last_msg->message : ''
         ]);
     }
 
