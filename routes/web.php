@@ -13,6 +13,9 @@
 
 Route::get('/', 'GlobalController@inicial')->name('inicial');
 
+// Acessar o chat pela url
+Route::get('{slug}', 'ChatController@showChatUrl');
+
 // Listar e setar cidade
 Route::post('cidades/get', 'GlobalController@getCidade');
 Route::get('cidades/set/{id}', 'GlobalController@setCidade');
@@ -30,7 +33,7 @@ Route::post('categorias/busca', 'GlobalController@buscaCategorias');
 
 // Busca
 Route::post('trabalhos/busca', 'TrabalhoController@formBusca');
-Route::any('busca/{tipo?}/{palavra_chave?}/{area?}/{tag?}', 'TrabalhoController@busca');
+Route::any('busca/{city}/{state}/{tipo?}/{palavra_chave?}/{area?}/{tag?}', 'TrabalhoController@busca');
 
 Route::get('termos/uso', function() {
     return view('termos-uso');
@@ -40,28 +43,31 @@ Route::get('politica/privacidade', function() {
 })->name('termos-privacidade');
 
 Route::group(['prefix' => 'mensagem'], function() {
-    // Enviar
-    Route::post('send', 'MessageController@send');
-    // Listar mensagens do chat
-    Route::get('list/{id}/{offset}', 'MessageController@list');
-    // Exibir chat
-    Route::get('chat/show/{id}/{tipo}/{chat_id?}', 'ChatController@show');
     // Listar mensagens pessoais
     Route::get('list/pessoal', 'ChatController@pessoal')->name('msg-pessoal');
     // Listar mensagens de trabalho
     Route::get('list/trabalho', 'ChatController@trabalho')->name('msg-trabalho');
-    // Finalizar chat
-    Route::get('chat/close/{id}', 'ChatController@close')->name('close-chat');
-    // Retomar chat
-    Route::get('chat/open/{id}', 'ChatController@open')->name('open-chat');
-    // Apagar chat
-    Route::get('chat/delete/{id}', 'ChatController@delete')->name('delete-chat');
-    // Bloquear Usuario
-    Route::get('chat/block/{id}', 'ChatController@blockUser')->name('block-user');
-    // Desbloquear Usuario
-    Route::get('chat/unblock/{id}', 'ChatController@unblockUser')->name('unblock-user');
-    // Count novas mensagens trabalho/pessoal
-    Route::post('new-messages', 'MessageController@newMessages');
+    // Exibir chat
+    Route::get('chat/show/{id}/{tipo}/{chat_id?}', 'ChatController@show');
+
+    Route::group(['middleware' => 'auth:web'], function() {
+        // Enviar
+        Route::post('send', 'MessageController@send');
+        // Listar mensagens do chat
+        Route::get('list/{id}/{offset}', 'MessageController@list');
+        // Finalizar chat
+        Route::get('chat/close/{id}', 'ChatController@close')->name('close-chat');
+        // Retomar chat
+        Route::get('chat/open/{id}', 'ChatController@open')->name('open-chat');
+        // Apagar chat
+        Route::get('chat/delete/{id}', 'ChatController@delete')->name('delete-chat');
+        // Bloquear Usuario
+        Route::get('chat/block/{id}', 'ChatController@blockUser')->name('block-user');
+        // Desbloquear Usuario
+        Route::get('chat/unblock/{id}', 'ChatController@unblockUser')->name('unblock-user');
+        // Count novas mensagens trabalho/pessoal
+        Route::post('new-messages', 'MessageController@newMessages');
+    });
 });
 
 Route::group(['prefix' => 'trabalho'], function() {
