@@ -58,9 +58,15 @@ $(document).ready(function() {
 
         if(count) {
             if(pessoal.find('span').length) {
-                pessoal.find('span').text(count);
+                if(count != parseInt(pessoal.find('span').text())) {
+                    trabalho.find('span').text(count);
+
+                    $('#alert-new-message')[0].play();
+                }
             } else {
                 pessoal.append("<span>" + count + "</span>");
+
+                $('#alert-new-message')[0].play();
             }
         } else {
             pessoal.find('span').remove();
