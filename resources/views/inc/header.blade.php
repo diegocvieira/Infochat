@@ -27,18 +27,18 @@
     	<meta name='description' content='{{ $header_desc or 'Infochat - O atendimento online da sua cidade' }}' />
     	<meta itemprop='name' content='{{ $header_title or 'Infochat' }}'>
     	<meta itemprop='description' content='{{ $header_desc or "Infochat - O atendimento online da sua cidade" }}'>
-    	<meta itemprop='image' content='{{ $header_image or asset('img/banner-redes-sociais.jpg') }}'>
+    	<meta itemprop='image' content='{{ $header_image or asset('img/banner.png') }}'>
 
     	<meta name='twitter:card' content='summary_large_image'>
     	<meta name='twitter:title' content='{{ $header_title or 'Infochat' }}'>
     	<meta name='twitter:description' content='{{ $header_desc or 'v' }}'>
     	<!-- imagens largas para o Twitter Summary Card precisam ter pelo menos 280x150px  -->
-    	<meta name='twitter:image' content='{{ $header_image or asset('img/banner-redes-sociais.jpg')}}'>
+    	<meta name='twitter:image' content='{{ $header_image or asset('img/banner.png')}}'>
 
     	<meta property='og:title' content='{{ $header_title or 'Infochat' }}' />
     	<meta property='og:type' content='website' />
     	<meta property='og:url' content='{{ url()->current() }}' />
-    	<meta property='og:image' content='{{ $header_image or asset('img/banner-redes-sociais.jpg')}}' />
+    	<meta property='og:image' content='{{ $header_image or asset('img/banner.png')}}' />
     	<meta property='og:description' content='{{ $header_desc or 'Infochat - O atendimento online da sua cidade' }}' />
     	<meta property='og:site_name' content='Infochat' />
 
