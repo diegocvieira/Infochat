@@ -238,7 +238,7 @@
 
             <h2>15. Lei e Jurisdição Governantes</h2>
             <p>
-                Nos casos em que a Empresa forneceu aos Usuários uma tradução da versão em inglês dos Termos e Condições (doravante referida como "Versão em Inglês"), a Versão em Inglês regerá o relacionamento entre os Usuários e a Empresa. No caso de uma contradição entre a Versão Inglesa e uma tradução, as disposições na Versão Inglesa prevalecerão sobre qualquer outra tradução. Estes Termos e Condições serão regidos pelas leis do Brasil. Conflitos que surjam do Serviço ou conflitos entre Usuários e a Empresa relacionados ao serviço serão regido principalmente sob a jurisdição exclusiva do Tribunal Distrital de Pelotas/RS.
+                Nos casos em que a Empresa forneceu aos Usuários uma tradução da versão em português dos Termos e Condições (doravante referida como "Versão Traduzida”), a versão traduzida regerá o relacionamento entre os Usuários e a Empresa. No caso de uma contradição entre a versão em português e a versão traduzida, as disposições na versão em português prevalecerão sobre qualquer versão traduzida. Estes Termos e Condições serão regidos pelas leis do Brasil. Conflitos que surjam do Serviço ou conflitos entre Usuários e a Empresa relacionados ao serviço serão regidos sob a jurisdição exclusiva do Tribunal da cidade de Pelotas/RS.
             </p>
         </section>
     </div>
