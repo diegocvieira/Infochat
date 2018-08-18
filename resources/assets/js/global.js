@@ -713,7 +713,7 @@ $(document).ready(function() {
             var div = $('.chat').find('.mensagens'),
                 date = new Date();
 
-            div.append("<div class='row enviada'><div class='msg'><p>" + input.val() + "</p><span>" + date.getHours() + ":" + date.getMinutes() + "</span></div></div>");
+            div.append("<div class='row enviada'><div class='msg'><p>" + input.val() + "</p><span>" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + "</span></div></div>");
 
             div.scrollTop(div[0].scrollHeight);
 
