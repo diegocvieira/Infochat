@@ -139,23 +139,7 @@ class TrabalhoController extends Controller
                  }, $request->dia, $request->de_manha, $request->ate_tarde, $request->de_tarde, $request->ate_noite);
                  $count = 0;
                  foreach($horarios as $horario) {
-                    if($horario['de_manha']) {
-                        $count++;
-                    }
-
-                    if($horario['ate_tarde']) {
-                        $count++;
-                    }
-
-                    if($horario['de_tarde']) {
-                        $count++;
-                    }
-
-                    if($horario['ate_noite']) {
-                        $count++;
-                    }
-
-                     if($horario['dia'] && $count >= 2) {
+                     if(is_numeric($horario['dia']) && ($horario['de_manha'] && $horario['ate_tarde'] || $horario['de_tarde'] && $horario['ate_noite'])) {
                          $trabalho->horarios()->create($horario);
                      }
                  }
