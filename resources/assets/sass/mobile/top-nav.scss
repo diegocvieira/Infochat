@@ -1,0 +1,141 @@
+.top-nav {
+    background-color: rgb(63, 81, 181);
+    position: fixed;
+    width: 100%;
+    left: 0;
+    top: 0;
+    padding: 13px 0;
+    box-shadow: 2.5px 4.33px 14.25px 0.75px rgba(100, 100, 100, 0.078);
+    z-index: 99;
+
+    &.top-simple {
+        .nav_title {
+            font-size: 16.6px;
+            color: rgb(255, 255, 255);
+            float: left;
+        }
+
+        .link-back {
+            width: 25px;
+            height: 25px;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-image: url('../../img/arrow2.png');
+            filter: brightness(0) invert(1);
+            float: left;
+            margin: 0 10px;
+        }
+    }
+
+    #logo-infochat {
+        width: 100px;
+        float: left;
+        margin-left: 15px;
+    }
+
+    #open-search, #open-menu {
+        float: right;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        width: 45px;
+        height: 25px;
+
+        &#open-search {
+            background-image: url('../../img/icon-lupa.png');
+            filter: brightness(0) invert(1);
+        }
+
+        &#open-menu {
+            background-image: url('../../img/menu.png');
+        }
+    }
+
+    nav {
+        float: right;
+        position: relative;
+
+        ul {
+            display: none;
+            right: 0;
+            border-radius: 5px;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 2.5px 4.33px 19px 1px rgba(100, 100, 100, 0.118);
+            width: 200px;
+            left: auto;
+            float: left;
+            padding-top: 10px;
+            top: -10px;
+            position: absolute;
+            z-index: 2;
+
+            li {
+                width: 100%;
+                float: left;
+                margin: 0;
+                height: auto;
+
+                a {
+                    font-size: 13.7px;
+                    color: rgb(100, 100, 100);
+                    width: 100%;
+                    float: left;
+                    padding: 10px 0 10px 40px;
+                    background-size: 20px;
+                    background-repeat: no-repeat;
+                    background-position: 7%;
+                    line-height: normal;
+
+                    &.icon-conta {
+                        background-image: url('../../img/icon-settings.png');
+                    }
+
+                    &.icon-perfil-trabalho {
+                        background-image: url('../../img/icon-work.png');
+                    }
+
+                    &.icon-logout {
+                        background-image: url('../../img/icon-logout.png');
+                    }
+
+                    &.icon-como-funciona {
+                        background-image: url('../../img/icon-como-funciona.png');
+                    }
+
+                    &.icon-cadastro {
+                        background-image: url('../../img/icon-cadastro.png');
+                    }
+
+                    &.icon-login {
+                        background-image: url('../../img/icon-login.png');
+                    }
+                }
+
+                &.termos {
+                    border-top: 1px solid rgb(240, 240, 240);
+                    text-align: center;
+                    margin-top: 7px;
+
+                    a {
+                        font-size: 10.8px;
+                        color: rgb(150, 150, 150);
+                        width: auto;
+                        padding: 15px 3px;
+                        clear: inherit;
+
+                        &:first-child {
+                            margin-left: 12px;
+                        }
+                    }
+
+                    span {
+                        float: left;
+                        margin: 12px 4px 0 4px;
+                        color: rgb(150, 150, 150);
+                    }
+                }
+            }
+        }
+    }
+}

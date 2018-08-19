@@ -1,4 +1,6 @@
 {
     "/js/global.js": "/js/global.js",
-    "/css/global.css": "/css/global.css"
+    "/css/global.css": "/css/global.css",
+    "/css/mobile-global.css": "/css/mobile-global.css",
+    "/js/mobile-global.js": "/js/mobile-global.js"
 }

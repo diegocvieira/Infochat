@@ -12,10 +12,13 @@ let mix = require('laravel-mix');
  */
 
 mix.js('resources/assets/js/global.js', 'public/js')
+    .js('resources/assets/js/mobile-global.js', 'public/js')
     .sass('resources/assets/sass/global.scss', 'public/css')
+    .sass('resources/assets/sass/mobile/mobile-global.scss', 'public/css')
     .copyDirectory('resources/assets/img', 'public/img')
-    .copyDirectory('resources/assets/fonts', 'public/fonts');
+    .copyDirectory('resources/assets/fonts', 'public/fonts')
+    .copyDirectory('resources/assets/offline-developer', 'public/offline-developer');
 
 if(mix.inProduction()) {
-    mix.version(['public/js/global.js', 'public/css/global.css']);
+    mix.version(['public/js/global.js', 'public/js/mobile-global.js', 'public/css/global.css', 'public/css/mobile-global.css']);
 }

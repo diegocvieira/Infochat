@@ -11,6 +11,7 @@ use Cookie;
 use DB;
 use Auth;
 use App\Chat;
+use Agent;
 
 class GlobalController extends Controller
 {
@@ -31,7 +32,11 @@ class GlobalController extends Controller
 
         $trabalhos = Trabalho::filtroStatus()->filtroCidade()->limit(20)->inRandomOrder()->get();
 
-        return view('pagina-inicial', compact('filtro_ordem', 'trabalhos'));
+        if(Agent::isMobile()) {
+            return view('mobile.pagina-inicial', compact('filtro_ordem', 'trabalhos'));
+        } else {
+            return view('pagina-inicial', compact('filtro_ordem', 'trabalhos'));
+        }
     }
 
     public function getCidade(Request $request)

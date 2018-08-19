@@ -36,11 +36,25 @@ Route::post('trabalhos/busca', 'TrabalhoController@formBusca');
 Route::any('busca/{city}/{state}/{tipo?}/{palavra_chave?}/{area?}/{tag?}', 'TrabalhoController@busca');
 
 Route::get('termos/uso', function() {
-    return view('termos-uso');
+    if(Agent::isMobile()) {
+        return view('mobile.termos-uso');
+    } else {
+        return view('termos-uso');
+    }
 })->name('termos-uso');
 Route::get('politica/privacidade', function() {
-    return view('termos-privacidade');
+    if(Agent::isMobile()) {
+        return view('mobile.termos-uso');
+    } else {
+        return view('termos-privacidade');
+    }
 })->name('termos-privacidade');
+
+Route::get('como/funciona', function() {
+    if(Agent::isMobile()) {
+        return view('mobile.como-funciona');
+    }
+})->name('como-funciona');
 
 Route::group(['prefix' => 'mensagem'], function() {
     // Listar mensagens pessoais

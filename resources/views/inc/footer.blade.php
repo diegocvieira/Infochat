@@ -114,7 +114,7 @@
             </div>
         </div><!-- /.modal -->
 
-        @if($app->environment('development'))
+        @if($app->environment('local'))
             <script type="text/javascript" src="{{ asset('offline-developer/jquery.min.js') }}"></script>
             <script type="text/javascript" src="{{ asset('offline-developer/bootstrap.min.js') }}"></script>
             <script type="text/javascript" src="{{ asset('offline-developer/jquery.validate.min.js') }}"></script>

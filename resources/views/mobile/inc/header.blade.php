@@ -11,7 +11,7 @@
 
     	<link rel="shortcut icon" href="img/favicon.ico">
 
-    	<meta name="theme-color" content="#3f51b5">
+    	<meta name="theme-color" content="#1a276d">
 
     	<!-- SEO META TAGS -->
     	<meta name="csrf-token" content="{!! csrf_token() !!}">
@@ -56,7 +56,7 @@
             <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css'>
         @endif
 
-        <link rel="stylesheet" type="text/css" href="{{ mix('/css/global.css') }}"/>
+        <link rel="stylesheet" type="text/css" href="{{ mix('/css/mobile-global.css') }}"/>
     </head>
     <body class="<?php echo isset($body_class) ? $body_class : '' ?>">
         @if(session('session_flash'))
