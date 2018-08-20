@@ -17,6 +17,7 @@ use App\Favoritar;
 use Cookie;
 use App\Chat;
 use App\Estado;
+use Agent;
 
 class TrabalhoController extends Controller
 {
@@ -254,12 +255,23 @@ class TrabalhoController extends Controller
 
         // Detecta se foi acessado por url ou ajax
         if(!\Request::ajax()) {
-            return view('pagina-inicial', compact('trabalhos', 'palavra_chave', 'tipo', 'area', 'tag', 'filtro_ordem', 'header_title', 'header_desc'));
+            if(Agent::isMobile()) {
+                return view('mobile.pagina-inicial', compact('trabalhos', 'palavra_chave', 'tipo', 'area', 'tag', 'filtro_ordem', 'header_title', 'header_desc'));
+            } else {
+                return view('pagina-inicial', compact('trabalhos', 'palavra_chave', 'tipo', 'area', 'tag', 'filtro_ordem', 'header_title', 'header_desc'));
+            }
         } else {
-            return response()->json([
-                'trabalhos' => view('inc.list-resultados', compact('trabalhos', 'offset'))->render(),
-                'url' => $url
-            ]);
+            if(Agent::isMobile()) {
+                return response()->json([
+                    'trabalhos' => view('mobile.inc.list-resultados', compact('trabalhos', 'offset'))->render(),
+                    'url' => $url
+                ]);
+            } else {
+                return response()->json([
+                    'trabalhos' => view('inc.list-resultados', compact('trabalhos', 'offset'))->render(),
+                    'url' => $url
+                ]);
+            }
         }
     }
 

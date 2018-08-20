@@ -10,6 +10,7 @@ use Auth;
 use App\Message;
 use App\BlockedUser;
 use Cookie;
+use Agent;
 
 class ChatController extends Controller
 {
@@ -154,9 +155,15 @@ class ChatController extends Controller
 
         $section = 'pessoal';
 
-        return response()->json([
-            'mensagens' => view('inc.list-mensagens-pessoal', compact('chats', 'section'))->render()
-        ]);
+        if(Agent::isMobile()) {
+            return response()->json([
+                'mensagens' => view('mobile.inc.list-mensagens-pessoal', compact('chats', 'section'))->render()
+            ]);
+        } else {
+            return response()->json([
+                'mensagens' => view('inc.list-mensagens-pessoal', compact('chats', 'section'))->render()
+            ]);
+        }
     }
 
     // Listar os ultimos usuarios que enviaram uma mensagem
@@ -176,9 +183,15 @@ class ChatController extends Controller
 
         $section = 'trabalho';
 
-        return response()->json([
-            'mensagens' => view('inc.list-mensagens-trabalho', compact('chats', 'section'))->render()
-        ]);
+        if(Agent::isMobile()) {
+            return response()->json([
+                'mensagens' => view('mobile.inc.list-mensagens-trabalho', compact('chats', 'section'))->render()
+            ]);
+        } else {
+            return response()->json([
+                'mensagens' => view('inc.list-mensagens-trabalho', compact('chats', 'section'))->render()
+            ]);
+        }
     }
 
     public function close($id)

@@ -7,7 +7,7 @@
 @extends('mobile.base')
 
 @section('content')
-    <div class="pagina-como-funciona">
+    <div class="container pagina-como-funciona">
 
         <div class="slider" id="slider">
             <div class="holder">

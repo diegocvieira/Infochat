@@ -23,6 +23,14 @@ ul, li {
     background-color: #fdd !important;
 }
 
+.container {
+    margin: 53px 0 0 0;
+    padding: 0;
+    height: calc(100% - 53px);
+    float: left;
+    width: 100%;
+}
+
 .modal {
     .close-modal {
         width: 25px;
@@ -175,6 +183,7 @@ ul, li {
 }
 
 @import 'top-nav.scss';
+@import 'aside-categorias.scss';
 @import 'termos.scss';
 @import 'resultados.scss';
 @import 'como-funciona.scss';

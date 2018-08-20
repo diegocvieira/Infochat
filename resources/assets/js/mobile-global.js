@@ -15,6 +15,24 @@ $(document).ready(function() {
         }
     });
 
+    // Abrir e fechar busca
+    $(document).on('click', '#open-search', function(e) {
+        e.preventDefault();
+
+        $('.top-nav').find('nav, #open-search, #logo-infochat').hide();
+
+        $('#form-search').show();
+
+        $('#form-search').find('input[type=text]').focus();
+    });
+    $(document).on('click', '.close-form-search', function(e) {
+        e.preventDefault();
+
+        $('.top-nav').find('nav, #open-search, #logo-infochat').show();
+
+        $('#form-search').hide();
+    });
+
     // Modal de alertas
     function modalAlert(body, btn) {
         var modal = $('#modal-alert');
@@ -147,56 +165,8 @@ $(document).ready(function() {
         }
     });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ////////////////////////////// PAGINA COMO FUNCIONA //////////////////////////////
-    
+
     if($('.pagina-como-funciona').length) {
         if(navigator.msMaxTouchPoints) {
             $('#slider').addClass('ms-touch');
@@ -276,4 +246,338 @@ $(document).ready(function() {
              slider.init();
          }
      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     ////////////////////////////// ASIDE (CATEGORIAS E CIDADE) //////////////////////////////
+
+     $(document).on('click', '#open-aside', function(e) {
+         e.preventDefault();
+
+         $('.aside-categorias').css({
+             'width' : '80%',
+             'left' : '0'
+         });
+
+         $('.aside-categorias').after("<div class='modal-backdrop fade in' id='close-aside'></div>");
+     });
+     $(document).on('click', '#close-aside', function(e) {
+         e.preventDefault();
+
+         $(this).hide();
+
+         $('.aside-categorias').css({
+             'width' : '0',
+             'left' : '-50%'
+         });
+     });
+
+     // Exibir categorias e subcategorias e pesquisar trabalhos ao seleciona-las
+     $(document).on('click', '#categorias .cat-search', function(e) {
+         e.preventDefault();
+
+         $('#form-search-palavra-chave').val('');
+
+         var next = $(this).parent().next(),
+             submit = $(this).hasClass('close-area') ? false : true,
+             $this = $(this);
+
+         $('#form-search-palavra-chave').attr('placeholder', 'Pesquise em ' + $this.text());
+
+         if($(this).hasClass('area')) {
+             var area = $('.aside-categorias').find('.area').parent();
+
+             $('.aside-categorias').find('.cats').remove();
+
+             $.ajax({
+                 url: 'aside/categorias/' + $(this).data('search'),
+                 method: 'GET',
+                 dataType:'json',
+                 success: function(data) {
+                     if(submit) {
+                         $this.parent().after("<div class='cats'></div>");
+
+                         $(data.categorias).each(function(index, element) {
+                             $this.parent().next().append("<li><a href='#' class='categoria cat-search' data-search='" + element.titulo + "'>" + element.titulo + "</a></li>");
+                         });
+                     }
+
+                     if(data.categorias.length) {
+                         $this.hasClass('close-area') ? area.show() : area.not($this.parent()).hide();
+
+                         $this.toggleClass('close-area');
+                     } else {
+                         $('#categorias .area').removeClass('active');
+                         $this.addClass('active');
+                     }
+                 }
+             });
+
+             $('#form-search-area').val($(this).hasClass('close-area') ? '' : $this.data('search'));
+             $('#form-search-tag').val('');
+         } else {
+             if($(this).hasClass('categoria')) {
+                 $.ajax({
+                     url: 'aside/subcategorias/' + $(this).data('search'),
+                     method: 'GET',
+                     dataType:'json',
+                     success: function(data) {
+                         $this.parent().after("<div class='subs'></div>");
+
+                         $(data.subcategorias).each(function(index, element) {
+                             $this.parent().next().append("<li><a href='#' class='cat-search' data-search='" + element.titulo + "'>" + element.titulo + "</a></li>");
+                         });
+
+                         $('.aside-categorias').find('.subs').not($this.parent().next()).hide();
+
+                         if(!data.subcategorias.length) {
+                             $('#categorias .categoria').removeClass('active');
+                             $this.addClass('active');
+                         }
+                     }
+                 });
+             } else {
+                 $('.aside-categorias').find('.subs a').removeClass('active');
+
+                 $('#categorias .subcategoria').removeClass('active');
+                 $(this).addClass('active');
+             }
+
+             $('#form-search-tag').val($(this).data('search'));
+         }
+
+         $('#form-search').submit();
+     });
+
+     // Exibir areas e pesquisar trabalhos ao selecionar um novo tipo
+     $('#categorias').on('click', '.tipo', function(e) {
+         e.preventDefault();
+
+         $('#form-search-palavra-chave, #form-search-area, #form-search-tag').val('');
+
+         $('#categorias').find('.tipo').removeClass('active');
+         $(this).addClass('active');
+
+         var tipo = $(this).data('search'),
+             placeholder = (tipo == 'estabelecimentos' || tipo == 'profissionais') ? 'Pesquise em ' + tipo : 'Pesquise aqui';
+
+         $('#form-search-palavra-chave').attr('placeholder', placeholder);
+
+         if(!logged && tipo == 'favoritos') {
+             modalAlert('Faça login para acessar seus favoritos.', 'OK');
+         } else {
+             $('#form-search-tipo').val($(this).data('search'));
+             $('#form-search').submit();
+         }
+
+         if(tipo != 'favoritos') {
+             $('#categorias').find('.area').remove();
+
+             $.ajax({
+                 url: 'aside/areas/' + $(this).data('search'),
+                 method: 'GET',
+                 dataType:'json',
+                 success: function(data) {
+                     $(data.areas).each(function(index, element) {
+                         $('#categorias').append("<li><a href='#' class='area cat-search' data-search='" + element.slug + "' style='background-image: url(img/categorias/" + element.slug + ".png);'>" + element.titulo + "</a></li>")
+                     });
+                 }
+             });
+         }
+     });
+
+     // Exibir form de busca por cidades
+     $('.aside-categorias').on('click', '.cidade-atual', function(e) {
+         e.preventDefault();
+
+         $('#form-busca-cidade').show();
+         $('#form-busca-cidade').find('input[type=text]').val('').focus();
+     });
+
+     //Fechar busca por cidade e categorias
+     $(document).click(function(e) {
+         if(!$(e.target).closest('.cidades').length) {
+             $('.cidades').find('#form-busca-cidade').hide();
+             $('.cidades').find('#modal-busca-cidade').remove();
+         }
+
+         if(!$(e.target).closest('#categorias').length) {
+             $('#categorias').find('#form-busca-categoria').hide();
+             $('#categorias').find('#modal-busca-categorias').remove();
+             $('.open-busca-categoria').show();
+         }
+     });
+
+     // Enviar form de busca por cidades
+     $('#form-busca-cidade').on('submit', function(e) {
+         e.preventDefault();
+
+         if($(this).find('input[type=text]').val()) {
+             $.ajax({
+                 url: $(this).attr('action'),
+                 method: 'POST',
+                 dataType:'json',
+                 data: $(this).serialize(),
+                 success: function (data) {
+                     var modal = $('#modal-busca-cidade');
+
+                     modal.length ? modal.find('li').remove() : $('#form-busca-cidade').append("<div id='modal-busca-cidade'><ul></ul></div>");
+
+                     $(data.cidades).each(function(index, element) {
+                         $('#modal-busca-cidade').find('ul').append("<li><a href='/cidades/set/" + element.id + "'>" + element.title + ' - ' + element.estado.letter + "</a></li>");
+                     });
+                 }
+             });
+         }
+
+         return false;
+     });
+
+     // Exibir form de busca por categorias
+     $('.aside-categorias').on('click', '.open-busca-categoria', function(e) {
+         e.preventDefault();
+
+         $('.open-busca-categoria').hide();
+         $('#form-busca-categoria').show();
+         $('#form-busca-categoria').find('input[type=text]').val('').focus();
+     });
+
+     // Enviar form de busca por categorias
+     $('#form-busca-categoria').on('submit', function(e) {
+         e.preventDefault();
+
+         if($(this).find('input[type=text]').val()) {
+             $.ajax({
+                 url: $(this).attr('action'),
+                 method: 'POST',
+                 dataType:'json',
+                 data: $(this).serialize(),
+                 success: function (data) {
+                     var modal = $('#modal-busca-categorias');
+
+                     modal.length ? modal.find('li').remove() : $('#form-busca-categoria').append("<div id='modal-busca-categorias'><ul></ul></div>");
+
+                     $(data.categorias).each(function(index, element) {
+                         $('#modal-busca-categorias').find('ul').append("<li><a href='#' class='cat-search' data-search='" + element.titulo + "'>" + element.titulo + "</a></li>");
+                     });
+                 }
+             });
+         }
+
+         return false;
+     });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     ////////////////////////////// RESULTADOS DAS BUSCAS //////////////////////////////
+
+     // Submeter form principal de busca
+     $(document).on('submit', '#form-search', function() {
+         $(this).find('#form-search-offset').val('');
+
+         $.ajax({
+             url: $(this).attr('action'),
+             method: 'POST',
+             dataType:'json',
+             data: $(this).serialize(),
+             success: function(data) {
+                 window.history.pushState('', '', data.url);
+
+                 $('.abas-resultados').find('a').removeClass('active');
+                 $('.abas-resultados').find('a[data-type=resultado]').addClass('active');
+
+                 if(data.trabalhos.length > 0) {
+                     $('div.filtro-ordem').show();
+
+                     $('#form-search-results').html(data.trabalhos);
+                 } else {
+                     $('div.filtro-ordem').hide();
+
+                     $('#form-search-results').html("<div class='sem-resultados'><p>Sua pesquisa não encontrou resultado.<br>Verifique se todas as palavras estão corretas ou tente palavras-chave diferentes.</p></div>");
+                 }
+             }
+         });
+
+         return false;
+     });
+
+     // Alternar entre abas dos resultados e mensagens
+     $('.abas-resultados').on('click', 'a', function(e) {
+         e.preventDefault();
+
+         $('.abas-resultados').find('a').removeClass('active');
+
+         $(this).addClass('active');
+
+         var type = $(this).data('type');
+
+         if(type == 'resultado') {
+             $('#form-search').submit();
+         } else {
+             $.ajax({
+                 url: $(this).attr('href'),
+                 method: 'GET',
+                 dataType: 'json',
+                 success: function(data) {
+                     $('div.filtro-ordem').hide();
+
+                     window.history.pushState('', '', '/');
+
+                     $('#form-search-results').html(data.mensagens);
+                 }
+             });
+         }
+     });
 });

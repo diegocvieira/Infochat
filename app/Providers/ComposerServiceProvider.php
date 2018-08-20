@@ -14,11 +14,11 @@ class ComposerServiceProvider extends ServiceProvider
     {
         // Using class based composers...
         view()->composer(
-            ['inc.aside-categorias'], 'App\Http\ViewComposers\CategoriasComposer'
+            ['inc.aside-categorias', 'mobile.inc.aside-categorias'], 'App\Http\ViewComposers\CategoriasComposer'
         );
 
         view()->composer(
-            ['inc.abas-resultados'], 'App\Http\ViewComposers\NewMessagesComposer'
+            ['inc.abas-resultados', 'mobile.inc.abas-resultados'], 'App\Http\ViewComposers\NewMessagesComposer'
         );
     }
 

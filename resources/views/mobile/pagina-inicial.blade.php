@@ -5,9 +5,9 @@
 @extends('mobile.base')
 
 @section('content')
-    <div class="pagina-inicial">
+    <div class="container pagina-inicial">
         <div class="resultados">
-            @include('inc.abas-resultados')
+            @include('mobile.inc.abas-resultados')
         </div>
     </div>
 @endsection

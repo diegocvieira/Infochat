@@ -8,7 +8,7 @@
 @extends('mobile.base')
 
 @section('content')
-    <div class="pagina-termos">
+    <div class="container pagina-termos">
         <section>
             <h1>TERMOS E CONDIÇÕES DE USO DO INFOCHAT</h1>
 

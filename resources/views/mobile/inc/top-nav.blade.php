@@ -7,6 +7,10 @@
         <a href="#" id="open-menu"></a>
 
         <ul>
+            <li>
+                <a href="#" id="open-aside" class="icon-categorias">Categorias</a>
+            </li>
+
             @if(Auth::guard('web')->check())
                 <li>
                     <a href="{{ action('TrabalhoController@getConfig') }}" class="icon-perfil-trabalho" id="open-trabalho-config">Perfil de trabalho</a>
@@ -44,4 +48,21 @@
     </nav>
 
     <a href="#" id="open-search"></a>
+
+    {!! Form::open(['method' => 'post', 'id' => 'form-search', 'action' => 'TrabalhoController@formBusca']) !!}
+        <a href="#" class="close-form-search"></a>
+
+        {!! Form::text('palavra_chave', (isset($palavra_chave) && $palavra_chave != 'area') ? $palavra_chave : '', ['class' => 'form-control', 'id' => 'form-search-palavra-chave', 'placeholder' => 'Pesquisar...']) !!}
+
+        {!! Form::hidden('area', isset($area) ? $area : '', ['id' => 'form-search-area']) !!}
+        {!! Form::hidden('tag', isset($tag) ? $tag : '', ['id' => 'form-search-tag']) !!}
+        {!! Form::hidden('tipo', isset($tipo) ? $tipo : 'todos', ['id' => 'form-search-tipo']) !!}
+
+        {!! Form::hidden('ordem', isset($ordem) ? $ordem : '', ['id' => 'form-search-ordem']) !!}
+
+        {!! Form::hidden('offset', '', ['id' => 'form-search-offset']) !!}
+    {!! Form::close() !!}
+
+
+    @include('mobile.inc.aside-categorias')
 </header>
