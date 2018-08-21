@@ -182,6 +182,41 @@ ul, li {
     }
 }
 
+
+.teste {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+
+  a {
+    display: inline-block;
+    width: 40%;
+  }
+}
+#container {
+    width:300px;
+    height: 60px;
+    overflow: hidden;
+}
+#modules {
+    height:90px; /* 40px - more place for scrollbar, is hidden under parent box */
+    padding:5px;
+    white-space:nowrap;
+    overflow-x: scroll;
+    overflow-y: hide;
+	-webkit-overflow-scrolling:touch;
+}
+.module {
+    display:inline-block;
+    width:50px;
+    height:50px;
+    line-height:50px;
+    text-align:center;
+    background:#ddd;
+}
+.module + .module {
+    margin-left:5px
+}
 @import 'top-nav.scss';
 @import 'aside-categorias.scss';
 @import 'termos.scss';

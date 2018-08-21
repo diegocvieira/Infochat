@@ -86,6 +86,8 @@
             <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.8/jquery.mask.min.js"></script>
         @endif
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.finger/0.1.6/jquery.finger.min.js"></script>
+
         <script src="{{ mix('/js/mobile-global.js') }}"></script>
     </body>
 </html>

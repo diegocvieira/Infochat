@@ -274,7 +274,6 @@ $(document).ready(function() {
 
 
 
-
      ////////////////////////////// ASIDE (CATEGORIAS E CIDADE) //////////////////////////////
 
      $(document).on('click', '#open-aside', function(e) {
@@ -580,4 +579,81 @@ $(document).ready(function() {
              });
          }
      });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     $('.teste').on('flick', function(e) {
+        console.log('ok');
+     });
+
+
+
+
+
+     window.oncontextmenu = function(event) {
+         event.preventDefault();
+         event.stopPropagation();
+         return false;
+     };
+
+    $(document).on('flick', '.teste', function(e) {
+        e.preventDefault();
+
+        console.log('ok');
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 });
