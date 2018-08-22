@@ -571,10 +571,17 @@ $(document).ready(function() {
         $('#logo-infochat, #open-search').hide();
 
         // Move options to top
-        top.append("<div class='manage-options'><a href='#' class='close-content'></a>" + $(this).find('.manage-options').html() + "</div>");
+        top.append("<div class='manage-options'><a href='#' class='close-content' id='close-manage-options'></a>" + $(this).find('.manage-options').html() + "</div>");
 
         // Add id to identify result after click
         top.find('.options a').attr('data-chatid', $(this).data('chatid'));
+    });
+
+    $(document).on('click', '#close-manage-options', function(e) {
+        e.preventDefault();
+
+        $('#logo-infochat, #open-search').show();
+        $('.top-nav').find('.manage-options').remove();
     });
 
     $(document).on('click', '.top-nav .options a', function(e) {
