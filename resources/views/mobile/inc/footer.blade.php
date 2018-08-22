@@ -72,6 +72,14 @@
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
 
+        <div class="modal fade" id="modal-default" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body"></div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal -->
+
         @if($app->environment('local'))
             <script type="text/javascript" src="{{ asset('offline-developer/jquery.min.js') }}"></script>
             <script type="text/javascript" src="{{ asset('offline-developer/bootstrap.min.js') }}"></script>
@@ -87,6 +95,16 @@
         @endif
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.finger/0.1.6/jquery.finger.min.js"></script>
+
+        <audio src="{{ asset('img/sound.mp3') }}" id="alert-new-message"></audio>
+
+        <script>
+            @if(Auth::guard('web')->check())
+                var logged = true;
+            @else
+                var logged = false;
+            @endif
+        </script>
 
         <script src="{{ mix('/js/mobile-global.js') }}"></script>
     </body>

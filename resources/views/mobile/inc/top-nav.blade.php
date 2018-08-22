@@ -63,6 +63,5 @@
         {!! Form::hidden('offset', '', ['id' => 'form-search-offset']) !!}
     {!! Form::close() !!}
 
-
     @include('mobile.inc.aside-categorias')
 </header>

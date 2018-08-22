@@ -85,7 +85,7 @@ Route::group(['prefix' => 'mensagem'], function() {
 });
 
 Route::group(['prefix' => 'trabalho'], function() {
-    Route::get('show/{id}', 'TrabalhoController@show');
+    Route::get('show/{id}', 'TrabalhoController@show')->name('show-trabalho');
 
     Route::group(['middleware' => 'auth:web'], function() {
         Route::get('config', 'TrabalhoController@getConfig');

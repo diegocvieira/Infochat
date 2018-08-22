@@ -1,6 +1,6 @@
 @if(isset($chats) && count($chats) > 0)
     @foreach($chats as $chat)
-        <div class="result open-chat work-tab" data-type="pessoal" data-id="{{ $chat->user_from->id }}" data-identificador="{{ $chat->id }}">
+        <div class="result open-chat work-tab" data-type="pessoal" data-id="{{ $chat->user_from->id }}" data-chatid="{{ $chat->id }}">
             <div class="imagem">
                 @if($chat->user_from->imagem)
                     <img src="{{ asset('uploads/perfil/' . $chat->user_from->imagem) }}" alt="Foto de perfil de {{ $chat->user_from->nome }}" />
@@ -28,6 +28,26 @@
                     @if($chat->count_new_messages() > 0)
                         <span class="new-messages">{{ $chat->count_new_messages() }}</span>
                     @endif
+                </div>
+            </div>
+
+            <div class="manage-options">
+                <div class="options">
+                    @if(!$chat->close || $chat->close && $chat->close == Auth::guard('web')->user()->id)
+                        @if($chat->close)
+                            <a href="{{ route('open-chat', $chat->id) }}" id="open-chat"></a>
+                        @else
+                            <a href="{{ route('close-chat', $chat->id) }}" id="close-chat"></a>
+                        @endif
+                    @endif
+
+                    @if($chat->user_from->blocked)
+                        <a href="{{ route('unblock-user', $chat->from_id) }}" id="unblock-user"></a>
+                    @else
+                        <a href="{{ route('block-user', $chat->from_id) }}" id="block-user"></a>
+                    @endif
+
+                    <a href="{{ route('delete-chat', $chat->id) }}" id="delete-chat"></a>
                 </div>
             </div>
         </div>

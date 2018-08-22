@@ -19,5 +19,11 @@
                 </div>
             </div>
         </div>
+
+        <div class="manage-options">
+            <div class="options">
+                <a href="{{ route('show-trabalho', $trabalho->id) }}" id="work-details"></a>
+            </div>
+        </div>
     </div>
 @endforeach

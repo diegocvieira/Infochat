@@ -33,6 +33,20 @@ $(document).ready(function() {
         $('#form-search').hide();
     });
 
+    // Scroll custom para funcionar em conteudo carregado dinamicamente
+    function listenForScrollEvent(e) {
+        e.on('scroll', function() {
+            e.trigger('custom-scroll');
+        });
+    }
+
+    // Desable default press touch
+    window.oncontextmenu = function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        return false;
+    };
+
     // Modal de alertas
     function modalAlert(body, btn) {
         var modal = $('#modal-alert');
@@ -246,33 +260,6 @@ $(document).ready(function() {
              slider.init();
          }
      }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
      ////////////////////////////// ASIDE (CATEGORIAS E CIDADE) //////////////////////////////
 
@@ -492,34 +479,6 @@ $(document).ready(function() {
          return false;
      });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
      ////////////////////////////// RESULTADOS DAS BUSCAS //////////////////////////////
 
      // Submeter form principal de busca
@@ -580,80 +539,195 @@ $(document).ready(function() {
          }
      });
 
+     // Scroll infinito nos resultados
+     $('.resultados').on('scroll', function() {
+         if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+             var form = $('#form-search'),
+                 form_result = $('#form-search-results');
 
+             form.find('#form-search-offset').val(form_result.find('.result').length);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-     $('.teste').on('flick', function(e) {
-        console.log('ok');
+             $.ajax({
+                 url: form.attr('action'),
+                 method: 'POST',
+                 dataType:'json',
+                 data: form.serialize(),
+                 success: function(data) {
+                     form_result.append(data.trabalhos);
+                 }
+             });
+         }
      });
 
-
-
-
-
-     window.oncontextmenu = function(event) {
-         event.preventDefault();
-         event.stopPropagation();
-         return false;
-     };
-
-    $(document).on('flick', '.teste', function(e) {
+    $(document).on('press', '.result', function(e) {
         e.preventDefault();
 
-        console.log('ok');
+        var top = $('.top-nav');
+
+        // Verify if options exists
+        top.find('.manage-options').remove();
+
+        // Hide top
+        $('#logo-infochat, #open-search').hide();
+
+        // Move options to top
+        top.append("<div class='manage-options'><a href='#' class='close-content'></a>" + $(this).find('.manage-options').html() + "</div>");
+
+        // Add id to identify result after click
+        top.find('.options a').attr('data-chatid', $(this).data('chatid'));
     });
 
+    $(document).on('click', '.top-nav .options a', function(e) {
+        e.preventDefault();
 
+        var id = $(this).attr('id'),
+            chat_id = $(this).data('chatid');
 
+        $('.top-nav').find('.manage-options').remove();
+        $('#logo-infochat, #open-search').show();
 
+        $.ajax({
+            url: $(this).attr('href'),
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                if(data.status) {
+                    if(id == 'work-details') {
+                        var modal = $('#modal-default');
+                        modal.removeAttr('class');
+                        modal.addClass('modal fade show-trabalho');
+                        modal.find('.modal-body').html(data.trabalho);
+                        modal.modal('show');
 
+                        //Scroll custom para funcionar em conteudo carregdao dinamicamente
+                        listenForScrollEvent($('.show-trabalho .modal-content'));
+                    } else {
+                        var result = $('.result[data-chatid=' + chat_id + ']');
 
+                        if(id == 'close-chat') {
+                            result.find('#close-chat').remove();
+                            result.find('.options').prepend("<a href='" + data.route + "' id='open-chat'></a>");
+                            result.find('.date').after("<span class='status-close'></span>");
+                        } else if(id == 'open-chat') {
+                            result.find('#open-chat').remove();
+                            result.find('.options').prepend("<a href='" + data.route + "' id='close-chat'></a>");
+                            result.find('.status-close').remove();
+                        } else if(id == 'delete-chat') {
+                            result.remove();
 
+                            if($('.result').length == 0) {
+                                setTimeout(function() {
+                                    window.location.reload(true);
+                                }, 100);
+                            }
+                        } else if(id == 'block-user') {
+                            result.find('#block-user').remove();
+                            result.find('.options a:first').after("<a href='" + data.route + "' id='unblock-user'></a>");
+                            result.find('.date').after("<span class='status-block'></span>");
+                        } else if(id == 'unblock-user') {
+                            result.find('#unblock-user').remove();
+                            result.find('.options a:first').after("<a href='" + data.route + "' id='block-user'></a>");
+                            result.find('.status-block').remove();
+                        }
+                    }
+                } else {
+                    modalAlert('Ocorreu um erro inesperado. Atualize a página e tente novamente.', 'OK');
+                }
+            }
+        });
+    });
 
+    ////////////////////////////// DETALHES DO TRABALHO //////////////////////////////
 
+    // Favoritar (Add e remover)
+    $(document).on('click', '.favoritar', function(e) {
+        e.preventDefault();
 
+        if(logged) {
+            $.ajax({
+                url: '/trabalho/favoritar/' + $(this).data('id'),
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $('.favoritar').toggleClass('favorito');
+                }
+            });
+        } else {
+            modalAlert('É necessário estar logado para poder favoritar', 'OK');
+        }
+    });
 
+    // Alternar entre abas
+    $(document).on('click', '.show-trabalho .abas a', function(e) {
+        e.preventDefault();
 
+        $('.aba-aberta').hide();
+        $('.abas').find('a').removeClass('active');
 
+        $('.' + $(this).data('type')).show();
+        $(this).addClass('active');
+    });
 
+    // Avaliar
+    $(document).on('click', '#form-avaliar-trabalho .nota label', function() {
+        var nota = $(this).prev().val();
 
+        $(this).parents('.nota').find('label').each(function() {
+            if($(this).prev().val() <= nota) {
+                $(this).addClass('star-full');
+            } else {
+                $(this).removeClass('star-full');
+            }
+        });
 
+        $(this).addClass('star-full');
+    });
 
+    $(document).on('submit', '#form-avaliar-trabalho', function() {
+        if($(this).find('input[type=radio]').is(':checked')) {
+            if(logged) {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: 'POST',
+                    dataType: 'json',
+                    data: $(this).serialize(),
+                    success: function(data) {
+                        if(data.status && data.descricao) {
+                            $('.show-trabalho').find('.comentarios .sem-resultados').remove();
 
+                            var imagem = data.imagem ? "<img src='/uploads/perfil/" + data.imagem + "' />" : "<img src='/img/paisagem.png' class='sem-imagem' />";
 
+                            $('.show-trabalho').find('.comentarios').prepend("<div class='comentario'><div class='imagem-user'>" + imagem + "</div><div class='header-comentario'><h4>" + data.nome + "</h4><span class='nota'>" + data.nota + ".0</span><span class='data'>" + data.data + "</span></div><div class='descricao-comentario'><p>" + data.descricao + "</p></div></div>");
+                        }
 
+                        modalAlert(data.msg, 'OK');
+                    }
+                });
+            } else {
+                modalAlert('Acesse sua conta para poder avaliar.', 'OK');
+            }
+        }
 
+        return false;
+    });
 
+    // Listar Comentarios
+    $(document).on('custom-scroll', '.show-trabalho .modal-content', function() {
+        var div = $('.show-trabalho').find('.comentarios');
 
+        if(div.is(':visible') && $(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+            $.ajax({
+                url: '/trabalho/avaliar/list/' + $('.show-trabalho').find('input[name=trabalho_id]').val() + '/' + div.find('.comentario').length,
+                method: 'GET',
+                dataType:'json',
+                success: function(data) {
+                    $(data.avaliacoes).each(function(index, element) {
+                        imagem = element.user.imagem ? "<img src='/uploads/perfil/" + element.user.imagem + "' />" : "<img src='/img/paisagem.png' class='sem-imagem' />";
 
-
-
-
-
-
-
-
-
-
+                        div.append("<div class='comentario'><div class='imagem-user'>" + imagem + "</div><div class='header-comentario'><h4>" + element.user.nome + "</h4><span class='nota'>" + element.nota + ".0</span><span class='data'>" + element.created_at + "</span></div><div class='descricao-comentario'><p>" + element.descricao + "</p></div></div>");
+                    });
+                }
+            });
+        }
+    });
 });

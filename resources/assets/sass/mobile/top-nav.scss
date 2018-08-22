@@ -36,6 +36,54 @@
         margin-left: 15px;
     }
 
+    .close-content {
+        width: 45px;
+        height: 25px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-image: url('../../img/arrow2.png');
+        filter: brightness(0) invert(1);
+        float: left;
+    }
+
+    .manage-options {
+        .options {
+            float: right;
+
+            a {
+                width: 45px;
+                height: 25px;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+                float: left;
+
+                &#work-details {
+                    background-image: url('../../img/icon-profile3.png');
+                }
+
+                &#close-chat {
+                    background-image: url('../../img/icon-lock.png');
+                    filter: brightness(0) invert(1);
+                }
+
+                &#open-chat {
+                    background-image: url('../../img/icon-unlock.png');
+                }
+
+                &#delete-chat {
+                    background-image: url('../../img/icon-delete.png');
+                }
+
+                &#block-user, &#unblock-user {
+                    background-image: url('../../img/icon-block.png');
+                    filter: brightness(0) invert(1);
+                }
+            }
+        }
+    }
+
     #form-search {
         width: 100%;
         display: none;
