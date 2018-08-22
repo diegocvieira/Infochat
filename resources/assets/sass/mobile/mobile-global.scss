@@ -19,6 +19,11 @@ ul, li {
     list-style: none;
 }
 
+a, a:hover, a:active, a:focus {
+    text-decoration: none;
+    outline: none;
+}
+
 .error {
     background-color: #fdd !important;
 }
@@ -199,3 +204,4 @@ ul, li {
 @import 'resultados.scss';
 @import 'como-funciona.scss';
 @import 'show-trabalho.scss';
+@import 'recuperar-senha.scss';

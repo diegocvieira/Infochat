@@ -7,6 +7,7 @@ use App\PasswordReset;
 use Mail;
 use Validator;
 use App\User;
+use Agent;
 
 class RecuperarSenhaController extends Controller
 {
@@ -53,7 +54,11 @@ class RecuperarSenhaController extends Controller
 
         $header_title = 'Recuperar senha | Infochat';
 
-        return view('recuperar-senha', compact('email', 'header_title'));
+        if(Agent::isMobile()) {
+            return view('mobile.recuperar-senha', compact('email', 'header_title'));
+        } else {
+            return view('recuperar-senha', compact('email', 'header_title'));
+        }
     }
 
     public function alterar(Request $request)

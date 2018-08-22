@@ -2,7 +2,6 @@
     $header_title = 'Termos de uso | Infochat';
     $top_simple = true;
     $top_nav_title = 'Termos de uso';
-    $top_nav_home = true;
 ?>
 
 @extends('mobile.base')

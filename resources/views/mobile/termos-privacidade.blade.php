@@ -2,7 +2,6 @@
     $header_title = 'Política de privacidade | Infochat';
     $top_simple = true;
     $top_nav_title = 'Política de privacidade';
-    $top_nav_home = true;
 ?>
 
 @extends('mobile.base')
