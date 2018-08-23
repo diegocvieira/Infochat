@@ -60,6 +60,45 @@ a, a:hover, a:active, a:focus {
         filter: brightness(0) invert(1);
         float: left;
     }
+
+    .top-modal {
+        background-color: rgb(63, 81, 181);
+        box-shadow: 2.5px 4.33px 14.25px 0.75px rgba(100, 100, 100, 0.078);
+        width: 100%;
+        height: 50px;
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 999;
+        padding: 0 5px;
+
+        .title {
+            font-size: 16.6px;
+            color: rgb(255, 255, 255);
+            float: left;
+            margin: 15px 0 0 0;
+        }
+    }
+
+    &.show-trabalho, &.user-config, &.work-config {
+        .modal-dialog, .modal-content {
+            margin: 0;
+            border: none;
+            border-radius: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .modal-content {
+            overflow: auto;
+        }
+
+        .modal-body {
+            padding: 50px 0 20px 0;
+            float: left;
+            width: 100%;
+        }
+    }
 }
 
 #modal-cadastro-usuario, #modal-login-usuario {
@@ -172,8 +211,9 @@ a, a:hover, a:active, a:focus {
 		padding-bottom: 20px;
 
         .btn, .btn-back {
-			width: 80px;
+			width: auto;
 			height: 40px;
+            padding: 0 15px;
 			border: 0;
             font-size: 14.5px;
             border-radius: 5px;
@@ -205,3 +245,5 @@ a, a:hover, a:active, a:focus {
 @import 'como-funciona.scss';
 @import 'show-trabalho.scss';
 @import 'recuperar-senha.scss';
+@import 'usuario-config.scss';
+@import 'work-config.scss';

@@ -8,6 +8,7 @@ use Validator;
 use Session;
 use Auth;
 use Hash;
+use Agent;
 
 class UserController extends Controller
 {
@@ -68,9 +69,15 @@ class UserController extends Controller
     {
         $usuario = User::find(Auth::guard('web')->user()->id);
 
-        return response()->json([
-            'body' => view('admin.usuario-config', compact('usuario'))->render()
-        ]);
+        if(Agent::isMobile()) {
+            return response()->json([
+                'body' => view('mobile.admin.usuario-config', compact('usuario'))->render()
+            ]);
+        } else {
+            return response()->json([
+                'body' => view('admin.usuario-config', compact('usuario'))->render()
+            ]);
+        }
     }
 
     public function setConfig(Request $request)

@@ -53,9 +53,15 @@ class TrabalhoController extends Controller
             $categorias = Categoria::where('area_id', $trabalho->area_id)->get();
         }
 
-        return response()->json([
-            'body' => view('admin.trabalho-config', compact('categorias', 'areas', 'trabalho', 'tipos', 'horarios', 'dias_semana'))->render()
-        ]);
+        if(Agent::isMobile()) {
+            return response()->json([
+                'body' => view('mobile.admin.work-config', compact('categorias', 'areas', 'trabalho', 'tipos', 'horarios', 'dias_semana'))->render()
+            ]);
+        } else {
+            return response()->json([
+                'body' => view('admin.trabalho-config', compact('categorias', 'areas', 'trabalho', 'tipos', 'horarios', 'dias_semana'))->render()
+            ]);
+        }
     }
 
     public function setConfig(Request $request)

@@ -1,7 +1,7 @@
-<div class="top-work">
+<div class="top-modal">
     <a href="#" data-dismiss="modal" class="close-modal-arrow"></a>
 
-    <h3 class="{{ $trabalho->user->online ? 'margin' : '' }}">{{ $trabalho->nome }}</h3>
+    <h3 class="title {{ $trabalho->user->online ? 'margin' : '' }}">{{ $trabalho->nome }}</h3>
 
     @if($trabalho->user->online)
         <span class="online">online</span>
