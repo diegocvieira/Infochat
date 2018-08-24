@@ -1,5 +1,5 @@
 @foreach($trabalhos as $trabalho)
-    <div class="result open-chat result-tab" data-type="trabalho" data-id="{{ $trabalho->id }}" data-identificador="">
+    <div class="result open-chat result-tab" data-type="trabalho" data-id="{{ $trabalho->id }}">
         <div class="imagem">
             @if($trabalho->imagem)
                 <img src="{{ asset('uploads/perfil/' . $trabalho->imagem) }}" alt="Foto de perfil de {{ $trabalho->nome }}" />

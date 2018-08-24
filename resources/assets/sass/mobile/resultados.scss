@@ -64,17 +64,18 @@
 
             span {
                 display: inline-block;
-                font-size: 12.5px;
-                color: rgb(255, 255, 255);
                 border-radius: 50%;
-                background-color: rgb(132, 206, 111);
-                width: 20px;
-                height: 20px;
                 text-align: center;
                 overflow: hidden;
-                line-height: normal;
-                top: 5px;
+                top: 3px;
+                left: 2px;
                 position: relative;
+                background-color: rgb(255, 255, 255);
+                width: 16px;
+                height: 16px;
+                font-size: 10.8px;
+                color: rgb(63, 81, 181);
+                line-height: 16px;
             }
         }
     }

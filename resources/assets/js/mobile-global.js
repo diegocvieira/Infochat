@@ -75,7 +75,6 @@ $(document).ready(function() {
     function modalAlert(body, btn) {
         var modal = $('#modal-alert');
 
-        modal.find('.modal-footer .btn2').remove();
         modal.find('.modal-footer .btn-back').hide();
 
         modal.find('.modal-body').html(body);
@@ -287,7 +286,7 @@ $(document).ready(function() {
 
      ////////////////////////////// ASIDE (CATEGORIAS E CIDADE) //////////////////////////////
 
-     $(document).on('click', '#open-aside', function(e) {
+     $(document).on('click', '#open-aside, #open-cidades', function(e) {
          e.preventDefault();
 
          $('.aside-categorias').css({
@@ -296,6 +295,12 @@ $(document).ready(function() {
          });
 
          $('.aside-categorias').after("<div class='modal-backdrop fade in' id='close-aside'></div>");
+
+         if($(this).attr('id') == 'open-cidades') {
+             setTimeout(function() {
+                 $('.aside-categorias').find('.cidade-atual').trigger('click');
+             }, 500);
+         }
      });
      $(document).on('click', '#close-aside', function(e) {
          e.preventDefault();
@@ -1421,4 +1426,256 @@ $(document).ready(function() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     // Aparecer e ocultar mensagens flash session
+    setTimeout(function() {
+        $('.session-flash').fadeOut();
+    }, 5000);
+
+    // Atualizar as abas de mensagens em tempo real
+    if(logged) {
+        setInterval(function() {
+            $.ajax({
+                url: 'mensagem/new-messages',
+                method: 'POST',
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    newMessagesPessoal(data.pessoal);
+                    newMessagesTrabalho(data.trabalho);
+                }
+            });
+        }, 20000);
+    }
+
+    // Atualizar count aba trabalho
+    function newMessagesTrabalho(count) {
+        var trabalho = $('.resultados').find('.abas-resultados a[data-type=trabalho]');
+
+        if(count) {
+            if(trabalho.find('span').length) {
+                if(count != parseInt(trabalho.find('span').text())) {
+                    trabalho.find('span').text(count);
+
+                    $('#alert-new-message')[0].play();
+                }
+            } else {
+                trabalho.append("<span>" + count + "</span>");
+
+                $('#alert-new-message')[0].play();
+            }
+        } else {
+            trabalho.find('span').remove();
+        }
+    }
+
+    // Atualizar count aba pessoal
+    function newMessagesPessoal(count) {
+        var pessoal = $('.resultados').find('.abas-resultados a[data-type=pessoal]');
+
+        if(count) {
+            if(pessoal.find('span').length) {
+                if(count != parseInt(pessoal.find('span').text())) {
+                    pessoal.find('span').text(count);
+
+                    $('#alert-new-message')[0].play();
+                }
+            } else {
+                pessoal.append("<span>" + count + "</span>");
+
+                $('#alert-new-message')[0].play();
+            }
+        } else {
+            pessoal.find('span').remove();
+        }
+    }
+
+    // Remover class de erro ao selecionar um valor valido
+    $(document).on('change', 'select.selectpicker', function() {
+        if($(this).val() != '') {
+            $(this).prev().prev().removeClass('error');
+            $(this).parent().removeClass('error');
+        }
+    });
+
+    ////////////////////////////// CHAT //////////////////////////////
+
+    $(document).on('click', '.open-chat', function(e) {
+        e.preventDefault();
+
+        // Remover numero de novas mensagens
+        $(this).find('.new-messages').remove();
+
+        var chatid = $(this).data('chatid'),
+            url = '/mensagem/chat/show/' + $(this).data('id') + '/' + $(this).data('type');
+
+        if(chatid) {
+            url = url + '/' + chatid;
+        }
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            dataType:'json',
+            success: function(data) {
+                var modal = $('#modal-default');
+                modal.removeAttr('class');
+                modal.addClass('modal fade chat');
+                modal.find('.modal-body').html(data.trabalho);
+                modal.modal('show');
+
+                // Scroll to bottom
+                setTimeout(function() {
+                    $('.chat').find('.mensagens').scrollTop($('.chat').find('.mensagens')[0].scrollHeight);
+                }, 500);
+
+                //Scroll custom para funcionar em conteudo carregdao dinamicamente
+                listenForScrollEvent($('.chat .mensagens'));
+
+                // Atualizar count da aba trabalho
+                newMessagesTrabalho(data.new_messages_trabalho);
+
+                // Atualizar count da aba pessoal
+                newMessagesPessoal(data.new_messages_pessoal);
+            }
+        });
+
+        if(logged == true) {
+            interval = null;
+
+            // Limpar setinterval anterior
+            clearInterval(interval);
+
+            // Atualizar chat em tempo real
+            interval = setInterval(function() {
+                $.ajax({
+                    url: 'mensagem/list/' + $('.chat').find('input[name=chat_id]').val() + '/0',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        var div = $('.chat').find('.mensagens');
+
+                        // Verifica se a ultima mensagem que esta no chat foi a ultima recebida
+                        if(div.find('.recebida:last p').text() != data.last_msg) {
+                            div.html(data.mensagens);
+                        }
+                    }
+                });
+            }, 10000);
+        }
+    });
+
+    // Avaliar atendimento
+    $(document).on('change', '#form-avaliar input[type=radio]', function() {
+        $('#form-avaliar').submit();
+    });
+    $(document).on('submit', '#form-avaliar', function() {
+        $.ajax({
+            url: $(this).attr('action'),
+            method: 'POST',
+            dataType: 'json',
+            data: $(this).serialize(),
+            success: function(data) {
+                if(!data.status) {
+                    $('#form-avaliar').find('input[type=radio]').prop('checked', false);
+
+                    modalAlert(data.msg, 'OK');
+                }
+            }
+        });
+
+        return false;
+    });
+
+    // Enviar mensagem
+    $(document).on('submit', '#form-enviar-msg', function() {
+        var input = $(this).find('input[type=text]');
+
+        if(input.val()) {
+            $('.chat').find('.sem-mensagens').remove();
+
+            var div = $('.chat').find('.mensagens'),
+                date = new Date();
+
+            div.append("<div class='row enviada'><div class='msg'><p>" + input.val() + "</p><span>" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + "</span></div></div>");
+
+            div.scrollTop(div[0].scrollHeight);
+
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                dataType: 'json',
+                data: $(this).serialize(),
+                success: function(data) {
+                    if(data.status != 1) {
+                        div.find('.enviada:last').append("<span class='error-msg'>Erro</span>");
+
+                        if(data.status == 3) {
+                            clearInterval(interval);
+
+                            modalAlert(data.msg, 'OK');
+                        }
+                    }
+                }
+            });
+
+            input.val('');
+        }
+
+        return false;
+    });
+
+    // Scroll infinito nas mensagens do chat
+    $(document).on('custom-scroll', '.chat .mensagens', function() {
+        if($(this).scrollTop() == 0) {
+            var div = $('.chat').find('.mensagens');
+
+            $.ajax({
+                url: 'mensagem/list/' + $('.chat').find('input[name=chat_id]').val() + '/' + div.find('.msg').length,
+                method: 'GET',
+                dataType:'json',
+                success: function(data) {
+                    div.prepend(data.mensagens);
+
+                    // Verifica se o nome do dia ja existe e o remove
+                    var seen = {};
+                    $('.chat .dia h3').each(function() {
+                        var txt = $(this).text();
+
+                        seen[txt] ? $(this).parent().remove() : seen[txt] = true;
+                    });
+                }
+            });
+        }
+    });
 });

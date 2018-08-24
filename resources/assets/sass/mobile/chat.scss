@@ -1,0 +1,241 @@
+.chat {
+    .modal-body {
+        height: 100%;
+        padding-bottom: 0 !important;
+    }
+
+    .sem-selecao, .sem-mensagens {
+        text-align: center;
+        height: 220px;
+        position: relative;
+        top: 50%;
+        margin-top: -110px;
+
+        img {
+            width: 80px;
+        }
+
+        p {
+            font-size: 16.6px;
+            color: rgba(150, 150, 150, 0.8);
+            line-height: 1.25;
+            margin: 20px 0 0 0;
+        }
+    }
+
+    .top-modal {
+        .imagem {
+            width: 30px;
+            height: 30px;
+            border: 1px solid rgb(230, 230, 230);
+            border-radius: 3px;
+            position: relative;
+            float: left;
+            margin: 10px 5px 10px 0;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 3px;
+
+                &.sem-imagem {
+                    width: 15px;
+                    height: 15px;
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    margin: -7.5px 0 0 -7.5px;
+                }
+            }
+        }
+
+        .title-status {
+            float: left;
+            width: calc(100% - 134px);
+        }
+
+        .title {
+            width: 100%;
+            font-size: 13.75px;
+            margin-top: 20px;
+
+            &.margin {
+                margin-top: 12px;
+            }
+        }
+
+        .online {
+            font-size: 11.6px;
+            color: rgb(255, 255, 255);
+            float: left;
+        }
+
+        #form-avaliar {
+            float: right;
+            margin-top: 12px;
+
+            input[type=radio] {
+                display: none;
+
+                &#like + label {
+                    background-image: url('../../img/icon-like.png');
+                }
+
+                &#dislike + label {
+                    background-image: url('../../img/icon-dislike.png');
+                }
+
+                &#like:checked + label {
+                    background-image: url('../../img/icon-like2.png');
+                }
+
+                &#dislike:checked + label {
+                    background-image: url('../../img/icon-dislike2.png');
+                }
+            }
+
+            label {
+                float: left;
+                width: 22px;
+                height: 22px;
+                background-size: contain;
+                background-position: center;
+                background-repeat: no-repeat;
+                cursor: pointer;
+                filter: brightness(0) invert(1);
+                margin-right: 10px;
+            }
+        }
+    }
+
+    .mensagens {
+        $height: calc(100% - 50px);
+        float: left;
+        width: 100%;
+        height: $height;
+        min-height: $height;
+        max-height: $height;
+        overflow: auto;
+        padding: 0 30px;
+
+        .error-msg {
+            float: right;
+            margin: 7px 10px 0 0;
+            font-size: 13.7px;
+            color: rgb(240, 108, 108);
+        }
+
+        .row {
+            width: 100%;
+            float: left;
+            margin: 5px 0;
+
+            &.recebida {
+                .msg {
+                    $color-recebida: rgb(240, 240, 240);
+                    float: left;
+                    background-color: $color-recebida;
+
+                    &:after{
+                        content: '';
+                        position: absolute;
+                        width: 0;
+                        height: 0;
+                        left: -10px;
+                        right: auto;
+                        top: 0;
+                        bottom: auto;
+                        border: 12px solid;
+                        border-color: $color-recebida $color-recebida transparent transparent;
+                    }
+                }
+            }
+
+            &.enviada {
+                .msg {
+                    $color-enviada: rgb(226, 229, 244);
+                    float: right;
+                    background-color: $color-enviada;
+
+                    &:after{
+                        content: '';
+                        position: absolute;
+                        width: 0;
+                        height: 0;
+                        left: auto;
+                        right: -10px;
+                        top: 0;
+                        bottom: auto;
+                        border: 12px solid;
+                        border-color: $color-enviada transparent transparent $color-enviada;
+                    }
+                }
+            }
+
+            h3 {
+                font-size: 12.5px;
+                color: rgb(100, 100, 100);
+                font-weight: 700;
+                text-align: center;
+                text-transform: uppercase;
+            }
+
+            .msg {
+                max-width: 75%;
+                padding: 8px 90px 8px 15px;
+                border-radius: 15px;
+                position: relative;
+
+                p {
+                    font-size: 13.7px;
+                    color: #000;
+                    margin: 0;
+                    float: left;
+                }
+
+                span {
+                    font-size: 10.833px;
+                    color: rgb(150, 150, 150);
+                    position: absolute;
+                    right: 15px;
+                    bottom: 5px;
+                }
+            }
+        }
+    }
+
+    #form-enviar-msg {
+        background-color: rgb(230, 230, 230);
+        width: 100%;
+        height: 50px;
+        float: left;
+        padding: 5px;
+
+        input[type=text] {
+            border-radius: 20px;
+            background-color: rgb(240, 240, 240);
+            width: calc(100% - 45px);
+            height: 40px;
+            font-size: 13.7px;
+            color: #000;
+            float: left;
+            border: none;
+            padding-left: 15px;
+        }
+
+        .button {
+            float: left;
+            border: none;
+            border-radius: 50%;
+            background-color: rgb(63, 81, 181);
+            width: 40px;
+            height: 40px;
+            margin-left: 5px;
+            background-image: url('../../img/icon-send2.png');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 22px;
+        }
+    }
+}

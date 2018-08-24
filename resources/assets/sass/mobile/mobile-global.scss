@@ -80,7 +80,7 @@ a, a:hover, a:active, a:focus {
         }
     }
 
-    &.show-trabalho, &.user-config, &.work-config {
+    &.show-trabalho, &.user-config, &.work-config, &.chat {
         .modal-dialog, .modal-content {
             margin: 0;
             border: none;
@@ -247,3 +247,4 @@ a, a:hover, a:active, a:focus {
 @import 'recuperar-senha.scss';
 @import 'usuario-config.scss';
 @import 'work-config.scss';
+@import 'chat.scss';

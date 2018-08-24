@@ -66,10 +66,10 @@ class MessageController extends Controller
                     if($check) {
                         $email = $check->from_id == $user_logged ? $check->user_to->email : $check->user_from->email;
 
-                        Mail::send('emails.nova_mensagem', [], function($q) use($email) {
-                            $q->from('no-reply@infochat.com.br', 'Infochat');
-                            $q->to($email)->subject('Nova mensagem');
-                        });
+                        //Mail::send('emails.nova_mensagem', [], function($q) use($email) {
+                            //$q->from('no-reply@infochat.com.br', 'Infochat');
+                            //$q->to($email)->subject('Nova mensagem');
+                        //});
                     }
                 } else {
                     $return['status'] = 2;

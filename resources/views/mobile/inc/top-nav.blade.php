@@ -4,9 +4,17 @@
     </a>
 
     <nav>
-        <a href="#" id="open-menu"></a>
+        @if(Auth::guard('web')->check())
+            <a href="#" id="open-menu" class="logged"></a>
+        @else
+            <a href="#" id="open-menu"></a>
+        @endif
 
         <ul>
+            <li>
+                <a href="#" id="open-cidades" class="icon-cidades">Trocar cidade</a>
+            </li>
+
             <li>
                 <a href="#" id="open-aside" class="icon-categorias">Categorias</a>
             </li>

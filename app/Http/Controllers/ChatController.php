@@ -69,11 +69,19 @@ class ChatController extends Controller
             $new_messages_pessoal = null;
         }
 
-        return response()->json([
-            'trabalho' => view('inc.chat', compact('destinatario', 'chat', 'tipo'))->render(),
-            'new_messages_trabalho' => $new_messages_trabalho,
-            'new_messages_pessoal' => $new_messages_pessoal
-        ]);
+        if(Agent::isMobile()) {
+            return response()->json([
+                'trabalho' => view('mobile.inc.chat', compact('destinatario', 'chat', 'tipo'))->render(),
+                'new_messages_trabalho' => $new_messages_trabalho,
+                'new_messages_pessoal' => $new_messages_pessoal
+            ]);
+        } else {
+            return response()->json([
+                'trabalho' => view('inc.chat', compact('destinatario', 'chat', 'tipo'))->render(),
+                'new_messages_trabalho' => $new_messages_trabalho,
+                'new_messages_pessoal' => $new_messages_pessoal
+            ]);
+        }
     }
 
     public function showChatUrl($slug)

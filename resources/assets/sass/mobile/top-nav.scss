@@ -142,6 +142,10 @@
 
         &#open-menu {
             background-image: url('../../img/menu.png');
+
+            &.logged {
+                background-image: url('../../img/icon-profile2.png');
+            }
         }
     }
 
@@ -206,6 +210,11 @@
 
                     &.icon-categorias {
                         background-image: url('../../img/icon-categorias.png');
+                    }
+
+                    &.icon-cidades {
+                        background-image: url('../../img/icon-map.png');
+                        background-size: 25px;
                     }
                 }
 
