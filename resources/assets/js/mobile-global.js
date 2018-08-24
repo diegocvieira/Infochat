@@ -1629,7 +1629,10 @@ $(document).ready(function() {
 
             div.append("<div class='row enviada'><div class='msg'><p>" + input.val() + "</p><span>" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + "</span></div></div>");
 
-            div.scrollTop(div[0].scrollHeight);
+            // Scroll to bottom
+            setTimeout(function() {
+                div.scrollTop(div[0].scrollHeight);
+            }, 500);
 
             $.ajax({
                 url: $(this).attr('action'),
