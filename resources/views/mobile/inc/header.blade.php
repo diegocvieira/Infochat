@@ -68,6 +68,14 @@
 
             gtag('config', 'UA-86559553-2');
         </script>
+
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-7367829499171206",
+            enable_page_level_ads: true
+          });
+        </script>
     </head>
     <body class="<?php echo isset($body_class) ? $body_class : '' ?>">
         @if(session('session_flash'))
