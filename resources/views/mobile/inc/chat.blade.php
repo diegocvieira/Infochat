@@ -1,17 +1,9 @@
-<!--<div class="topo-chat">
-    @if($tipo == 'trabalho')
-        <a href="#" class="ver-perfil" data-id="{{ $destinatario->id }}">{{ $destinatario->nome }}</a>
-    @else
-        <a href="#">{{ $destinatario->nome }}</a>
-    @endif
-</div>-->
-
 {!! Form::hidden('user_id', $tipo == 'trabalho' ? $destinatario->user_id : $destinatario->id, ['id' => 'user_id']) !!}
 
 <div class="top-modal">
     <a href="#" data-dismiss="modal" class="close-modal-arrow"></a>
 
-    <div class="imagem">
+    <div class="imagem {{ !$destinatario->imagem ? 'border' : '' }}">
         @if($destinatario->imagem)
             <img src="{{ asset('uploads/perfil/' . $destinatario->imagem) }}" alt="Foto de perfil de {{ $destinatario->nome }}" />
         @else

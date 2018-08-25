@@ -912,85 +912,7 @@ $(document).ready(function() {
         }
     });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    ////////////////////////////// MODAL DAS CONFIGURACOES DO TRABALHO //////////////////////////////
+    ////////////////////////////// MODAL WORK CONFIG //////////////////////////////
 
     function insertTag(value) {
         var count = parseInt($('.tags').find('.count-tag').text());
@@ -1435,6 +1357,9 @@ $(document).ready(function() {
 
 
 
+     window.onhashchange = function(e) {
+         $('.modal').hide();
+     }
 
 
 
@@ -1455,10 +1380,6 @@ $(document).ready(function() {
 
 
 
-     // Aparecer e ocultar mensagens flash session
-    setTimeout(function() {
-        $('.session-flash').fadeOut();
-    }, 5000);
 
     // Atualizar as abas de mensagens em tempo real
     if(logged) {
@@ -1530,7 +1451,7 @@ $(document).ready(function() {
 
     ////////////////////////////// CHAT //////////////////////////////
 
-    $(document).on('click', '.open-chat', function(e) {
+    $(document).on('tap', '.open-chat', function(e) {
         e.preventDefault();
 
         // Remover numero de novas mensagens
@@ -1578,19 +1499,23 @@ $(document).ready(function() {
 
             // Atualizar chat em tempo real
             interval = setInterval(function() {
-                $.ajax({
-                    url: 'mensagem/list/' + $('.chat').find('input[name=chat_id]').val() + '/0',
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(data) {
-                        var div = $('.chat').find('.mensagens');
+                if($('.chat').is(':visible')) {
+                    $.ajax({
+                        url: 'mensagem/list/' + $('.chat').find('input[name=chat_id]').val() + '/0',
+                        method: 'GET',
+                        dataType: 'json',
+                        success: function(data) {
+                            var div = $('.chat').find('.mensagens');
 
-                        // Verifica se a ultima mensagem que esta no chat foi a ultima recebida
-                        if(div.find('.recebida:last p').text() != data.last_msg) {
-                            div.html(data.mensagens);
+                            // Verifica se a ultima mensagem que esta no chat foi a ultima recebida
+                            if(div.find('.recebida:last p').text() != data.last_msg) {
+                                div.html(data.mensagens);
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    clearInterval(interval);
+                }
             }, 10000);
         }
     });
