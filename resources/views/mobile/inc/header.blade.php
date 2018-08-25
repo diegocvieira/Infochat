@@ -68,7 +68,6 @@
 
             gtag('config', 'UA-86559553-2');
         </script>
-
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
         <script>
           (adsbygoogle = window.adsbygoogle || []).push({
