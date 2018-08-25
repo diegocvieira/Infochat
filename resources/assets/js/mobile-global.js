@@ -60,8 +60,65 @@ $(document).ready(function() {
         }
     };
 
-    // Fazer validate ignorar campos ocultos
-    $.validator.setDefaults({ ignore: "" });
+    // Atualizar as abas de mensagens em tempo real
+    if(logged) {
+        setInterval(function() {
+            $.ajax({
+                url: 'mensagem/new-messages',
+                method: 'POST',
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    newMessagesPessoal(data.pessoal);
+                    newMessagesTrabalho(data.trabalho);
+                }
+            });
+        }, 20000);
+    }
+
+    // Atualizar count aba trabalho
+    function newMessagesTrabalho(count) {
+        var trabalho = $('.resultados').find('.abas-resultados a[data-type=trabalho]');
+
+        if(count) {
+            if(trabalho.find('span').length) {
+                if(count != parseInt(trabalho.find('span').text())) {
+                    trabalho.find('span').text(count);
+
+                    $('#alert-new-message')[0].play();
+                }
+            } else {
+                trabalho.append("<span>" + count + "</span>");
+
+                $('#alert-new-message')[0].play();
+            }
+        } else {
+            trabalho.find('span').remove();
+        }
+    }
+
+    // Atualizar count aba pessoal
+    function newMessagesPessoal(count) {
+        var pessoal = $('.resultados').find('.abas-resultados a[data-type=pessoal]');
+
+        if(count) {
+            if(pessoal.find('span').length) {
+                if(count != parseInt(pessoal.find('span').text())) {
+                    pessoal.find('span').text(count);
+
+                    $('#alert-new-message')[0].play();
+                }
+            } else {
+                pessoal.append("<span>" + count + "</span>");
+
+                $('#alert-new-message')[0].play();
+            }
+        } else {
+            pessoal.find('span').remove();
+        }
+    }
 
     // Remover class de erro ao selecionar um valor valido
     $(document).on('change', 'select.selectpicker', function() {
@@ -1332,122 +1389,6 @@ $(document).ready(function() {
             }
         });
      });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    window.onpopstate = function(e) {
-         $('.modal').hide();
-     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // Atualizar as abas de mensagens em tempo real
-    if(logged) {
-        setInterval(function() {
-            $.ajax({
-                url: 'mensagem/new-messages',
-                method: 'POST',
-                dataType: 'json',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(data) {
-                    newMessagesPessoal(data.pessoal);
-                    newMessagesTrabalho(data.trabalho);
-                }
-            });
-        }, 20000);
-    }
-
-    // Atualizar count aba trabalho
-    function newMessagesTrabalho(count) {
-        var trabalho = $('.resultados').find('.abas-resultados a[data-type=trabalho]');
-
-        if(count) {
-            if(trabalho.find('span').length) {
-                if(count != parseInt(trabalho.find('span').text())) {
-                    trabalho.find('span').text(count);
-
-                    $('#alert-new-message')[0].play();
-                }
-            } else {
-                trabalho.append("<span>" + count + "</span>");
-
-                $('#alert-new-message')[0].play();
-            }
-        } else {
-            trabalho.find('span').remove();
-        }
-    }
-
-    // Atualizar count aba pessoal
-    function newMessagesPessoal(count) {
-        var pessoal = $('.resultados').find('.abas-resultados a[data-type=pessoal]');
-
-        if(count) {
-            if(pessoal.find('span').length) {
-                if(count != parseInt(pessoal.find('span').text())) {
-                    pessoal.find('span').text(count);
-
-                    $('#alert-new-message')[0].play();
-                }
-            } else {
-                pessoal.append("<span>" + count + "</span>");
-
-                $('#alert-new-message')[0].play();
-            }
-        } else {
-            pessoal.find('span').remove();
-        }
-    }
-
-    // Remover class de erro ao selecionar um valor valido
-    $(document).on('change', 'select.selectpicker', function() {
-        if($(this).val() != '') {
-            $(this).prev().prev().removeClass('error');
-            $(this).parent().removeClass('error');
-        }
-    });
 
     ////////////////////////////// CHAT //////////////////////////////
 
