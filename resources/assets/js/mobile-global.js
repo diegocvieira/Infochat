@@ -1357,7 +1357,7 @@ $(document).ready(function() {
 
 
 
-     window.onhashchange = function(e) {
+    window.onpopstate = function(e) {
          $('.modal').hide();
      }
 
