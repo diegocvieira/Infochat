@@ -58,6 +58,16 @@
         @endif
 
         <link rel="stylesheet" type="text/css" href="{{ mix('/css/mobile-global.css') }}"/>
+
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-86559553-2"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'UA-86559553-2');
+        </script>
     </head>
     <body class="<?php echo isset($body_class) ? $body_class : '' ?>">
         @if(session('session_flash'))
