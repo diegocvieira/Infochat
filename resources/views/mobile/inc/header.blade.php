@@ -14,6 +14,7 @@
     	<meta name="theme-color" content="#1a276d">
 
     	<!-- SEO META TAGS -->
+        <meta name="google-site-verification" content="QmIWiV6myEkzAONZs45zJROviJCSlA-6kSCE4bQjTNY" />
     	<meta name="csrf-token" content="{!! csrf_token() !!}">
 
     	@if(isset($header_keywords))
