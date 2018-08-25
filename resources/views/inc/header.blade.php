@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-86559553-2"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'UA-86559553-2');
+        </script>
+        <meta name="google-site-verification" content="QmIWiV6myEkzAONZs45zJROviJCSlA-6kSCE4bQjTNY" />
+
     	<meta charset="UTF-8">
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,7 +25,6 @@
     	<meta name="theme-color" content="#3f51b5">
 
     	<!-- SEO META TAGS -->
-        <meta name="google-site-verification" content="QmIWiV6myEkzAONZs45zJROviJCSlA-6kSCE4bQjTNY" />
     	<meta name="csrf-token" content="{!! csrf_token() !!}">
 
     	@if(isset($header_keywords))
@@ -58,16 +68,6 @@
         @endif
 
         <link rel="stylesheet" type="text/css" href="{{ mix('/css/global.css') }}"/>
-
-        <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-86559553-2"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', 'UA-86559553-2');
-        </script>
     </head>
     <body class="<?php echo isset($body_class) ? $body_class : '' ?>">
         @if(session('session_flash'))
