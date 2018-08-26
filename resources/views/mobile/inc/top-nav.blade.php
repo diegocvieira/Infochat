@@ -5,7 +5,11 @@
 
     <nav>
         @if(Auth::guard('web')->check())
-            <a href="#" id="open-menu" class="logged"></a>
+            @if(Auth::guard('web')->user()->imagem)
+                <a href="#" id="open-menu" class="logged" style="background-image: url({{ asset('uploads/perfil/' . Auth::guard('web')->user()->imagem) }});"></a>
+            @else
+                <a href="#" id="open-menu" class="logged"></a>
+            @endif
         @else
             <a href="#" id="open-menu"></a>
         @endif
@@ -29,7 +33,7 @@
                 </li>
 
                 <li>
-                    <a href="{{ route('usuario-logout') }}" class="icon-logout">Sair :(</a>
+                    <a href="{{ route('usuario-logout') }}" class="icon-logout">Sair</a>
                 </li>
             @else
                 <li>

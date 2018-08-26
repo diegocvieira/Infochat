@@ -707,35 +707,39 @@ $(document).ready(function() {
     $(document).on('submit', '#form-enviar-msg', function() {
         var input = $(this).find('input[type=text]');
 
-        if(input.val()) {
-            $('.chat').find('.sem-mensagens').remove();
+        if(logged) {
+            if(input.val()) {
+                $('.chat').find('.sem-mensagens').remove();
 
-            var div = $('.chat').find('.mensagens'),
-                date = new Date();
+                var div = $('.chat').find('.mensagens'),
+                    date = new Date();
 
-            div.append("<div class='row enviada'><div class='msg'><p>" + input.val() + "</p><span>" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + "</span></div></div>");
+                div.append("<div class='row enviada'><div class='msg'><p>" + input.val() + "</p><span>" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + "</span></div></div>");
 
-            div.scrollTop(div[0].scrollHeight);
+                div.scrollTop(div[0].scrollHeight);
 
-            $.ajax({
-                url: $(this).attr('action'),
-                method: 'POST',
-                dataType: 'json',
-                data: $(this).serialize(),
-                success: function(data) {
-                    if(data.status != 1) {
-                        div.find('.enviada:last').append("<span class='error-msg'>Erro</span>");
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: 'POST',
+                    dataType: 'json',
+                    data: $(this).serialize(),
+                    success: function(data) {
+                        if(data.status != 1) {
+                            div.find('.enviada:last').append("<span class='error-msg'>Erro</span>");
 
-                        if(data.status == 3) {
-                            clearInterval(interval);
+                            if(data.status == 3) {
+                                clearInterval(interval);
 
-                            modalAlert(data.msg, 'OK');
+                                modalAlert(data.msg, 'OK');
+                            }
                         }
                     }
-                }
-            });
+                });
 
-            input.val('');
+                input.val('');
+            }
+        } else {
+            modalAlert('Acesse sua conta ou cadastre-se para liberar o infochat', 'OK');
         }
 
         return false;

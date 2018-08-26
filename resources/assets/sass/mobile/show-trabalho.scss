@@ -91,6 +91,8 @@
 
             &.avaliacao {
                 background-image: url('../../img/icon-star.png');
+                background-size: 25px;
+                background-position: 3.8%;
             }
 
             &.atendimento {
@@ -131,7 +133,7 @@
                 line-height: 40px;
                 color: #000;
                 font-size: 14.5px;
-                padding: 0 20px;
+                padding: 0 10px;
             }
 
             .active {

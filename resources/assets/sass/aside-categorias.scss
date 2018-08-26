@@ -63,6 +63,19 @@
             float: left;
             padding-left: 15px;
             color: #fff;
+
+            &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+                color: rgba(255, 255, 255, 0.8);
+                opacity: 1; /* Firefox */
+            }
+
+            &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+            &::-ms-input-placeholder { /* Microsoft Edge */
+                color: rgba(255, 255, 255, 0.8);
+            }
         }
 
         input[type=submit] {
@@ -88,7 +101,7 @@
         .open-busca-categoria {
             width: 100%;
             float: left;
-            height: 35px;
+            height: 30px;
             background-size: contain;
             background-position: left;
             background-repeat: no-repeat;

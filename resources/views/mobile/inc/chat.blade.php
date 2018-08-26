@@ -43,18 +43,10 @@
     @endif
 </div>
 
-@if(Auth::guard('web')->check())
-    {!! Form::open(['method' => 'post', 'action' => 'MessageController@send', 'id' => 'form-enviar-msg']) !!}
-        {!! Form::text('message', null, ['autofocus', 'placeholder' => 'Digite aqui...', 'id' => 'teste']) !!}
+{!! Form::open(['method' => 'post', 'action' => 'MessageController@send', 'id' => 'form-enviar-msg']) !!}
+    {!! Form::text('message', null, ['autofocus', 'placeholder' => 'Digite aqui...', 'class' => !Auth::guard('web')->check() ? 'lock' : '']) !!}
 
-        {!! Form::hidden('chat_id', $chat->id) !!}
+    {!! Form::hidden('chat_id', isset($chat) ? $chat->id : '') !!}
 
-        {!! Form::submit('', ['class' => 'button']) !!}
-    {!! Form::close() !!}
-@else
-    <div id="form-enviar-msg">
-        {!! Form::text('mensagem', null, ['autofocus', 'placeholder' => 'Acesse sua conta para liberar o infochat']) !!}
-
-        <button type="button" class="button"></button>
-    </div>
-@endif
+    {!! Form::submit('', ['class' => 'button']) !!}
+{!! Form::close() !!}

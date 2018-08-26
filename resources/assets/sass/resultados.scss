@@ -9,26 +9,13 @@
     .sem-resultados {
         width: 100%;
         float: left;
-
-        p {
-            font-size: 16.6px;
-            color: rgb(100, 100, 100);
-            line-height: 1.25;
-            text-align: center;
-            padding: 0 20px;
-        }
-    }
-
-    .sem-perfil-trabalho {
-        width: 100%;
-        float: left;
         text-align: center;
-        padding: 0 20px;
 
         p {
             font-size: 14.5px;
             color: rgb(100, 100, 100);
-            line-height: 1.429;
+            line-height: 1.25;
+            padding: 0 20px;
         }
 
         a {
@@ -134,7 +121,7 @@
                 height: 20px;
                 text-align: center;
                 overflow: hidden;
-                line-height: normal;
+                line-height: 20px;
                 top: 5px;
                 position: relative;
             }
@@ -261,6 +248,7 @@
                 height: 20px;
                 text-align: center;
                 overflow: hidden;
+                line-height: 20px;
             }
         }
 
@@ -323,6 +311,10 @@
                 position: relative;
                 padding-left: 17px;
                 float: left;
+
+                &:hover {
+                    color: rgb(122, 162, 244);
+                }
 
                 &:after {
                     content: '';
