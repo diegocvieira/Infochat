@@ -60,6 +60,14 @@
 
         <link rel="stylesheet" type="text/css" href="{{ mix('/css/global.css') }}"/>
 
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-2256938726697364",
+            enable_page_level_ads: true
+          });
+        </script>
+
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124628492-1"></script>
         <script>

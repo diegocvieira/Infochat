@@ -383,25 +383,10 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
-        for($i = 0; $i <= 35; $i++) {
-            $t = new Trabalho;
-
-            $t->user_id = 4;
-            $t->tipo = 1;
-            $t->nome = 'Teste ' . $i;
-            $t->cidade_id = 4913;
-            $t->slug = $i;
-            $t->status = 1;
-            $t->area_id = 2;
-            $t->cep = '96015-590';
-
-            $t->save();
-        }
-
-        /*\Mail::send('emails.nova_mensagem', [], function($q) {
+        \Mail::send('emails.nova_mensagem', [], function($q) {
             $q->from('no-reply@infochat.com.br', 'Infochat');
             $q->to('diegovc10@hotmail.com')->subject('Teste hotmail');
-        });*/
+        });
 
         /*$mensagem = Mensagem::selectRaw("CONCAT(FLOOR(sum(diferenca)/60),'h',MOD(sum(diferenca),60),'m') as tempo")
     ->whereIn('id', function($query) {

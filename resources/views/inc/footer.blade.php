@@ -3,7 +3,7 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h1>Bem-vindo!</h1>
+                            <h2>Bem-vindo!</h2>
                             <p>Cadastre-se totalmente grátis</p>
                         </div>
 
@@ -46,7 +46,7 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h1>Bem-vindo de volta!</h1>
+                            <h2>Bem-vindo de volta!</h2>
                             <p>Acesse seu perfil para começar</p>
                         </div>
 
