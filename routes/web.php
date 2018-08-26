@@ -32,7 +32,7 @@ Route::get('aside/areas/{tipo}', 'GlobalController@asideAreas');
 Route::post('categorias/busca', 'GlobalController@buscaCategorias');
 
 // Busca
-Route::post('trabalhos/busca', 'TrabalhoController@formBusca');
+Route::get('trabalhos/busca', 'TrabalhoController@formBusca');
 Route::any('busca/{city}/{state}/{tipo?}/{palavra_chave?}/{area?}/{tag?}', 'TrabalhoController@busca');
 
 Route::get('termos/uso', function() {

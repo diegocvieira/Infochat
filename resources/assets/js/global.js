@@ -362,7 +362,7 @@ $(document).ready(function() {
 
         $.ajax({
             url: $(this).attr('action'),
-            method: 'POST',
+            method: 'GET',
             dataType:'json',
             data: $(this).serialize(),
             success: function(data) {
