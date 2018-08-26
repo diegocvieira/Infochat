@@ -41,24 +41,18 @@
     @endif
 </div>
 
-@if(Auth::guard('web')->check())
-    {!! Form::open(['method' => 'post', 'action' => 'MessageController@send', 'id' => 'form-enviar-msg']) !!}
-        {!! Form::text('message', null, ['placeholder' => 'Digite uma mensagem']) !!}
-
-        {!! Form::hidden('chat_id', $chat->id) !!}
-
-        {!! Form::submit('', ['class' => 'button']) !!}
-    {!! Form::close() !!}
-@else
-    <div id="form-enviar-msg">
+{!! Form::open(['method' => 'post', 'action' => 'MessageController@send', 'id' => 'form-enviar-msg']) !!}
+    @if(!Auth::guard('web')->check())
         <div class="lock">
             <div class="balao">
                 <p>Acesse sua conta ou cadastre-se para liberar o infochat</p>
             </div>
         </div>
+    @endif
 
-        {!! Form::text('mensagem', null, ['placeholder' => 'Digite uma mensagem']) !!}
+    {!! Form::text('message', null, ['placeholder' => 'Digite uma mensagem']) !!}
 
-        <button type="button" class="button"></button>
-    </div>
-@endif
+    {!! Form::hidden('chat_id', isset($chat) ? $chat->id : '') !!}
+
+    {!! Form::submit('', ['class' => 'button']) !!}
+{!! Form::close() !!}

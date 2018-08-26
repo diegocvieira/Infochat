@@ -26,7 +26,17 @@
             <ul>
                 @if(Auth::guard('web')->check())
                     <li>
-                        <a href="#" class="open-nav" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ firstName(Auth::guard('web')->user()->nome) }}</a>
+                        <a href="#" class="open-nav" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <span>{{ firstName(Auth::guard('web')->user()->nome) }}</span>
+
+                            <div class="img">
+                                @if(Auth::guard('web')->user()->imagem)
+                                    <img src="{{ asset('uploads/perfil/' . Auth::guard('web')->user()->imagem) }}" alt="Foto de perfil de {{ Auth::guard('web')->user()->nome }}" />
+                                @else
+                                    <img src="{{ asset('img/icon-profile2.png') }}" class="sem-imagem" alt="Foto de perfil de {{ Auth::guard('web')->user()->nome }}" />
+                                @endif
+                            </div>
+                        </a>
 
                         <ul class="dropdown-menu">
                             <li>
@@ -38,7 +48,7 @@
                             </li>
 
                             <li>
-                                <a href="{{ route('usuario-logout') }}" class="icon-logout">Sair :(</a>
+                                <a href="{{ route('usuario-logout') }}" class="icon-logout">Sair</a>
                             </li>
 
                             <li class="termos">

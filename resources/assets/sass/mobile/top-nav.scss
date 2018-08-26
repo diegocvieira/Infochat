@@ -1,3 +1,7 @@
+.active-manage {
+    background-color: rgb(92, 107, 192) !important;
+}
+
 .top-nav {
     background-color: rgb(63, 81, 181);
     position: fixed;
@@ -132,8 +136,9 @@
         background-position: center;
         background-repeat: no-repeat;
         background-size: contain;
-        width: 45px;
+        width: 25px;
         height: 25px;
+        margin: 0 10px;
 
         &#open-search {
             background-image: url('../../img/icon-lupa.png');
@@ -144,6 +149,7 @@
             background-image: url('../../img/menu.png');
 
             &.logged {
+                border-radius: 50%;
                 background-image: url('../../img/icon-profile2.png');
             }
         }

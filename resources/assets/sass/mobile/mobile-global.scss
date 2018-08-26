@@ -24,6 +24,10 @@ a, a:hover, a:active, a:focus {
     outline: none;
 }
 
+* {
+    outline: none;
+}
+
 .error {
     background-color: #fdd !important;
 }

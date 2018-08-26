@@ -54,13 +54,13 @@
     @endforeach
 @else
     @if($section == 'trabalho')
-        <div class="sem-perfil-trabalho">
+        <div class="sem-resultados">
             <img src="{{ asset('img/icon-work.png') }}" />
 
             @if(Auth::guard('web')->check() && Auth::guard('web')->user()->trabalho)
                 <p>Você ainda não recebeu nenhuma mensagem.</p>
             @else
-                <p>Atenda seus clientes online e<br>permitir que novos clientes encontrem você</p>
+                <p>Atenda seus clientes online e<br>permita que novos clientes encontrem você</p>
 
                 @if(Auth::guard('web')->check())
                     <a href="{{ action('TrabalhoController@getConfig') }}" id="open-trabalho-config">Ativar perfil de trabalho</a>

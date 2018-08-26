@@ -650,6 +650,8 @@ $(document).ready(function() {
 
         var top = $('.top-nav');
 
+        $('.top-nav, .abas-resultados').addClass('active-manage');
+
         // Verify if options exists
         top.find('.manage-options').remove();
 
@@ -665,6 +667,8 @@ $(document).ready(function() {
 
     $(document).on('click', '#close-manage-options', function(e) {
         e.preventDefault();
+
+        $('.top-nav, .abas-resultados').removeClass('active-manage');
 
         $('#logo-infochat, #open-search').show();
         $('.top-nav').find('.manage-options').remove();
@@ -1487,38 +1491,42 @@ $(document).ready(function() {
     $(document).on('submit', '#form-enviar-msg', function() {
         var input = $(this).find('input[type=text]');
 
-        if(input.val()) {
-            $('.chat').find('.sem-mensagens').remove();
+        if(logged) {
+            if(input.val()) {
+                $('.chat').find('.sem-mensagens').remove();
 
-            var div = $('.chat').find('.mensagens'),
-                date = new Date();
+                var div = $('.chat').find('.mensagens'),
+                    date = new Date();
 
-            div.append("<div class='row enviada'><div class='msg'><p>" + input.val() + "</p><span>" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + "</span></div></div>");
+                div.append("<div class='row enviada'><div class='msg'><p>" + input.val() + "</p><span>" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + "</span></div></div>");
 
-            // Scroll to bottom
-            setTimeout(function() {
-                div.scrollTop(div[0].scrollHeight);
-            }, 500);
+                // Scroll to bottom
+                setTimeout(function() {
+                    div.scrollTop(div[0].scrollHeight);
+                }, 500);
 
-            $.ajax({
-                url: $(this).attr('action'),
-                method: 'POST',
-                dataType: 'json',
-                data: $(this).serialize(),
-                success: function(data) {
-                    if(data.status != 1) {
-                        div.find('.enviada:last').append("<span class='error-msg'>Erro</span>");
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: 'POST',
+                    dataType: 'json',
+                    data: $(this).serialize(),
+                    success: function(data) {
+                        if(data.status != 1) {
+                            div.find('.enviada:last').append("<span class='error-msg'>Erro</span>");
 
-                        if(data.status == 3) {
-                            clearInterval(interval);
+                            if(data.status == 3) {
+                                clearInterval(interval);
 
-                            modalAlert(data.msg, 'OK');
+                                modalAlert(data.msg, 'OK');
+                            }
                         }
                     }
-                }
-            });
+                });
 
-            input.val('');
+                input.val('');
+            }
+        } else {
+            modalAlert('Acesse sua conta ou cadastre-se para liberar o infochat', 'OK');
         }
 
         return false;

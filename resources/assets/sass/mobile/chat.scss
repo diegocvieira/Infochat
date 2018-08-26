@@ -217,7 +217,7 @@
 
         input[type=text] {
             border-radius: 20px;
-            background-color: rgb(240, 240, 240);
+            background-color: #fff;
             width: calc(100% - 45px);
             height: 40px;
             font-size: 13.7px;
@@ -225,6 +225,14 @@
             float: left;
             border: none;
             padding-left: 15px;
+
+            &.lock {
+                background-position: 10px;
+                background-image: url('../../img/icon-lock.png');
+                background-repeat: no-repeat;
+                background-size: 20px;
+                padding-left: 40px;
+            }
         }
 
         .button {
