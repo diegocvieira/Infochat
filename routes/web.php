@@ -30,6 +30,7 @@ Route::get('aside/categorias/{slug}', 'GlobalController@asideCategorias');
 Route::get('aside/subcategorias/{slug}', 'GlobalController@asideSubcategorias');
 Route::get('aside/areas/{tipo}', 'GlobalController@asideAreas');
 Route::post('categorias/busca', 'GlobalController@buscaCategorias');
+Route::get('aside/result/{type}/{title}', 'GlobalController@searchResult');
 
 // Busca
 Route::get('trabalhos/busca', 'TrabalhoController@formBusca');

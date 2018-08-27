@@ -47,5 +47,7 @@
         </script>
 
         <script src="{{ mix('/js/mobile-global.js') }}"></script>
+
+        @yield('script')
     </body>
 </html>
