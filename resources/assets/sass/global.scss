@@ -85,44 +85,56 @@ a, a:hover, a:active, a:focus {
     }
 }
 
-#modal-cadastro-usuario, #modal-login-usuario {
-    .modal-content {
+.page-user-login, .page-user-register {
+    text-align: center;
+    height: 100%;
+
+    form {
         border: 1px solid rgb(237, 237, 237);
         border-radius: 5px;
         background-color: rgb(255, 255, 255);
+        box-shadow: 10px 17.321px 16px 4px rgba(100, 100, 100, 0.078);
         width: 538px;
-        position: relative;
-        margin-left: -269px;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 70px;
+        position: absolute;
         left: 50%;
-    }
+        margin-left: -269px;
 
-    .modal-header {
-        border: none;
-        text-align: center;
-        padding-top: 30px;
-
-        h2 {
+        h1 {
             font-size: 25px;
             font-family: "KeepCalm";
             color: rgb(66, 66, 66);
+            margin: 0;
         }
 
-        p {
+        h2, p {
+            margin: 10px 0 40px 0;
             font-size: 14.5px;
             color: rgb(150, 150, 150);
-        }
-    }
 
-    .modal-body {
-        padding: 0 80px 20px 80px;
-
-        .col-xs-6 {
-            &:first-child {
-                padding-right: 5px;
+            &p {
+                margin: 0;
             }
+        }
 
-            &:last-child {
-                padding-left: 5px;
+        a {
+            font-size: 11.6px;
+            color: rgb(66, 133, 244);
+        }
+
+        .passwords {
+            float: left;
+            width: 100%;
+
+            input {
+                width: calc(50% - 5px);
+                float: left;
+
+                &:last-child {
+                    float: right;
+                }
             }
         }
 
@@ -132,6 +144,7 @@ a, a:hover, a:active, a:focus {
             height: 53px;
             margin-top: 10px;
             background-color: rgb(245, 245, 245);
+            box-shadow: none;
         }
 
         input[type=submit] {
@@ -142,23 +155,7 @@ a, a:hover, a:active, a:focus {
             color: rgb(255, 255, 255);
             font-weight: 700;
             border: none;
-            margin-top: 20px;
-        }
-    }
-
-    .modal-footer {
-        border: none;
-        padding: 0 80px 40px 80px;
-        font-size: 11.6px;
-        text-align: center;
-
-        a {
-            color: rgb(66, 133, 244);
-        }
-
-        p {
-            color: rgb(150, 150, 150);
-            line-height: 1.25;
+            margin: 20px 0;
         }
     }
 }

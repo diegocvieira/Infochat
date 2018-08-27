@@ -131,26 +131,31 @@
         }
     }
 
-    #open-search, #open-menu {
+    #open-search {
         float: right;
         background-position: center;
         background-repeat: no-repeat;
         background-size: contain;
-        width: 25px;
+        width: 45px;
         height: 25px;
-        margin: 0 10px;
+        background-image: url('../../img/icon-lupa.png');
+        filter: brightness(0) invert(1);
+    }
 
-        &#open-search {
-            background-image: url('../../img/icon-lupa.png');
-            filter: brightness(0) invert(1);
-        }
+    #open-menu {
+        float: right;
+        width: 45px;
+        height: 25px;
+        text-align: center;
 
-        &#open-menu {
-            background-image: url('../../img/menu.png');
+        img {
+            width: 25px;
+            height: 25px;
+            object-fit: cover;
+            display: inline-block;
 
             &.logged {
                 border-radius: 50%;
-                background-image: url('../../img/icon-profile2.png');
             }
         }
     }

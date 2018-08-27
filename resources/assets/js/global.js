@@ -218,9 +218,12 @@ $(document).ready(function() {
                 });
             } else {
                 $('.aside-categorias').find('.subs a').removeClass('active');
-
                 $('#categorias .subcategoria').removeClass('active');
                 $(this).addClass('active');
+
+                if($(this).hasClass('modal-search')) {
+                    $('#modal-busca-categorias').remove();
+                }
             }
 
             $('#form-search-tag').val($(this).data('search'));
@@ -338,7 +341,7 @@ $(document).ready(function() {
                     modal.length ? modal.find('li').remove() : $('#form-busca-categoria').append("<div id='modal-busca-categorias'><ul></ul></div>");
 
                     $(data.categorias).each(function(index, element) {
-                        $('#modal-busca-categorias').find('ul').append("<li><a href='#' class='cat-search' data-search='" + element.titulo + "'>" + element.titulo + "</a></li>");
+                        $('#modal-busca-categorias').find('ul').append("<li><a href='#' class='cat-search modal-search' data-search='" + element.titulo + "'>" + element.titulo + "</a></li>");
                     });
                 }
             });
@@ -809,7 +812,7 @@ $(document).ready(function() {
         });
     });
 
-    $('#form-login-usuario').on('submit', function(e) {
+    $('#form-user-login').on('submit', function(e) {
         e.preventDefault();
 
         $.ajax({
@@ -829,7 +832,7 @@ $(document).ready(function() {
         return false;
     });
 
-    $('#form-cadastro-usuario').validate({
+    $('#form-user-register').validate({
         rules: {
             nome: {
                 required: true,

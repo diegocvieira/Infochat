@@ -57,12 +57,12 @@ class GlobalController extends Controller
 
     public function buscaCategorias(Request $request)
     {
-        $subcategorias = Subcategoria::where('titulo', 'LIKE', '%' . $request->nome_categoria . '%')->select('titulo', 'slug');
+        $subcategorias = Subcategoria::where('titulo', 'LIKE', '%' . $request->nome_categoria . '%')->select('titulo', 'slug', DB::raw("'subcategoria' as type"));
 
         $categorias = Categoria::where('titulo', 'LIKE', '%' . $request->nome_categoria . '%')
-                                ->select('titulo', 'slug')
-                                ->union($subcategorias)
-                                ->get();
+            ->select('titulo', 'slug', DB::raw("'categoria' as type"))
+            ->union($subcategorias)
+            ->get();
 
         return json_encode(['categorias' => $categorias]);
     }
@@ -96,7 +96,7 @@ class GlobalController extends Controller
         $categorias = Categoria::whereHas('area', function($q) use($slug) {
                 $q->where('slug', $slug);
             })
-            ->where(DB::raw("(SELECT COUNT(*) FROM tags WHERE tags.tag LIKE CONCAT('%', categorias.titulo, '%'))"), '>=', 1)
+            ->where(DB::raw("(SELECT COUNT(*) FROM tags JOIN trabalhos WHERE trabalhos.id = tags.trabalho_id AND trabalhos.cidade_id = " . Cookie::get('sessao_cidade_id') . " AND tags.tag LIKE CONCAT('%', categorias.titulo, '%'))"), '>=', 1)
             ->orderBy('titulo', 'asc')
             ->select('titulo', 'slug')
             ->distinct()
@@ -110,7 +110,7 @@ class GlobalController extends Controller
         $subcategorias = Subcategoria::whereHas('categoria', function($q) use($slug) {
             $q->where('slug', $slug);
         })
-        ->where(DB::raw("(SELECT COUNT(*) FROM tags WHERE tags.tag LIKE CONCAT('%', subcategorias.titulo, '%'))"), '>=', 1)
+        ->where(DB::raw("(SELECT COUNT(*) FROM tags JOIN trabalhos WHERE trabalhos.id = tags.trabalho_id AND trabalhos.cidade_id = " . Cookie::get('sessao_cidade_id') . " AND tags.tag LIKE CONCAT('%', subcategorias.titulo, '%'))"), '>=', 1)
         ->orderBy('titulo', 'asc')
         ->select('titulo', 'slug')
         ->distinct()
