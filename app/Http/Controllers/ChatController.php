@@ -140,7 +140,11 @@ class ChatController extends Controller
                 app('App\Http\Controllers\MessageController')->read($chat_id);
             }
 
-            return view('show-chat-url', compact('palavra_chave', 'trabalhos', 'chat', 'tipo', 'destinatario', 'header_desc', 'header_title'));
+            if(Agent::isMobile()) {
+                return view('mobile.show-chat-url', compact('palavra_chave', 'trabalhos', 'chat', 'tipo', 'destinatario', 'header_desc', 'header_title'));
+            } else {
+                return view('show-chat-url', compact('palavra_chave', 'trabalhos', 'chat', 'tipo', 'destinatario', 'header_desc', 'header_title'));
+            }
         } else {
             return view('errors.404');
         }

@@ -113,7 +113,7 @@
     }
 
     .mensagens {
-        $height: calc(100% - 130px);
+        $height: calc(100% - 140px);
         float: left;
         width: 100%;
         height: $height;
@@ -121,7 +121,7 @@
         max-height: $height;
         overflow: auto;
         padding: 0 30px;
-        margin-top: 60px;
+        margin: 60px 0 10px 0;
 
         .error-msg {
             float: right;
@@ -133,48 +133,50 @@
         .row {
             width: 100%;
             float: left;
-            margin: 5px 0;
+            margin-top: 3px;
 
             &.recebida {
                 .msg {
-                    $color-recebida: rgb(240, 240, 240);
                     float: left;
-                    background-color: $color-recebida;
-
-                    &:after{
-                        content: '';
-                        position: absolute;
-                        width: 0;
-                        height: 0;
-                        left: -10px;
-                        right: auto;
-                        top: 0;
-                        bottom: auto;
-                        border: 12px solid;
-                        border-color: $color-recebida $color-recebida transparent transparent;
-                    }
+                    background-color: rgb(240, 240, 240);
                 }
+            }
+
+            &.start {
+                margin-top: 10px;
+            }
+
+            &.start.recebida .msg:after {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 0;
+                left: -10px;
+                right: auto;
+                top: 0;
+                bottom: auto;
+                border: 12px solid;
+                border-color: rgb(240, 240, 240) rgb(240, 240, 240) transparent transparent;
             }
 
             &.enviada {
                 .msg {
-                    $color-enviada: rgb(226, 229, 244);
                     float: right;
-                    background-color: $color-enviada;
-
-                    &:after{
-                        content: '';
-                        position: absolute;
-                        width: 0;
-                        height: 0;
-                        left: auto;
-                        right: -10px;
-                        top: 0;
-                        bottom: auto;
-                        border: 12px solid;
-                        border-color: $color-enviada transparent transparent $color-enviada;
-                    }
+                    background-color: rgb(226, 229, 244);
                 }
+            }
+
+            &.start.enviada .msg:after {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 0;
+                left: auto;
+                right: -10px;
+                top: 0;
+                bottom: auto;
+                border: 12px solid;
+                border-color: rgb(226, 229, 244) transparent transparent rgb(226, 229, 244);
             }
 
             h3 {
@@ -188,8 +190,9 @@
             .msg {
                 max-width: 75%;
                 padding: 8px 90px 8px 15px;
-                border-radius: 15px;
+                border-radius: 10px;
                 position: relative;
+                box-shadow: 0.5px 0.866px 0.99px 0.01px rgba(0, 0, 0, 0.118);
 
                 p {
                     font-size: 13.7px;

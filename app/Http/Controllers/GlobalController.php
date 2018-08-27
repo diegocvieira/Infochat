@@ -67,6 +67,17 @@ class GlobalController extends Controller
         return json_encode(['categorias' => $categorias]);
     }
 
+    public function searchResult($type, $title)
+    {
+        if($type == 'categoria') {
+            $result = Categoria::with('area')->where('titulo', $title)->first();
+        } else {
+            $result = Subcategoria::with('categoria.area')->where('titulo', $title)->first();
+        }
+
+        return json_encode(['result' => $result, 'type' => $type]);
+    }
+
     // Usado no modal trabalho config
     public function getAreas($tipo)
     {
