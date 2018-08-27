@@ -30,7 +30,7 @@
                             <span>{{ firstName(Auth::guard('web')->user()->nome) }}</span>
 
                             <div class="img">
-                                @if(!Auth::guard('web')->user()->imagem)
+                                @if(Auth::guard('web')->user()->imagem)
                                     <img src="{{ asset('uploads/perfil/' . Auth::guard('web')->user()->imagem) }}" alt="Foto de perfil de {{ Auth::guard('web')->user()->nome }}" />
                                 @else
                                     <img src="{{ asset('img/icon-profile2.png') }}" class="sem-imagem" alt="Foto de perfil de {{ Auth::guard('web')->user()->nome }}" />
