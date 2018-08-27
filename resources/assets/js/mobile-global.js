@@ -149,7 +149,7 @@ $(document).ready(function() {
 
     ////////////////////////////// MODAL LOGIN E CADASTRO //////////////////////////////
 
-    $('#form-login-usuario').on('submit', function(e) {
+    $('#form-user-login').on('submit', function(e) {
         e.preventDefault();
 
         $.ajax({
@@ -209,7 +209,7 @@ $(document).ready(function() {
         });
     });
 
-    $('#form-cadastro-usuario').validate({
+    $('#form-user-register').validate({
         rules: {
             nome: {
                 required: true,

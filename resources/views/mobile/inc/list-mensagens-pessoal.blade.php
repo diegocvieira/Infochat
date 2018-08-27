@@ -56,7 +56,7 @@
             @if(Auth::guard('web')->check())
                 <p>Você ainda não enviou nenhuma mensagem.</p>
             @else
-                <p>É necessário estar logado para poder visualizar suas mensagens.</p>
+                <p>É necessário estar logado para<br>poder visualizar suas mensagens.</p>
             @endif
         </div>
     @endif

@@ -26,7 +26,7 @@
 
     	<link rel='canonical' href='{{ $header_canonical or url()->current() }}' />
 
-    	<meta name='description' content='{{ $header_desc or 'Infochat - O atendimento online da sua cidade' }}' />
+    	<meta name='description' content='{{ $header_desc or 'O jeito mais fácil de encontrar e entrar em contato com os profissionais e estabelecimentos da sua cidade, você pode pedir informações e tirar suas dúvidas sem sair de casa.' }}' />
     	<meta itemprop='name' content='{{ $header_title or 'Infochat' }}'>
     	<meta itemprop='description' content='{{ $header_desc or "Infochat - O atendimento online da sua cidade" }}'>
     	<meta itemprop='image' content='{{ $header_image or asset('img/banner.png') }}'>

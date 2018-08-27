@@ -101,6 +101,22 @@ Route::group(['prefix' => 'trabalho'], function() {
 });
 
 Route::group(['prefix' => 'usuario'], function() {
+    Route::get('login', function() {
+        if(Agent::isMobile()) {
+            return view('mobile.user-login');
+        } else {
+            return view('user-login');
+        }
+    })->name('user-login');
+
+    Route::get('cadastro', function() {
+        if(Agent::isMobile()) {
+            return view('mobile.user-register');
+        } else {
+            return view('user-register');
+        }
+    })->name('user-register');
+
     Route::post('cadastro', 'UserController@create');
     Route::post('login', 'UserController@login');
 

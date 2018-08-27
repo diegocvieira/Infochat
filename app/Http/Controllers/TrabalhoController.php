@@ -383,9 +383,20 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
+        /*$kw = 'a';
+
+        $subcategorias = Subcategoria::where('titulo', 'LIKE', '%' . $kw . '%')->select('titulo', 'slug', DB::raw("'subcategoria' as type"));
+
+        $categorias = Categoria::where('titulo', 'LIKE', '%' . $kw . '%')
+            ->select('titulo', 'slug', DB::raw("'categoria' as type"))
+            ->union($subcategorias)
+            ->get();
+
+        return $categorias;*/
+
         \Mail::send('emails.nova_mensagem', [], function($q) {
             $q->from('no-reply@infochat.com.br', 'Infochat');
-            $q->to('diegovc10@hotmail.com')->subject('Teste hotmail');
+            $q->to('dvdiegovieiradv@gmail.com')->subject('Teste hotmail');
         });
 
         /*$mensagem = Mensagem::selectRaw("CONCAT(FLOOR(sum(diferenca)/60),'h',MOD(sum(diferenca),60),'m') as tempo")

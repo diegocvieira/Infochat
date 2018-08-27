@@ -4,15 +4,19 @@
     </a>
 
     <nav>
+        <a href="#" id="open-menu">
+
         @if(Auth::guard('web')->check())
             @if(Auth::guard('web')->user()->imagem)
-                <a href="#" id="open-menu" class="logged" style="background-image: url({{ asset('uploads/perfil/' . Auth::guard('web')->user()->imagem) }});"></a>
+                <img src="{{ asset('uploads/perfil/' . Auth::guard('web')->user()->imagem) }}" class="logged" />
             @else
-                <a href="#" id="open-menu" class="logged"></a>
+                <img src="{{ asset('img/icon-profile2.png') }}" class="logged" />
             @endif
         @else
-            <a href="#" id="open-menu"></a>
+            <img src="{{ asset('img/menu.png') }}" />
         @endif
+
+        </a>
 
         <ul>
             <li>
@@ -41,11 +45,11 @@
                 </li>
 
                 <li>
-                    <a href="#" data-toggle="modal" data-target="#modal-cadastro-usuario" class="icon-cadastro">Cadastrar</a>
+                    <a href="{{ route('user-register') }}" class="icon-cadastro">Cadastrar</a>
                 </li>
 
                 <li>
-                    <a href="#" data-toggle="modal" data-target="#modal-login-usuario" class="icon-login">Entrar</a>
+                    <a href="{{ route('user-login') }}" class="icon-login">Entrar</a>
                 </li>
             @endif
 
