@@ -314,6 +314,14 @@ $(document).ready(function() {
         }
     });
 
+    $('#form-busca-cidade, #form-busca-categoria').find('input[type=text]').on('keyup', function() {
+        if($(this).val().length >= 2) {
+            $(this).parents('form').submit();
+        } else {
+            $(this).next().next().remove();
+        }
+    });
+
     // Enviar form de busca por cidades
     $('#form-busca-cidade').on('submit', function(e) {
         e.preventDefault();
@@ -379,6 +387,10 @@ $(document).ready(function() {
     $(document).on('change', 'select.filtro-ordem', function() {
         $('#form-search-ordem').val($(this).val());
 
+        $('#form-search').submit();
+    });
+
+    $(document).on('keyup', '#form-search input[type=text]', function(e) {
         $('#form-search').submit();
     });
 
@@ -450,7 +462,7 @@ $(document).ready(function() {
 
             $.ajax({
                 url: form.attr('action'),
-                method: 'POST',
+                method: 'GET',
                 dataType:'json',
                 data: form.serialize(),
                 success: function(data) {
