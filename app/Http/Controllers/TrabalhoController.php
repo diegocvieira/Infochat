@@ -383,6 +383,34 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
+        /*for($i = 1; $i <= 2; $i++) {
+            $image = new \Imagick(resource_path('assets/img/material-divulgacao/' . $i . '.png'));
+            $draw = new \ImagickDraw();
+
+            /* Font properties */
+            /*$draw->setFillColor('black');
+            $draw->setFont('Bookman-DemiItalic');
+            $draw->setFontSize(30);
+
+            /* Create text */
+            //$image->annotateImage($draw, 10, 45, 0, 'The quick brown fox jumps over the lazy dog');
+
+            /* Output the image with headers */
+            //header('Content-type: image/png');
+
+            //echo $image;
+
+            //$path = 'material-divulgacao/' . Auth::guard('web')->user()->id;
+
+            //if(!is_dir($path)) {
+                //mkdir($path, 0777, true);
+            //}
+
+            //$image->writeImage($path . '/' . $i . '.png');
+        //}
+
+
+
         \Mail::send('emails.nova_mensagem', [], function($q) {
             $q->from('no-reply@infochat.com.br', 'Infochat');
             $q->to('dvdiegovieiradv@gmail.com')->subject('Teste hotmail');

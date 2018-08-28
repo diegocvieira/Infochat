@@ -2,7 +2,7 @@
     <div class="cidade-atual">Você está em <span>{{ Cookie::get('sessao_cidade_title') . '/' . Cookie::get('sessao_estado_letter') }}</span></div>
 
     {!! Form::open(['action' => 'GlobalController@getCidade', 'method' => 'post', 'id' => 'form-busca-cidade']) !!}
-        {!! Form::text('nome_cidade', '', ['placeholder' => 'Digite sua cidade']) !!}
+        {!! Form::text('nome_cidade', '', ['placeholder' => 'Digite sua cidade', 'autocomplete' => 'off']) !!}
 
         {!! Form::submit('') !!}
     {!! Form::close() !!}
@@ -29,7 +29,7 @@
         <a href="#" class="open-busca-categoria"></a>
 
         {!! Form::open(['action' => 'GlobalController@buscaCategorias', 'method' => 'post', 'id' => 'form-busca-categoria']) !!}
-            {!! Form::text('nome_categoria', '', ['placeholder' => 'Pesquisar categoria']) !!}
+            {!! Form::text('nome_categoria', '', ['placeholder' => 'Pesquisar categoria', 'autocomplete' => 'off']) !!}
 
             {!! Form::submit('') !!}
         {!! Form::close() !!}

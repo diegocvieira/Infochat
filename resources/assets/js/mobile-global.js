@@ -506,6 +506,14 @@ $(document).ready(function() {
          }
      });
 
+     $('#form-busca-cidade, #form-busca-categoria').find('input[type=text]').on('keyup', function() {
+         if($(this).val().length >= 2) {
+             $(this).parents('form').submit();
+         } else {
+             $(this).next().next().remove();
+         }
+     });
+
      // Enviar form de busca por cidades
      $('#form-busca-cidade').on('submit', function(e) {
          e.preventDefault();
@@ -566,6 +574,10 @@ $(document).ready(function() {
      });
 
      ////////////////////////////// RESULTADOS DAS BUSCAS //////////////////////////////
+
+     $(document).on('keyup', '#form-search input[type=text]', function(e) {
+         $('#form-search').submit();
+     });
 
      // Submeter form principal de busca
      $(document).on('submit', '#form-search', function() {
@@ -635,7 +647,7 @@ $(document).ready(function() {
 
              $.ajax({
                  url: form.attr('action'),
-                 method: 'POST',
+                 method: 'GET',
                  dataType:'json',
                  data: form.serialize(),
                  success: function(data) {

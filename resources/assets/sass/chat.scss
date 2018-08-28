@@ -133,7 +133,7 @@
         .row {
             width: 100%;
             float: left;
-            margin-top: 3px;
+            margin: 3px 0 0 0;
 
             &.recebida {
                 .msg {
@@ -264,7 +264,7 @@
         }
 
         input[type=text] {
-            border-radius: 5px;
+            border-radius: 20px;
             background-color: rgb(255, 255, 255);
             width: 90%;
             height: 40px;
@@ -272,7 +272,7 @@
             color: #000;
             float: left;
             border: none;
-            padding-left: 10px;
+            padding-left: 20px;
         }
 
         .button {
