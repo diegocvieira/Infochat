@@ -41,9 +41,9 @@ class Handler extends ExceptionHandler
             $error['file'] = $exception->getFile();
             $error['line'] = $exception->getLine();
 
-            //Mail::send('emails.phperror', ['error' => $error], function($message) {
-                //$message->to('contato@infochat.com.br')->subject('GENERAL ERROR: - ' . date('d/m/Y').' ' . date('H:i').'h');
-            //});
+            Mail::send('emails.phperror', ['error' => $error], function($message) {
+                $message->to('contato@infochat.com.br')->subject('GENERAL ERROR: - ' . date('d/m/Y').' ' . date('H:i').'h');
+            });
         }
 
         parent::report($exception);
