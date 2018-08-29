@@ -115,8 +115,8 @@ class Trabalho extends Model
     public function scopeFiltroTag($query, $tag)
     {
         if($tag) {
-            return $query->where(function($teste) {
-                $teste->whereHas('tags', function($q) use($tag) {
+            return $query->where(function($w) use($tag) {
+                $w->whereHas('tags', function($q) use($tag) {
                     $q->where('tag', 'LIKE', '%' . $tag . '%');
                 });
             });

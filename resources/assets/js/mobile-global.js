@@ -436,9 +436,35 @@ $(document).ready(function() {
                  });
              } else {
                  $('.aside-categorias').find('.subs a').removeClass('active');
-
                  $('#categorias .subcategoria').removeClass('active');
                  $(this).addClass('active');
+
+                 if($(this).hasClass('modal-search')) {
+                     $('#modal-busca-categorias').remove();
+
+                     $.ajax({
+                         url: '/aside/result/' + $(this).data('type') + '/' + $(this).data('search'),
+                         method: 'GET',
+                         dataType:'json',
+                         success: function(data) {
+                             $('.aside-categorias').find('.cats').remove();
+
+                             if(data.type == 'categoria') {
+                                 var area = $('.area[data-search=' + data.result.area.slug + ']');
+                                 area.parent().after("<div class='cats'><li><a href='#' class='categoria cat-search' data-search='" + data.result.titulo + "'>" + data.result.titulo + "</a></li></div>");
+                             } else {
+                                 var area = $('.area[data-search=' + data.result.categoria.area.slug + ']');
+                                 area.parent().after("<div class='cats'><li><a href='#' class='categoria cat-search' data-search='" + data.result.categoria.titulo + "'>" + data.result.categoria.titulo + "</a></li><div class='subs'><li><a href='#' class='cat-search' data-search='" + data.result.titulo + "'>" + data.result.titulo + "</a></li></div></div>");
+                             }
+
+                             $('.aside-categorias').find('.area').removeClass('close-area');
+                             area.addClass('close-area modal-search');
+
+                             $('.aside-categorias').find('.area').parent().show();
+                             $('.aside-categorias').find('.area').parent().not(area.parent()).hide();
+                         }
+                     });
+                 }
              }
 
              $('#form-search-tag').val($(this).data('search'));
@@ -564,7 +590,7 @@ $(document).ready(function() {
                      modal.length ? modal.find('li').remove() : $('#form-busca-categoria').append("<div id='modal-busca-categorias'><ul></ul></div>");
 
                      $(data.categorias).each(function(index, element) {
-                         $('#modal-busca-categorias').find('ul').append("<li><a href='#' class='cat-search' data-search='" + element.titulo + "'>" + element.titulo + "</a></li>");
+                         $('#modal-busca-categorias').find('ul').append("<li><a href='#' class='cat-search modal-search' data-search='" + element.titulo + "'>" + element.titulo + "</a></li>");
                      });
                  }
              });
