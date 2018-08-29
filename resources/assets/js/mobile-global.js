@@ -400,7 +400,7 @@ $(document).ready(function() {
                          });
                      }
 
-                     if(data.categorias.length) {
+                     if(data.categorias.length || $this.hasClass('modal-search')) {
                          $this.hasClass('close-area') ? area.show() : area.not($this.parent()).hide();
 
                          $this.toggleClass('close-area');
@@ -590,7 +590,7 @@ $(document).ready(function() {
                      modal.length ? modal.find('li').remove() : $('#form-busca-categoria').append("<div id='modal-busca-categorias'><ul></ul></div>");
 
                      $(data.categorias).each(function(index, element) {
-                         $('#modal-busca-categorias').find('ul').append("<li><a href='#' class='cat-search modal-search' data-search='" + element.titulo + "'>" + element.titulo + "</a></li>");
+                         $('#modal-busca-categorias').find('ul').append("<li><a href='#' class='cat-search modal-search' data-type='" + element.type + "' data-search='" + element.titulo + "'>" + element.titulo + "</a></li>");
                      });
                  }
              });
