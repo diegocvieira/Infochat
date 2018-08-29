@@ -115,8 +115,10 @@ class Trabalho extends Model
     public function scopeFiltroTag($query, $tag)
     {
         if($tag) {
-            return $query->whereHas('tags', function($q) use($tag) {
-                $q->where('tag', 'LIKE', '%' . $tag . '%');
+            return $query->where(function($teste) {
+                $teste->whereHas('tags', function($q) use($tag) {
+                    $q->where('tag', 'LIKE', '%' . $tag . '%');
+                });
             });
         }
     }
@@ -143,6 +145,8 @@ class Trabalho extends Model
                             ->orderBy('calc_nota', 'desc')
                             ->groupBy('trabalhos.id');
             }
+        } else {
+            return $query->orderBy('created_at', 'desc');
         }
     }
 
