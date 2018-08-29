@@ -235,7 +235,8 @@ class TrabalhoController extends Controller
             }
         }
 
-        $trabalhos = $trabalhos->offset($offset)
+        $trabalhos = $trabalhos->where('cidade_id', Cookie::get('sessao_cidade_id'))
+            ->offset($offset)
             ->limit(20)
             ->get();
 

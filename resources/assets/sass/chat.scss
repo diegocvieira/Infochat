@@ -189,7 +189,7 @@
 
             .msg {
                 max-width: 75%;
-                padding: 8px 90px 8px 15px;
+                padding: 8px 80px 8px 15px;
                 border-radius: 10px;
                 position: relative;
                 box-shadow: 0.5px 0.866px 0.99px 0.01px rgba(0, 0, 0, 0.118);
@@ -198,7 +198,7 @@
                     font-size: 13.7px;
                     color: rgb(100, 100, 100);
                     margin: 0;
-                    float: left;
+                    word-wrap: break-word;
                 }
 
                 span {
