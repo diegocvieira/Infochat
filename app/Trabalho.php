@@ -132,21 +132,24 @@ class Trabalho extends Model
         }
     }
 
+    public function scopeFiltroRandom($query)
+    {
+        return $query->inRandomOrder();
+    }
+
     public function scopeFiltroOrdem($query, $ordem)
     {
-        if($ordem) {
-            if($ordem == 'a_z') {
-                return $query->orderBy('nome', 'asc');
-            } else if($ordem == 'populares') {
-                return $query->orderBy('pageviews', 'desc');
-            } else {
-                return $query->join('avaliacoes', 'avaliacoes.trabalho_id', 'trabalhos.id')
-                            ->select(DB::raw("(SUM(avaliacoes.nota) / COUNT(avaliacoes.id)) as calc_nota"), 'trabalhos.*')
-                            ->orderBy('calc_nota', 'desc')
-                            ->groupBy('trabalhos.id');
-            }
+        if($ordem == 'a_z') {
+            return $query->orderBy('nome', 'asc');
+        } else if($ordem == 'populares') {
+            return $query->orderBy('pageviews', 'desc');
+        } else if($ordem == 'random') {
+            return $query->inRandomOrder();
         } else {
-            return $query->orderBy('created_at', 'desc');
+            return $query->leftJoin('avaliacoes', 'avaliacoes.trabalho_id', 'trabalhos.id')
+                ->select(DB::raw("(SUM(avaliacoes.nota) / COUNT(avaliacoes.id)) as calc_nota"), 'trabalhos.*')
+                ->orderBy('calc_nota', 'desc')
+                ->groupBy('trabalhos.id');
         }
     }
 

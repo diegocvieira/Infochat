@@ -30,7 +30,7 @@ class GlobalController extends Controller
             'a_z' => 'a - z'
         ];
 
-        $trabalhos = Trabalho::filtroStatus()->filtroCidade()->filtroOrdem('')->limit(20)->get();
+        $trabalhos = Trabalho::filtroStatus()->filtroCidade()->filtroOrdem('random')->paginate(20);
 
         if(Agent::isMobile()) {
             return view('mobile.pagina-inicial', compact('filtro_ordem', 'trabalhos'));

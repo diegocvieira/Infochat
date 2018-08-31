@@ -7,6 +7,8 @@ use App\Avaliar;
 use App\AvaliarAtendimento;
 use Auth;
 use App\Trabalho;
+use Illuminate\Pagination\Paginator;
+use Agent;
 
 class AvaliarController extends Controller
 {
@@ -77,18 +79,29 @@ class AvaliarController extends Controller
         return json_encode($return);
     }
 
-    public function list($id, $offset)
+    public function list($id, $page)
     {
-        $offset = $offset ? $offset : 0;
+        Paginator::currentPageResolver(function() use ($page) {
+            return $page;
+        });
 
-        $avaliacoes = Avaliar::with('user')
-            ->where('trabalho_id', $id)
-            ->offset($offset)
-            ->limit(20)
+        $avaliacoes = Avaliar::where('trabalho_id', $id)
             ->whereNotNull('descricao')
-            ->orderBy('created_at', 'desc')
-            ->get();
+            ->orderBy('id', 'desc')
+            ->paginate(20);
 
-        return json_encode(['avaliacoes' => $avaliacoes]);
+        if($page == 1) {
+            return $avaliacoes;
+        } else {
+            if(Agent::isMobile()) {
+                return response()->json([
+                    'avaliacoes' => view('mobile.list-avaliacoes', compact('avaliacoes'))->render()
+                ]);
+            } else {
+                return response()->json([
+                    'avaliacoes' => view('list-avaliacoes', compact('avaliacoes'))->render()
+                ]);
+            }
+        }
     }
 }

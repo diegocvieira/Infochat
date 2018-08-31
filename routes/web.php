@@ -54,6 +54,10 @@ Route::get('politica/privacidade', function() {
 Route::get('como/funciona', function() {
     if(Agent::isMobile()) {
         return view('mobile.como-funciona');
+    } else {
+        session()->flash('session_flash_como_funciona', 'Como funciona');
+
+        return redirect()->route('inicial');
     }
 })->name('como-funciona');
 
@@ -88,6 +92,8 @@ Route::group(['prefix' => 'mensagem'], function() {
 Route::group(['prefix' => 'trabalho'], function() {
     Route::get('show/{id}', 'TrabalhoController@show')->name('show-trabalho');
 
+    Route::get('avaliar/list/{id}/{page}', 'AvaliarController@list')->name('listar-avaliacoes');
+
     Route::group(['middleware' => 'auth:web'], function() {
         Route::get('config', 'TrabalhoController@getConfig');
         Route::post('config', 'TrabalhoController@setConfig');
@@ -95,7 +101,6 @@ Route::group(['prefix' => 'trabalho'], function() {
 
         Route::post('avaliar-atendimento', 'AvaliarController@avaliarAtendimento')->name('avaliar-atendimento');
         Route::post('avaliar', 'AvaliarController@avaliar')->name('avaliar-trabalho');
-        Route::get('avaliar/list/{id}/{offset}', 'AvaliarController@list')->name('listar-avaliacoes');
 
         Route::get('favoritar/{id}', 'TrabalhoController@favoritar');
     });

@@ -67,9 +67,6 @@ $(document).ready(function() {
                 url: 'mensagem/new-messages',
                 method: 'POST',
                 dataType: 'json',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
                 success: function(data) {
                     newMessagesPessoal(data.pessoal);
                     newMessagesTrabalho(data.trabalho);
@@ -607,7 +604,7 @@ $(document).ready(function() {
 
      // Submeter form principal de busca
      $(document).on('submit', '#form-search', function() {
-         $(this).find('#form-search-offset').val('');
+         $(this).find('#form-search-page').val('');
 
          $.ajax({
              url: $(this).attr('action'),
@@ -663,24 +660,26 @@ $(document).ready(function() {
          }
      });
 
-     // Scroll infinito nos resultados
-     $('.resultados').on('scroll', function() {
-         if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-             var form = $('#form-search'),
-                 form_result = $('#form-search-results');
+     // Load more results
+     $(document).on('click', '.load-more-results', function() {
+         var form = $('#form-search'),
+             btn = $(this);
 
-             form.find('#form-search-offset').val(form_result.find('.result').length);
+         btn.html('Carregando...');
 
-             $.ajax({
-                 url: form.attr('action'),
-                 method: 'GET',
-                 dataType:'json',
-                 data: form.serialize(),
-                 success: function(data) {
-                     form_result.append(data.trabalhos);
-                 }
-             });
-         }
+         form.find('#form-search-page').val($(this).data('page'));
+
+         $.ajax({
+             url : form.attr('action'),
+             method: 'GET',
+             dataType:'json',
+             data: form.serialize(),
+             success: function(data) {
+                 btn.remove();
+
+                 $('#form-search-results').append(data.trabalhos);
+             }
+         });
      });
 
     $(document).on('press', '.result', function(e) {
@@ -733,9 +732,6 @@ $(document).ready(function() {
                         modal.addClass('modal fade show-trabalho');
                         modal.find('.modal-body').html(data.trabalho);
                         modal.modal('show');
-
-                        //Scroll custom para funcionar em conteudo carregdao dinamicamente
-                        listenForScrollEvent($('.show-trabalho .modal-content'));
                     } else {
                         var result = $('.result[data-chatid=' + chat_id + ']');
 
@@ -847,23 +843,21 @@ $(document).ready(function() {
     });
 
     // Listar Comentarios
-    $(document).on('custom-scroll', '.show-trabalho .modal-content', function() {
-        var div = $('.show-trabalho').find('.comentarios');
+    $(document).on('click', '.load-more-avaliacoes', function() {
+        var btn = $(this);
 
-        if(div.is(':visible') && $(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-            $.ajax({
-                url: '/trabalho/avaliar/list/' + $('.show-trabalho').find('input[name=trabalho_id]').val() + '/' + div.find('.comentario').length,
-                method: 'GET',
-                dataType:'json',
-                success: function(data) {
-                    $(data.avaliacoes).each(function(index, element) {
-                        imagem = element.user.imagem ? "<img src='/uploads/perfil/" + element.user.imagem + "' />" : "<img src='/img/paisagem.png' class='sem-imagem' />";
+        btn.html('Carregando...');
 
-                        div.append("<div class='comentario'><div class='imagem-user'>" + imagem + "</div><div class='header-comentario'><h4>" + element.user.nome + "</h4><span class='nota'>" + element.nota + ".0</span><span class='data'>" + element.created_at + "</span></div><div class='descricao-comentario'><p>" + element.descricao + "</p></div></div>");
-                    });
-                }
-            });
-        }
+        $.ajax({
+            url: '/trabalho/avaliar/list/' + $('.show-trabalho').find('input[name=trabalho_id]').val() + '/' + $(this).data('page'),
+            method: 'GET',
+            dataType:'json',
+            success: function(data) {
+                btn.remove();
+
+                $('.comentarios').append(data.avaliacoes);
+            }
+        });
     });
 
     ////////////////////////////// MODAL USER CONFIG //////////////////////////////

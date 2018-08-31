@@ -23,3 +23,7 @@
         </div>
     </div>
 @endforeach
+
+@if($trabalhos->currentPage() < $trabalhos->lastPage())
+    <button class="load-more-results" data-page="{{ $trabalhos->currentPage() + 1 }}">+</button>
+@endif

@@ -15,7 +15,7 @@
 
             {!! Form::hidden('ordem', isset($ordem) ? $ordem : '', ['id' => 'form-search-ordem']) !!}
 
-            {!! Form::hidden('offset', '', ['id' => 'form-search-offset']) !!}
+            {!! Form::hidden('page', '', ['id' => 'form-search-page']) !!}
 
             {!! Form::submit('') !!}
         {!! Form::close() !!}
@@ -77,3 +77,13 @@
         </nav>
     </div>
 </header>
+
+@if(session('session_flash_como_funciona'))
+    @section('script')
+        <script>
+            $(function() {
+                $('#modal-como-funciona').modal('show');
+            });
+        </script>
+    @endsection
+@endif
