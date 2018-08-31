@@ -76,7 +76,7 @@
 
         {!! Form::hidden('ordem', isset($ordem) ? $ordem : '', ['id' => 'form-search-ordem']) !!}
 
-        {!! Form::hidden('offset', '', ['id' => 'form-search-offset']) !!}
+        {!! Form::hidden('page', '', ['id' => 'form-search-page']) !!}
     {!! Form::close() !!}
 
     @include('mobile.inc.aside-categorias')

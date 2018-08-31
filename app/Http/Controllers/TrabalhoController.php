@@ -179,10 +179,10 @@ class TrabalhoController extends Controller
         $city = Cookie::get('sessao_cidade_slug');
         $state = Cookie::get('sessao_estado_letter_lc');
 
-        return $this->busca($city, $state, $request->tipo, $palavra_chave, $request->area, $request->tag, $request->ordem, $request->offset);
+        return $this->busca($city, $state, $request->tipo, $palavra_chave, $request->area, $request->tag, $request->ordem);
     }
 
-    public function busca($city_slug, $state_letter_lc, $tipo = null, $palavra_chave = null, $area = null, $tag = null, $ordem = null, $offset = null)
+    public function busca($city_slug, $state_letter_lc, $tipo = null, $palavra_chave = null, $area = null, $tag = null, $ordem = null)
     {
         // Verifica e seta a requisicao se for uma cidade diferente
         if($city_slug != Cookie::get('sessao_cidade_slug') || $state_letter_lc != Cookie::get('sessao_estado_letter_lc')) {
@@ -203,8 +203,6 @@ class TrabalhoController extends Controller
         // Desformatar para pesquisar
         $palavra_chave = urldecode($palavra_chave);
         $tag = urldecode($tag);
-
-        $offset = $offset ? $offset : 0;
 
         $trabalhos = Trabalho::filtroStatus()
             ->filtroCidade()
@@ -235,10 +233,7 @@ class TrabalhoController extends Controller
             }
         }
 
-        $trabalhos = $trabalhos->where('cidade_id', Cookie::get('sessao_cidade_id'))
-            ->offset($offset)
-            ->limit(20)
-            ->get();
+        $trabalhos = $trabalhos->paginate(20);
 
         // Gera a URL
         if(!$palavra_chave && $area) {
@@ -270,12 +265,12 @@ class TrabalhoController extends Controller
         } else {
             if(Agent::isMobile()) {
                 return response()->json([
-                    'trabalhos' => view('mobile.inc.list-resultados', compact('trabalhos', 'offset'))->render(),
+                    'trabalhos' => view('mobile.inc.list-resultados', compact('trabalhos'))->render(),
                     'url' => $url
                 ]);
             } else {
                 return response()->json([
-                    'trabalhos' => view('inc.list-resultados', compact('trabalhos', 'offset'))->render(),
+                    'trabalhos' => view('inc.list-resultados', compact('trabalhos'))->render(),
                     'url' => $url
                 ]);
             }
@@ -285,6 +280,8 @@ class TrabalhoController extends Controller
     public function show($id)
     {
         $trabalho = Trabalho::find($id);
+
+        $avaliacoes = app('App\Http\Controllers\AvaliarController')->list($trabalho->id, 1);
 
         pageview($trabalho->id);
 
@@ -297,12 +294,12 @@ class TrabalhoController extends Controller
 
         if(Agent::isMobile()) {
             return response()->json([
-                'trabalho' => view('mobile.show-trabalho', compact('trabalho', 'avaliacao_usuario'))->render(),
+                'trabalho' => view('mobile.show-trabalho', compact('trabalho', 'avaliacao_usuario', 'avaliacoes'))->render(),
                 'status' => true
             ]);
         } else {
             return response()->json([
-                'trabalho' => view('show-trabalho', compact('trabalho', 'avaliacao_usuario'))->render(),
+                'trabalho' => view('show-trabalho', compact('trabalho', 'avaliacao_usuario', 'avaliacoes'))->render(),
                 'status' => true
             ]);
         }
@@ -414,7 +411,7 @@ class TrabalhoController extends Controller
 
         \Mail::send('emails.nova_mensagem', [], function($q) {
             $q->from('no-reply@infochat.com.br', 'Infochat');
-            $q->to('dvdiegovieiradv@gmail.com')->subject('Teste hotmail');
+            $q->to('diegovc10@hotmail.com')->subject('Teste hotmail');
         });
 
         /*$mensagem = Mensagem::selectRaw("CONCAT(FLOOR(sum(diferenca)/60),'h',MOD(sum(diferenca),60),'m') as tempo")

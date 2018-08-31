@@ -227,12 +227,12 @@
             height: 40px;
             width: 40px;
             background-color: rgb(255, 255, 255);
-            border-radius: 5px 0 0 5px;
+            border-radius: 20px 0 0 20px;
             float: left;
             position: relative;
 
             &+ input[type=text] {
-                border-radius: 0 5px 5px 0;
+                border-radius: 0 20px 20px 0;
                 padding-left: 0;
                 width: calc(90% - 40px);
             }

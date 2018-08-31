@@ -74,6 +74,8 @@
         </script>
         <!--End of Tawk.to Script-->
 
+        @yield('script')
+
         <script src="{{ mix('/js/global.js') }}"></script>
     </body>
 </html>

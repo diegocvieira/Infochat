@@ -361,6 +361,16 @@
         }
 
         &.comentarios {
+            .load-more-avaliacoes {
+                font-size: 13.7px;
+                color: rgb(122, 162, 244);
+                float: left;
+                margin-top: 10px;
+                border: none;
+                background-color: transparent;
+                padding: 0;
+            }
+
             .comentario {
                 width: 100%;
                 float: left;
