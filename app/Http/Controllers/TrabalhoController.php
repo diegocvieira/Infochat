@@ -98,14 +98,26 @@ class TrabalhoController extends Controller
              $trabalho->status = isset($request->status) ? 1 : 0;
 
              if(!empty($request->img)) {
-                 if(isset($t) && $t->imagem) {
-                     unlink('uploads/perfil/' . $t->imagem);
+                 $path = public_path() . '/uploads/' . $user_id;
+
+                 if($trabalho->imagem) {
+                     $old_image = $path . '/' . $trabalho->imagem;
+
+                     if(file_exists($old_image)) {
+                         unlink($old_image);
+                     }
                  }
 
-                 // Move  a imagem para a pasta
-                 $file = $request->img;
-                 $fileName = date('YmdHis') . microtime(true) . rand(111111111, 999999999) . '.' . $file->getClientOriginalExtension(); // Renomear
-                 $file->move('uploads/perfil', $fileName); // Mover para a pasta
+                 if(!file_exists($path)) {
+                     mkdir($path, 0777, true);
+                 }
+
+                 $image = new \Imagick($request->img->path());
+                 $fileName = date('YmdHis') . microtime(true) . rand(111111111, 999999999) . '.jpg';
+                 $image->setImageCompressionQuality(70);
+                 $image->setImageFormat('jpg');
+                 $image->stripImage();
+                 $image->writeImage($path . '/' . $fileName);
 
                  $trabalho->imagem = $fileName;
              }

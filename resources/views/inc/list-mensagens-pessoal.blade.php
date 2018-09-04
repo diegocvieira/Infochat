@@ -1,9 +1,9 @@
 @if(isset($chats) && count($chats) > 0)
     @foreach($chats as $chat)
-        <div class="result open-chat" data-type="trabalho" data-id="{{ $chat->user_to->trabalho->id }}" data-identificador="{{ $chat->id }}">
+        <div class="result open-chat" data-type="trabalho" data-id="{{ $chat->user_to->trabalho->id }}" data-chatid="{{ $chat->id }}">
             <div class="imagem">
                 @if($chat->user_to->trabalho->imagem)
-                    <img src="{{ asset('uploads/perfil/' . $chat->user_to->trabalho->imagem) }}" alt="Foto de perfil de {{ $chat->user_to->trabalho->nome }}" />
+                    <img src="{{ asset('uploads/' . $chat->user_to->id . '/' . $chat->user_to->trabalho->imagem) }}" alt="Foto de perfil de {{ $chat->user_to->trabalho->nome }}" />
                 @else
                     <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" alt="Foto de perfil de {{ $chat->user_to->trabalho->nome }}" />
                 @endif

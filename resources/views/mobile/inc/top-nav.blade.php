@@ -8,7 +8,7 @@
 
         @if(Auth::guard('web')->check())
             @if(Auth::guard('web')->user()->imagem)
-                <img src="{{ asset('uploads/perfil/' . Auth::guard('web')->user()->imagem) }}" class="logged" />
+                <img src="{{ asset('uploads/' . Auth::guard('web')->user()->id . '/' . Auth::guard('web')->user()->imagem) }}" class="logged" />
             @else
                 <img src="{{ asset('img/icon-profile2.png') }}" class="logged" />
             @endif

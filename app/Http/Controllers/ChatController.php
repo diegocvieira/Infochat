@@ -28,18 +28,20 @@ class ChatController extends Controller
             $destinatario_id = $destinatario->id;
         }
 
+        $user_id = $tipo == 'trabalho' ? $destinatario->user_id : $destinatario->id;
+
         if(Auth::guard('web')->check()) {
-            $user_id = Auth::guard('web')->user()->id;
+            $logged_user = Auth::guard('web')->user()->id;
 
             if(!$chat_id) {
-                $count = Chat::where('from_id', $user_id)
+                $count = Chat::where('from_id', $logged_user)
                     ->where('to_id', $destinatario_id)
                     ->whereNull('close')
                     ->first();
 
                 if(!$count) {
                     $c = new Chat;
-                    $c->from_id = $user_id;
+                    $c->from_id = $logged_user;
                     $c->to_id = $destinatario_id;
                     $c->created_at = date('Y-m-d H:i:s');
                     $c->save();
@@ -50,8 +52,8 @@ class ChatController extends Controller
                 }
             }
 
-            $chat = Chat::with(['messages' => function($q) use($user_id) {
-                    $q->where('deleted', '!=', $user_id)
+            $chat = Chat::with(['messages' => function($q) use($logged_user) {
+                    $q->where('deleted', '!=', $logged_user)
                         ->orWhereNull('deleted')
                         ->limit(20)
                         ->orderBy('id', 'desc');
@@ -71,13 +73,13 @@ class ChatController extends Controller
 
         if(Agent::isMobile()) {
             return response()->json([
-                'trabalho' => view('mobile.inc.chat', compact('destinatario', 'chat', 'tipo'))->render(),
+                'trabalho' => view('mobile.inc.chat', compact('destinatario', 'chat', 'tipo', 'user_id'))->render(),
                 'new_messages_trabalho' => $new_messages_trabalho,
                 'new_messages_pessoal' => $new_messages_pessoal
             ]);
         } else {
             return response()->json([
-                'trabalho' => view('inc.chat', compact('destinatario', 'chat', 'tipo'))->render(),
+                'trabalho' => view('inc.chat', compact('destinatario', 'chat', 'tipo', 'user_id'))->render(),
                 'new_messages_trabalho' => $new_messages_trabalho,
                 'new_messages_pessoal' => $new_messages_pessoal
             ]);
@@ -86,7 +88,7 @@ class ChatController extends Controller
 
     public function showChatUrl($slug)
     {
-        $trabalhos = Trabalho::filtroStatus()->where('slug', $slug)->get();
+        $trabalhos = Trabalho::filtroStatus()->where('slug', $slug)->paginate(1);
 
         if(count($trabalhos) > 0) {
             if(Cookie::get('sessao_cidade_id') != $trabalhos->first()->cidade_id || Cookie::get('sessao_estado_letter_lc') != $trabalhos->first()->cidade->estado->letter_lc) {
@@ -104,21 +106,22 @@ class ChatController extends Controller
             $chat_id = null;
             $tipo = 'trabalho';
             $destinatario_id = $trabalhos->first()->user_id;
+            $user_id = $destinatario->user_id;
 
             pageview($trabalhos->first()->id);
 
             if(Auth::guard('web')->check()) {
-                $user_id = Auth::guard('web')->user()->id;
+                $logged_user = Auth::guard('web')->user()->id;
 
                 if(!$chat_id) {
-                    $count = Chat::where('from_id', $user_id)
+                    $count = Chat::where('from_id', $logged_user)
                         ->where('to_id', $destinatario_id)
                         ->whereNull('close')
                         ->first();
 
                     if(!$count) {
                         $c = new Chat;
-                        $c->from_id = $user_id;
+                        $c->from_id = $logged_user;
                         $c->to_id = $destinatario_id;
                         $c->created_at = date('Y-m-d H:i:s');
                         $c->save();
@@ -129,8 +132,8 @@ class ChatController extends Controller
                     }
                 }
 
-                $chat = Chat::with(['messages' => function($q) use($user_id) {
-                        $q->where('deleted', '!=', $user_id)
+                $chat = Chat::with(['messages' => function($q) use($logged_user) {
+                        $q->where('deleted', '!=', $logged_user)
                             ->orWhereNull('deleted')
                             ->limit(20)
                             ->orderBy('id', 'desc');
@@ -141,9 +144,9 @@ class ChatController extends Controller
             }
 
             if(Agent::isMobile()) {
-                return view('mobile.show-chat-url', compact('palavra_chave', 'trabalhos', 'chat', 'tipo', 'destinatario', 'header_desc', 'header_title'));
+                return view('mobile.show-chat-url', compact('palavra_chave', 'trabalhos', 'chat', 'tipo', 'destinatario', 'user_id', 'header_desc', 'header_title'));
             } else {
-                return view('show-chat-url', compact('palavra_chave', 'trabalhos', 'chat', 'tipo', 'destinatario', 'header_desc', 'header_title'));
+                return view('show-chat-url', compact('palavra_chave', 'trabalhos', 'chat', 'tipo', 'destinatario', 'user_id', 'header_desc', 'header_title'));
             }
         } else {
             return view('errors.404');

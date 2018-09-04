@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-xs-4 imagem">
             @if(isset($trabalho) && $trabalho->imagem)
-            <div class="bg" style="background-image: url({{ asset('uploads/perfil/' . $trabalho->imagem) }}); background-size: cover;">
+            <div class="bg" style="background-image: url({{ asset('uploads/' . $trabalho->user_id . '/' . $trabalho->imagem) }}); background-size: cover;">
             @else
             <div class="bg sem-imagem">
             @endif
@@ -10,7 +10,7 @@
                 {!! Form::label('imagem', 'trocar imagem', ['class' => 'trocar-imagem']) !!}
             </div>
 
-            {!! Form::file('img', ['id' => 'imagem']) !!}
+            {!! Form::file('img', ['id' => 'imagem', 'accept' => 'image/*']) !!}
         </div>
 
         <div class="col-xs-8 infos">
