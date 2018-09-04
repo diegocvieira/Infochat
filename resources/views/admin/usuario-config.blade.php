@@ -4,7 +4,7 @@
     <div class="row">
         <div class="imagem">
             @if($usuario->imagem)
-                <img src="{{ asset('uploads/perfil/' . $usuario->imagem) }}" />
+                <img src="{{ asset('uploads/' . $usuario->id . '/' . $usuario->imagem) }}" />
             @else
                 <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" />
             @endif

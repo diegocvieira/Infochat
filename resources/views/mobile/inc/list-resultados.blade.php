@@ -2,7 +2,7 @@
     <div class="result open-chat result-tab" data-type="trabalho" data-id="{{ $trabalho->id }}">
         <div class="imagem">
             @if($trabalho->imagem)
-                <img src="{{ asset('uploads/perfil/' . $trabalho->imagem) }}" alt="Foto de perfil de {{ $trabalho->nome }}" />
+                <img src="{{ asset('uploads/' . $trabalho->user_id . '/' . $trabalho->imagem) }}" alt="Foto de perfil de {{ $trabalho->nome }}" />
             @else
                 <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" alt="Foto de perfil de {{ $trabalho->nome }}" />
             @endif

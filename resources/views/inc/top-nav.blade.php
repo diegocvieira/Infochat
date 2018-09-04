@@ -31,7 +31,7 @@
 
                             <div class="img">
                                 @if(Auth::guard('web')->user()->imagem)
-                                    <img src="{{ asset('uploads/perfil/' . Auth::guard('web')->user()->imagem) }}" alt="Foto de perfil de {{ Auth::guard('web')->user()->nome }}" />
+                                    <img src="{{ asset('uploads/' . Auth::guard('web')->user()->id . '/' . Auth::guard('web')->user()->imagem) }}" alt="Foto de perfil de {{ Auth::guard('web')->user()->nome }}" />
                                 @else
                                     <img src="{{ asset('img/icon-profile2.png') }}" class="sem-imagem" alt="Foto de perfil de {{ Auth::guard('web')->user()->nome }}" />
                                 @endif

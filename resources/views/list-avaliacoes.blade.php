@@ -2,7 +2,7 @@
     <div class="comentario">
         <div class="imagem-user">
             @if($avaliacao->user->imagem)
-                <img src="{{ asset('uploads/perfil/' . $avaliacao->user->imagem) }}" />
+                <img src="{{ asset('uploads/' . $avaliacao->user->id . '/' . $avaliacao->user->imagem) }}" />
             @else
                 <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" />
             @endif

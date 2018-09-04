@@ -657,7 +657,7 @@ $(document).ready(function() {
             // Remover numero de novas mensagens
             $(this).find('.new-messages').remove();
 
-            var chatid = $(this).data('identificador'),
+            var chatid = $(this).data('chatid'),
                 url = '/mensagem/chat/show/' + $(this).data('id') + '/' + $(this).data('type');
 
             if(chatid) {
