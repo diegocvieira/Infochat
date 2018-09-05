@@ -113,9 +113,9 @@ class TrabalhoController extends Controller
                  }
 
                  $image = new \Imagick($request->img->path());
-                 $fileName = date('YmdHis') . microtime(true) . rand(111111111, 999999999) . '.jpg';
-                 $image->setImageCompressionQuality(70);
                  $image->setImageFormat('jpg');
+                 $fileName = date('YmdHis') . microtime(true) . rand(111111111, 999999999) . '.' . $image->getImageFormat();
+                 $image->setImageCompressionQuality(65);
                  $image->stripImage();
                  $image->setSamplingFactors(array('2x2', '1x1', '1x1'));
                  $image->setInterlaceScheme(\Imagick::INTERLACE_JPEG);
