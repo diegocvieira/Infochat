@@ -98,32 +98,7 @@ class TrabalhoController extends Controller
              $trabalho->status = isset($request->status) ? 1 : 0;
 
              if(!empty($request->img)) {
-                 $path = public_path() . '/uploads/' . $user_id;
-
-                 if($trabalho->imagem) {
-                     $old_image = $path . '/' . $trabalho->imagem;
-
-                     if(file_exists($old_image)) {
-                         unlink($old_image);
-                     }
-                 }
-
-                 if(!file_exists($path)) {
-                     mkdir($path, 0777, true);
-                 }
-
-                 $image = new \Imagick($request->img->path());
-                 $image->setImageFormat('jpg');
-                 $fileName = date('YmdHis') . microtime(true) . rand(111111111, 999999999) . '.' . $image->getImageFormat();
-                 $image->setImageCompressionQuality(65);
-                 $image->stripImage();
-                 $image->setSamplingFactors(array('2x2', '1x1', '1x1'));
-                 $image->setInterlaceScheme(\Imagick::INTERLACE_JPEG);
-                 $image->setColorspace(\Imagick::COLORSPACE_SRGB);
-                 $image->writeImage($path . '/' . $fileName);
-                 $image->destroy();
-
-                 $trabalho->imagem = $fileName;
+                 $trabalho->imagem = _uploadImage($request->img, $trabalho->imagem);
              }
 
              if($trabalho->save()) {
@@ -422,8 +397,6 @@ class TrabalhoController extends Controller
 
             //$image->writeImage($path . '/' . $i . '.png');
         //}
-
-
 
         \Mail::send('emails.nova_mensagem', [], function($q) {
             $q->from('no-reply@infochat.com.br', 'Infochat');

@@ -99,32 +99,7 @@ class UserController extends Controller
                 }
 
                 if(!empty($request->img)) {
-                    $path = public_path() . '/uploads/' . $usuario->id;
-
-                    if($usuario->imagem) {
-                        $old_image = $path . '/' . $usuario->imagem;
-
-                        if(file_exists($old_image)) {
-                            unlink($old_image);
-                        }
-                    }
-
-                    if(!file_exists($path)) {
-                        mkdir($path, 0777, true);
-                    }
-
-                    $image = new \Imagick($request->img->path());
-                    $image->setImageFormat('jpg');
-                    $fileName = date('YmdHis') . microtime(true) . rand(111111111, 999999999) . '.' . $image->getImageFormat();
-                    $image->setImageCompressionQuality(65);
-                    $image->stripImage();
-                    $image->setSamplingFactors(array('2x2', '1x1', '1x1'));
-                    $image->setInterlaceScheme(\Imagick::INTERLACE_JPEG);
-                    $image->setColorspace(\Imagick::COLORSPACE_SRGB);
-                    $image->writeImage($path . '/' . $fileName);
-                    $image->destroy();
-
-                    $usuario->imagem = $fileName;
+                    $usuario->imagem = _uploadImage($request->img, $usuario->imagem);
                 }
 
                 if($usuario->save()) {
