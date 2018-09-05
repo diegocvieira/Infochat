@@ -70,9 +70,35 @@
         }
     }
 
+    .social-links {
+        float: right;
+        margin: 22px 20px 0 0;
+
+        a {
+            display: inline-block;
+            width: 26px;
+            height: 26px;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            margin-left: 3px;
+
+            &.social-facebook {
+                background-image: url('../img/icon-facebook.png');
+            }
+
+            &.social-instagram {
+                background-image: url('../img/icon-instagram.png');
+            }
+
+            &.social-twitter {
+                background-image: url('../img/icon-twitter.png');
+            }
+        }
+    }
+
     .nav-menu {
         text-align: right;
-        margin-right: 29%;
         float: none;
         height: 100%;
 
@@ -115,7 +141,7 @@
         }
 
         .dropdown-menu {
-            right: 29%;
+            right: 10px;
             border-radius: 5px;
             background-color: rgb(255, 255, 255);
             box-shadow: 2.5px 4.33px 19px 1px rgba(100, 100, 100, 0.118);

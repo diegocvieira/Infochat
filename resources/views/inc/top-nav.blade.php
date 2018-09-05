@@ -21,7 +21,7 @@
         {!! Form::close() !!}
     </div>
 
-    <div class="col-xs-7">
+    <div class="col-xs-5">
         <nav class="nav navbar-nav nav-menu">
             <ul>
                 @if(Auth::guard('web')->check())
@@ -75,6 +75,14 @@
                 @endif
             </ul>
         </nav>
+    </div>
+
+    <div class="col-xs-2">
+        <div class="social-links">
+            <a href="https://www.facebook.com/infochatapp" target="_blank" class="social-facebook"></a>
+            <a href="https://www.instagram.com/infochatapp" target="_blank" class="social-instagram"></a>
+            <a href="https://twitter.com/infochatapp" target="_blank" class="social-twitter"></a>
+        </div>
     </div>
 </header>
 
