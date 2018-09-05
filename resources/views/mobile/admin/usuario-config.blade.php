@@ -9,7 +9,7 @@
 
     <div class="imagem">
         @if($usuario->imagem)
-            <img src="{{ asset('uploads/' . $usuario->id . '/' . $usuario->imagem) }}" />
+            <img src="{{ asset('uploads/' . $usuario->id . '/' . _getOriginalImage($usuario->imagem)) }}" />
         @else
             <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" />
         @endif

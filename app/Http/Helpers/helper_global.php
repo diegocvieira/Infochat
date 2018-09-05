@@ -127,3 +127,59 @@ function firstName($name)
 
     return $array[0];
 }
+
+function _getOriginalImage($image)
+{
+    return str_replace('thumb', 'original', $image);
+}
+
+function _uploadImage($file, $old_file)
+{
+    $path = public_path() . '/uploads/' . Auth::guard('web')->user()->id;
+    $microtime = microtime(true);
+    $filename_thumb = $microtime . '.thumb.jpg';
+    $filename_original = $microtime . '.original.jpg';
+
+    // Remove old images
+    if($old_file) {
+        $old_image_thumb = $path . '/' . $old_file;
+        $old_image_original = $path . '/' . str_replace('thumb', 'original', $old_file);
+
+        if(file_exists($old_image_thumb)) {
+            unlink($old_image_thumb);
+        }
+
+        if(file_exists($old_image_original)) {
+            unlink($old_image_original);
+        }
+    }
+
+    // Create the folder if not exists
+    if(!file_exists($path)) {
+        mkdir($path, 0777, true);
+    }
+
+    for($i = 1; $i <= 2; $i++) {
+        $image = new \Imagick($file->path());
+        $image->setColorspace(\Imagick::COLORSPACE_SRGB);
+        $image->setImageFormat('jpg');
+        $image->stripImage();
+        $image->setImageCompressionQuality(70);
+        $image->setSamplingFactors(array('2x2', '1x1', '1x1'));
+        $image->setInterlaceScheme(\Imagick::INTERLACE_JPEG);
+
+        if($i == 1) {
+            // THUMB
+            $image->cropThumbnailImage(78, 78);
+            $image->writeImage($path . '/' . $filename_thumb);
+        } else {
+            // ORIGINAL
+            $image->cropThumbnailImage(250, 250);
+            $image->writeImage($path . '/' . $filename_original);
+        }
+
+        $image->destroy();
+    }
+
+    return $filename_thumb;
+}

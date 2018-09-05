@@ -16,7 +16,7 @@
 
     <div class="imagem">
         @if($trabalho->imagem)
-            <img src="{{ asset('uploads/' . $trabalho->user_id . '/' . $trabalho->imagem) }}" />
+            <img src="{{ asset('uploads/' . $trabalho->user_id . '/' . _getOriginalImage($trabalho->imagem)) }}" />
         @else
             <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" />
         @endif
