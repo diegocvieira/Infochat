@@ -16,7 +16,7 @@
                     </div>
                 @endif
 
-                <h2 class="usuario">{{ $chat->user_from->nome }}</h2>
+                <h3 class="usuario">{{ $chat->user_from->nome }}</h3>
 
                 <div class="result-bottom">
                     @if($chat->close)

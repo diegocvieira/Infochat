@@ -229,4 +229,33 @@
             padding-left: 40px;
         }
     }
+
+    .social-links {
+        float: left;
+        width: 100%;
+        margin-bottom: 20px;
+        text-align: right;
+
+        a {
+            display: inline-block;
+            width: 26px;
+            height: 26px;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            margin-left: 3px;
+
+            &.social-facebook {
+                background-image: url('../../img/icon-facebook.png');
+            }
+
+            &.social-instagram {
+                background-image: url('../../img/icon-instagram.png');
+            }
+
+            &.social-twitter {
+                background-image: url('../../img/icon-twitter.png');
+            }
+        }
+    }
 }

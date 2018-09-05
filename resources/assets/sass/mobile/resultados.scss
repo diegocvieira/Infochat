@@ -155,7 +155,7 @@
             width: calc(100% - 100px);
             padding-right: 10px;
 
-            h2 {
+            h3 {
                 font-size: 14.5px;
                 color: #000;
                 margin: 5px 0 0 0;
@@ -166,6 +166,10 @@
 
                 &.usuario {
                     margin-top: 30px;
+                }
+
+                a {
+                    color: #000;
                 }
             }
 

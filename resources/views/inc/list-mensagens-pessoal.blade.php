@@ -10,7 +10,7 @@
             </div>
 
             <div class="infos">
-                <h2>{{ $chat->user_to->trabalho->nome }}</h2>
+                <h3>{{ $chat->user_to->trabalho->nome }}</h3>
 
                 <div class="tags">
                     @foreach($chat->user_to->trabalho->tags as $t)
