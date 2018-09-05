@@ -11,7 +11,7 @@
 
             <div class="infos">
                 <div class="nome-tags">
-                    <h2>{{ $chat->user_from->nome }}</h2>
+                    <h3>{{ $chat->user_from->nome }}</h3>
                 </div>
 
                 <div class="status">

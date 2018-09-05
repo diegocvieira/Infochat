@@ -14,7 +14,7 @@
 Route::get('/', 'GlobalController@inicial')->name('inicial');
 
 // Acessar o chat pela url
-Route::get('{slug}', 'ChatController@showChatUrl');
+Route::get('{slug}', 'ChatController@showChatUrl')->name('show-chat');
 
 // Listar e setar cidade
 Route::post('cidades/get', 'GlobalController@getCidade');

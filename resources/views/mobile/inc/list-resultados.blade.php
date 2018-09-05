@@ -10,7 +10,7 @@
 
         <div class="infos">
             <div class="nome-tags">
-                <h2>{{ $trabalho->nome }}</h2>
+                <h3><a href="{{ route('show-chat', $trabalho->slug) }}">{{ $trabalho->nome }}</a></h3>
 
                 <div class="tags">
                     @foreach($trabalho->tags as $t)
