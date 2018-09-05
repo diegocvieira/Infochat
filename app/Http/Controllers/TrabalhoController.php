@@ -117,7 +117,11 @@ class TrabalhoController extends Controller
                  $image->setImageCompressionQuality(70);
                  $image->setImageFormat('jpg');
                  $image->stripImage();
+                 $image->setSamplingFactors(array('2x2', '1x1', '1x1'));
+                 $image->setInterlaceScheme(\Imagick::INTERLACE_JPEG);
+                 $image->setColorspace(\Imagick::COLORSPACE_SRGB);
                  $image->writeImage($path . '/' . $fileName);
+                 $image->destroy();
 
                  $trabalho->imagem = $fileName;
              }
