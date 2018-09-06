@@ -22,13 +22,15 @@ class ChatController extends Controller
             $destinatario_id = $destinatario->user_id;
 
             pageview($destinatario->id);
+
+            $destinatario_slug = $destinatario->slug;
         } else {
             $destinatario = User::find($id);
 
             $destinatario_id = $destinatario->id;
-        }
 
-        $user_id = $tipo == 'trabalho' ? $destinatario->user_id : $destinatario->id;
+            $destinatario_slug = null;
+        }
 
         if(Auth::guard('web')->check()) {
             $logged_user = Auth::guard('web')->user()->id;
@@ -73,15 +75,17 @@ class ChatController extends Controller
 
         if(Agent::isMobile()) {
             return response()->json([
-                'trabalho' => view('mobile.inc.chat', compact('destinatario', 'chat', 'tipo', 'user_id'))->render(),
+                'trabalho' => view('mobile.inc.chat', compact('destinatario', 'chat', 'tipo', 'destinatario_id'))->render(),
                 'new_messages_trabalho' => $new_messages_trabalho,
-                'new_messages_pessoal' => $new_messages_pessoal
+                'new_messages_pessoal' => $new_messages_pessoal,
+                'destinatario_slug' => $destinatario_slug
             ]);
         } else {
             return response()->json([
-                'trabalho' => view('inc.chat', compact('destinatario', 'chat', 'tipo', 'user_id'))->render(),
+                'trabalho' => view('inc.chat', compact('destinatario', 'chat', 'tipo', 'destinatario_id'))->render(),
                 'new_messages_trabalho' => $new_messages_trabalho,
-                'new_messages_pessoal' => $new_messages_pessoal
+                'new_messages_pessoal' => $new_messages_pessoal,
+                'destinatario_slug' => $destinatario_slug
             ]);
         }
     }
@@ -106,7 +110,6 @@ class ChatController extends Controller
             $chat_id = null;
             $tipo = 'trabalho';
             $destinatario_id = $trabalhos->first()->user_id;
-            $user_id = $destinatario->user_id;
 
             pageview($trabalhos->first()->id);
 
@@ -144,9 +147,9 @@ class ChatController extends Controller
             }
 
             if(Agent::isMobile()) {
-                return view('mobile.show-chat-url', compact('palavra_chave', 'trabalhos', 'chat', 'tipo', 'destinatario', 'user_id', 'header_desc', 'header_title'));
+                return view('mobile.show-chat-url', compact('palavra_chave', 'trabalhos', 'chat', 'tipo', 'destinatario', 'destinatario_id', 'header_desc', 'header_title'));
             } else {
-                return view('show-chat-url', compact('palavra_chave', 'trabalhos', 'chat', 'tipo', 'destinatario', 'user_id', 'header_desc', 'header_title'));
+                return view('show-chat-url', compact('palavra_chave', 'trabalhos', 'chat', 'tipo', 'destinatario', 'destinatario_id', 'header_desc', 'header_title'));
             }
         } else {
             return view('errors.404');

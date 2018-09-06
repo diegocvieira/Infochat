@@ -68,85 +68,89 @@ class TrabalhoController extends Controller
     {
         $validator = \Validator::make($request->all(), $this->trabalhoRules(), $this->customMessages());
 
-         if($validator->fails()) {
-             $return['msg'] = $validator->errors()->first();
-         } else {
-             $user_id = Auth::guard('web')->user()->id;
+        if($validator->fails()) {
+            $return['msg'] = $validator->errors()->first();
+        } else {
+            $user_id = Auth::guard('web')->user()->id;
 
-             // Verificar se o trabalho ja existe
-             $trabalho = Trabalho::firstOrNew(['user_id' => $user_id]);
+            // Verificar se o trabalho ja existe
+            $trabalho = Trabalho::firstOrNew(['user_id' => $user_id]);
 
-             // Buscar a cidade no banco
-             $cidade = Cidade::whereHas('estado', function($q) use($request) {
-                 $q->where('letter', $request->estado);
-             })->where('title', 'LIKE', '%' . $request->cidade . '%')->select('id')->first();
-         	$cidade_id = $cidade ? $cidade->id : null;
+            // Buscar a cidade no banco
+            $cidade = Cidade::whereHas('estado', function($q) use($request) {
+                $q->where('letter', $request->estado);
+            })->where('title', 'LIKE', '%' . $request->cidade . '%')->select('id')->first();
 
-             $trabalho->cidade_id = $cidade_id;
-             $trabalho->user_id = $user_id;
-             $trabalho->slug = str_slug($request->slug, '-');
-             $trabalho->tipo = $request->tipo;
-             $trabalho->nome = $request->nome;
-             $trabalho->descricao = $request->descricao;
-             $trabalho->logradouro = $request->logradouro;
-             $trabalho->numero = $request->numero;
-             $trabalho->bairro = $request->bairro;
-             $trabalho->complemento = $request->complemento;
-             $trabalho->area_id = $request->area_id;
-             $trabalho->cep = $request->cep;
-             $trabalho->email = $request->email;
-             $trabalho->status = isset($request->status) ? 1 : 0;
+            if(!$cidade) {
+                $return['msg'] = 'Não identificamos a sua cidade, confira o nome e tente novamente. Se o problema persistir, entre em contato conosco.';
+            } else if($cidade && $cidade->id != 4927) {
+                $return['msg'] = 'Ainda não estamos operando nesta cidade.' . "<br>" . 'Volte outro dia, estamos trabalhando para levar o infochat para o mundo todo.';
+            } else {
+                $trabalho->cidade_id = $cidade->id;
+                $trabalho->user_id = $user_id;
+                $trabalho->slug = str_slug($request->slug, '-');
+                $trabalho->tipo = $request->tipo;
+                $trabalho->nome = $request->nome;
+                $trabalho->descricao = $request->descricao;
+                $trabalho->logradouro = $request->logradouro;
+                $trabalho->numero = $request->numero;
+                $trabalho->bairro = $request->bairro;
+                $trabalho->complemento = $request->complemento;
+                $trabalho->area_id = $request->area_id;
+                $trabalho->cep = $request->cep;
+                $trabalho->email = $request->email;
+                $trabalho->status = isset($request->status) ? 1 : 0;
 
-             if(!empty($request->img)) {
-                 $trabalho->imagem = _uploadImage($request->img, $trabalho->imagem);
-             }
+                if(!empty($request->img)) {
+                    $trabalho->imagem = _uploadImage($request->img, $trabalho->imagem);
+                }
 
-             if($trabalho->save()) {
-                 // Telefones
-                 $trabalho->telefones()->delete();
-                 if(isset($request->fone)) {
-                     foreach($request->fone as $fone) {
-                         if(!empty($fone)) {
-                             $trabalho->telefones()->create(['fone' => $fone]);
-                         }
-                     }
-                 }
+                if($trabalho->save()) {
+                    // Telefones
+                    $trabalho->telefones()->delete();
+                    if(isset($request->fone)) {
+                        foreach($request->fone as $fone) {
+                            if(!empty($fone)) {
+                                $trabalho->telefones()->create(['fone' => $fone]);
+                            }
+                        }
+                    }
 
-                 // Redes sociais
-                 $trabalho->redes()->delete();
-                 if(isset($request->social)) {
-                     foreach($request->social as $social) {
-                         if(!empty($social)) {
-                             $trabalho->redes()->create(['url' => $social]);
-                         }
-                     }
-                 }
+                    // Redes sociais
+                    $trabalho->redes()->delete();
+                    if(isset($request->social)) {
+                        foreach($request->social as $social) {
+                            if(!empty($social)) {
+                                $trabalho->redes()->create(['url' => $social]);
+                            }
+                        }
+                    }
 
-                 // Tags
-                 $trabalho->tags()->delete();
-                 if(isset($request->tag) && count($request->tag) <= 10) {
-                     foreach($request->tag as $tag) {
-                         $trabalho->tags()->create(['tag' => $tag]);
-                     }
-                 }
+                    // Tags
+                    $trabalho->tags()->delete();
+                    if(isset($request->tag) && count($request->tag) <= 10) {
+                        foreach($request->tag as $tag) {
+                            $trabalho->tags()->create(['tag' => $tag]);
+                        }
+                    }
 
-                 // Horarios de atendimento
-                 $trabalho->horarios()->delete();
-                 $horarios = array_map(function($d, $dm, $at, $dt, $an) {
-                     return array('dia' => $d, 'de_manha' => $dm, 'ate_tarde' => $at, 'de_tarde' => $dt, 'ate_noite' => $an);
-                 }, $request->dia, $request->de_manha, $request->ate_tarde, $request->de_tarde, $request->ate_noite);
-                 $count = 0;
-                 foreach($horarios as $horario) {
-                     if(is_numeric($horario['dia']) && ($horario['de_manha'] && $horario['ate_tarde'] || $horario['de_tarde'] && $horario['ate_noite'])) {
-                         $trabalho->horarios()->create($horario);
-                     }
-                 }
+                    // Horarios de atendimento
+                    $trabalho->horarios()->delete();
+                    $horarios = array_map(function($d, $dm, $at, $dt, $an) {
+                        return array('dia' => $d, 'de_manha' => $dm, 'ate_tarde' => $at, 'de_tarde' => $dt, 'ate_noite' => $an);
+                    }, $request->dia, $request->de_manha, $request->ate_tarde, $request->de_tarde, $request->ate_noite);
+                    foreach($horarios as $horario) {
+                        if(is_numeric($horario['dia']) && ($horario['de_manha'] && $horario['ate_tarde'] || $horario['de_tarde'] && $horario['ate_noite'])) {
+                            $trabalho->horarios()->create($horario);
+                        }
+                    }
 
-                 $return['msg'] = 'Informações salvas com sucesso!';
-             } else {
-                 $return['msg'] = 'Ocorreu um erro inesperado. Tente novamente.';
-             }
-         }
+                    $return['msg'] = 'Informações salvas com sucesso!';
+                } else {
+                    $return['msg'] = 'Ocorreu um erro inesperado. Tente novamente.';
+                }
+            }
+        }
 
         return json_encode($return);
     }
@@ -327,10 +331,10 @@ class TrabalhoController extends Controller
             'nome' => 'required|max:100',
             'area_id' => 'required',
             'tipo' => 'required',
-            'cep' => 'required|max:10',
-            'logradouro' => 'required|max:100',
-            'bairro' => 'required|max:50',
-            'numero' => 'required|max:10',
+            'cep' => 'max:10',
+            'logradouro' => 'max:100',
+            'bairro' => 'max:50',
+            'numero' => 'max:10',
             'cidade' => 'required',
             'estado' => 'required',
             'img' => 'image|max:5000'
@@ -349,13 +353,13 @@ class TrabalhoController extends Controller
             'img.max' => 'A imagem tem que ter no máximo 5mb.',
             'area_id.required' => 'Selecione uma área.',
             'tipo.required' => 'Selecione um tipo.',
-            'cep.required' => 'Informe o CEP.',
+            //'cep.required' => 'Informe o CEP.',
             'cep.max' => 'O CEP deve ter menos de 10 caracteres.',
-            'logradouro.required' => 'Informe o logradouro.',
+            //'logradouro.required' => 'Informe o logradouro.',
             'logradouro.max' => 'O logradouro deve ter menos de 100 caracteres.',
-            'bairro.required' => 'Informe o bairro.',
+            //'bairro.required' => 'Informe o bairro.',
             'bairro.max' => 'O bairro deve ter menos de 50 caracteres.',
-            'numero.required' => 'Informe o número.',
+            //'numero.required' => 'Informe o número.',
             'numero.max' => 'O número deve ter menos de 10 caracteres.',
             'cidade.required' => 'Informe a cidade.',
             'estado.required' => 'Informe o estado.'
@@ -497,55 +501,5 @@ WHERE
 
 
         //dd(User::find(1)->trabalho()->toSql());
-
-        /*$row = 1;
-        $cat = false;
-
-        if(($handle = fopen(public_path('categorias-estabelecimentos.csv'), "r")) !== FALSE) {
-            while(($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                $num = count($data);
-                $row++;
-
-                for($col = 0; $col < $num; $col++) {
-                    if(substr($data[$col], 0, 2) == '**') {
-                        $area = new Area;
-                        $area->titulo = str_replace('*', '', $data[$col]);
-                        $area->slug = str_slug($data[$col], '-');
-                        $area->tipo = 2;
-                        //$area->save();
-                        $area_id = $area->id;
-
-                        echo str_replace('*', '', $data[$col]) . " ------------------------------ area<br />\n";
-                    } else if($data[$col] != '' && ($cat || $data[$col] == 'Açougues e frigoríficos')) {
-                        $categoria = new Categoria;
-                        $categoria->titulo = $data[$col];
-                        $categoria->slug = str_slug($data[$col], '-');
-                        $categoria->area_id = $area_id;
-                        //$categoria->save();
-                        $categoria_id = $categoria->id;
-
-                        echo $data[$col] . " ------------------------------ categoria<br />\n";
-
-                        $cat = false;
-                    } else {
-                        if($data[$col] != '') {
-                            $subcategoria = new Subcategoria;
-                            $subcategoria->titulo = $data[$col];
-                            $subcategoria->slug = str_slug($data[$col], '-');
-                            $subcategoria->categoria_id = $categoria_id;
-                            //$subcategoria->save();
-
-                            echo $data[$col] . "-------------------------------sub<br />\n";
-                        }
-                    }
-
-                    if($data[$col] == '') {
-                        $cat = true;
-                    }
-                }
-            }
-
-            fclose($handle);
-        }*/
     }
 }

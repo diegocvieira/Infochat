@@ -52,6 +52,10 @@ class GlobalController extends Controller
 
         _setCidade($cidade, $force = true);
 
+        if($cidade->id != 4927) {
+            session()->flash('session_flash_cidade_fechada', 'Cidade fechada');
+        }
+
         return redirect()->route('inicial');
     }
 

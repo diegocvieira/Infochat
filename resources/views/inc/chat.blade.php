@@ -1,9 +1,9 @@
 <div class="topo-chat">
-    {!! Form::hidden('user_id', $user_id, ['id' => 'user_id']) !!}
+    {!! Form::hidden('user_id', $destinatario_id, ['id' => 'user_id']) !!}
 
     <div class="imagem">
         @if($destinatario->imagem)
-            <img src="{{ asset('uploads/' . $user_id . '/' . $destinatario->imagem) }}" alt="Foto de perfil de {{ $destinatario->nome }}" />
+            <img src="{{ asset('uploads/' . $destinatario_id . '/' . $destinatario->imagem) }}" alt="Foto de perfil de {{ $destinatario->nome }}" />
         @else
             <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" alt="Foto de perfil de {{ $destinatario->nome }}" />
         @endif

@@ -21,11 +21,11 @@
         {!! Form::close() !!}
     </div>
 
-    <div class="col-xs-5">
+    <div class="col-xs-7">
         <nav class="nav navbar-nav nav-menu">
             <ul>
                 @if(Auth::guard('web')->check())
-                    <li>
+                    <li class="nav-logged">
                         <a href="#" class="open-nav" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             <span>{{ firstName(Auth::guard('web')->user()->nome) }}</span>
 

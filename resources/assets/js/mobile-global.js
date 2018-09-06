@@ -373,9 +373,10 @@ $(document).ready(function() {
 
          $('#form-search-palavra-chave').val('');
 
-         var next = $(this).parent().next(),
-             submit = $(this).hasClass('close-area') ? false : true,
-             $this = $(this);
+         var $this = $(this);
+
+         $('#categorias').find('.cat-search').removeClass('active');
+         $this.addClass('active');
 
          $('#form-search-palavra-chave').attr('placeholder', 'Pesquise em ' + $this.text());
 
@@ -389,26 +390,15 @@ $(document).ready(function() {
                  method: 'GET',
                  dataType:'json',
                  success: function(data) {
-                     if(submit) {
-                         $this.parent().after("<div class='cats'></div>");
+                     $this.parent().after("<div class='cats'></div>");
 
-                         $(data.categorias).each(function(index, element) {
-                             $this.parent().next().append("<li><a href='#' class='categoria cat-search' data-search='" + element.titulo + "'>" + element.titulo + "</a></li>");
-                         });
-                     }
-
-                     if(data.categorias.length || $this.hasClass('modal-search')) {
-                         $this.hasClass('close-area') ? area.show() : area.not($this.parent()).hide();
-
-                         $this.toggleClass('close-area');
-                     } else {
-                         $('#categorias .area').removeClass('active');
-                         $this.addClass('active');
-                     }
+                     $(data.categorias).each(function(index, element) {
+                         $this.parent().next().append("<li><a href='#' class='categoria cat-search' data-search='" + element.titulo + "'>" + element.titulo + "</a></li>");
+                     });
                  }
              });
 
-             $('#form-search-area').val($(this).hasClass('close-area') ? '' : $this.data('search'));
+             $('#form-search-area').val($this.data('search'));
              $('#form-search-tag').val('');
          } else {
              if($(this).hasClass('categoria')) {
@@ -424,11 +414,6 @@ $(document).ready(function() {
                          });
 
                          $('.aside-categorias').find('.subs').not($this.parent().next()).hide();
-
-                         if(!data.subcategorias.length) {
-                             $('#categorias .categoria').removeClass('active');
-                             $this.addClass('active');
-                         }
                      }
                  });
              } else {
@@ -446,19 +431,33 @@ $(document).ready(function() {
                          success: function(data) {
                              $('.aside-categorias').find('.cats').remove();
 
-                             if(data.type == 'categoria') {
-                                 var area = $('.area[data-search=' + data.result.area.slug + ']');
-                                 area.parent().after("<div class='cats'><li><a href='#' class='categoria cat-search' data-search='" + data.result.titulo + "'>" + data.result.titulo + "</a></li></div>");
-                             } else {
-                                 var area = $('.area[data-search=' + data.result.categoria.area.slug + ']');
-                                 area.parent().after("<div class='cats'><li><a href='#' class='categoria cat-search' data-search='" + data.result.categoria.titulo + "'>" + data.result.categoria.titulo + "</a></li><div class='subs'><li><a href='#' class='cat-search' data-search='" + data.result.titulo + "'>" + data.result.titulo + "</a></li></div></div>");
+                             var area_slug = data.type == 'categoria' ? data.result.area.slug : data.result.categoria.area.slug,
+                                 area = $('.area[data-search=' + area_slug + ']');
+
+                             if(area.length == 0) {
+                                 $.ajax({
+                                     url: 'aside/areas/' + area_slug,
+                                     method: 'GET',
+                                     dataType:'json',
+                                     success: function(data) {
+                                         $('#categorias').find('.cat-search').remove();
+
+                                         $(data.areas).each(function(index, element) {
+                                             $('#categorias').append("<li><a href='#' class='area cat-search' data-search='" + element.slug + "' style='background-image: url(img/categorias/" + element.slug + ".png);'>" + element.titulo + "</a></li>")
+                                         });
+                                     }
+                                 });
                              }
 
-                             $('.aside-categorias').find('.area').removeClass('close-area');
-                             area.addClass('close-area modal-search');
+                              setTimeout(function() {
+                                  area = $('.area[data-search=' + area_slug + ']');
 
-                             $('.aside-categorias').find('.area').parent().show();
-                             $('.aside-categorias').find('.area').parent().not(area.parent()).hide();
+                                  if(data.type == 'categoria') {
+                                      area.parent().after("<div class='cats'><li><a href='#' class='categoria cat-search' data-search='" + data.result.titulo + "'>" + data.result.titulo + "</a></li></div>");
+                                  } else {
+                                      area.parent().after("<div class='cats'><li><a href='#' class='categoria cat-search' data-search='" + data.result.categoria.titulo + "'>" + data.result.categoria.titulo + "</a></li><div class='subs'><li><a href='#' class='cat-search' data-search='" + data.result.titulo + "'>" + data.result.titulo + "</a></li></div></div>");
+                                  }
+                              }, 1000);
                          }
                      });
                  }
@@ -492,7 +491,7 @@ $(document).ready(function() {
          }
 
          if(tipo != 'favoritos') {
-             $('#categorias').find('.area').remove();
+             $('#categorias').find('.cat-search').remove();
 
              $.ajax({
                  url: 'aside/areas/' + $(this).data('search'),
@@ -1363,18 +1362,6 @@ $(document).ready(function() {
                             minlength: 1,
                             maxlength: 100
                         },
-                        cep: {
-                            required: true
-                        },
-                        bairro: {
-                            required: true
-                        },
-                        logradouro: {
-                            required: true
-                        },
-                        numero: {
-                            required: true
-                        },
                         cidade: {
                             required: true
                         },
@@ -1446,6 +1433,10 @@ $(document).ready(function() {
             method: 'GET',
             dataType:'json',
             success: function(data) {
+                if(data.destinatario_slug) {
+                    window.history.pushState('', '', data.destinatario_slug);
+                }
+
                 var modal = $('#modal-default');
                 modal.removeAttr('class');
                 modal.addClass('modal fade chat');

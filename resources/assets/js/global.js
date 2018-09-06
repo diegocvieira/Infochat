@@ -668,6 +668,10 @@ $(document).ready(function() {
                 method: 'GET',
                 dataType:'json',
                 success: function(data) {
+                    if(data.destinatario_slug) {
+                        window.history.pushState('', '', data.destinatario_slug);
+                    }
+
                     $('.chat').html(data.trabalho);
 
                     // Scroll to bottom
@@ -1416,18 +1420,6 @@ $(document).ready(function() {
                             required: true,
                             minlength: 1,
                             maxlength: 100
-                        },
-                        cep: {
-                            required: true
-                        },
-                        bairro: {
-                            required: true
-                        },
-                        logradouro: {
-                            required: true
-                        },
-                        numero: {
-                            required: true
                         },
                         cidade: {
                             required: true

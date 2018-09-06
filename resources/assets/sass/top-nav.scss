@@ -74,6 +74,12 @@
         text-align: right;
         float: none;
         height: 100%;
+        margin-right: 20px;
+
+        .nav-logged {
+            margin-right: 30%;
+            position: relative;
+        }
 
         .open > a, .open > a:focus, .open > a:hover, .open-nav:hover, .open-nav:active, .open-nav:focus {
             background-color: transparent;
@@ -114,7 +120,7 @@
         }
 
         .dropdown-menu {
-            right: 10px;
+            right: 0;
             border-radius: 5px;
             background-color: rgb(255, 255, 255);
             box-shadow: 2.5px 4.33px 19px 1px rgba(100, 100, 100, 0.118);

@@ -15,13 +15,13 @@
 
         <div class="col-xs-8 infos">
             <div class="tipo-nome">
-                {!! Form::select('tipo', $tipos, null, ['class' => 'selectpicker tipo', 'title' => 'Tipo', 'required']) !!}
+                {!! Form::select('tipo', $tipos, null, ['class' => 'selectpicker tipo', 'title' => 'Tipo *', 'required']) !!}
 
-                {!! Form::text('nome', null, ['placeholder' => 'Nome', 'class' => 'nome', 'required']) !!}
+                {!! Form::text('nome', null, ['placeholder' => 'Nome *', 'class' => 'nome', 'required']) !!}
             </div>
 
             <div class="categorias">
-                {!! Form::select('area_id', isset($trabalho) ? $areas : [], null, ['class' => 'selectpicker area', 'title' => 'Área', 'required']) !!}
+                {!! Form::select('area_id', isset($trabalho) ? $areas : [], null, ['class' => 'selectpicker area', 'title' => 'Área *', 'required']) !!}
 
                 <select name="categoria" title="Categoria" class="selectpicker categoria">
                     @if(isset($trabalho))
@@ -108,9 +108,9 @@
                 </div>
 
                 <div class="row">
-                    {!! Form::text('cidade', isset($trabalho) ? $trabalho->cidade->title : null, ['id' => 'cidade', 'placeholder' => 'Cidade', 'class' => 'cidade']) !!}
+                    {!! Form::text('cidade', isset($trabalho) ? $trabalho->cidade->title : null, ['id' => 'cidade', 'placeholder' => 'Cidade *', 'class' => 'cidade']) !!}
 
-                    {!! Form::text('estado', isset($trabalho) ? $trabalho->cidade->estado->letter : null, ['id' => 'estado', 'placeholder' => 'Estado', 'class' => 'estado']) !!}
+                    {!! Form::text('estado', isset($trabalho) ? $trabalho->cidade->estado->letter : null, ['id' => 'estado', 'placeholder' => 'Estado *', 'class' => 'estado']) !!}
                 </div>
 
                 <div class="row">
