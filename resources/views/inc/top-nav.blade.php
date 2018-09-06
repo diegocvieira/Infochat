@@ -1,7 +1,7 @@
 <header class="container-fluid top-nav">
     <div class="col-xs-2">
         <a href="{{ url('/') }}">
-            <img src="{{ asset('img/logo-infochat.png') }}" id="logo-infochat" class="img-responsive" />
+            <img src="{{ asset('img/logo-infochat.png') }}" id="logo-infochat" class="img-responsive" alt="Logo infochat" />
         </a>
     </div>
 
@@ -21,11 +21,11 @@
         {!! Form::close() !!}
     </div>
 
-    <div class="col-xs-5">
+    <div class="col-xs-7">
         <nav class="nav navbar-nav nav-menu">
             <ul>
                 @if(Auth::guard('web')->check())
-                    <li>
+                    <li class="nav-logged">
                         <a href="#" class="open-nav" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             <span>{{ firstName(Auth::guard('web')->user()->nome) }}</span>
 
@@ -75,14 +75,6 @@
                 @endif
             </ul>
         </nav>
-    </div>
-
-    <div class="col-xs-2">
-        <div class="social-links">
-            <a href="https://www.facebook.com/infochatapp" target="_blank" class="social-facebook"></a>
-            <a href="https://www.instagram.com/infochatapp" target="_blank" class="social-instagram"></a>
-            <a href="https://twitter.com/infochatapp" target="_blank" class="social-twitter"></a>
-        </div>
     </div>
 </header>
 

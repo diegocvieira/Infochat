@@ -15,7 +15,7 @@
     </div>
 
     <div class="imagem">
-        @if($trabalho->imagem)
+        @if(isset($trabalho) && $trabalho->imagem)
             <img src="{{ asset('uploads/' . $trabalho->user_id . '/' . _getOriginalImage($trabalho->imagem)) }}" />
         @else
             <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" />
@@ -27,11 +27,11 @@
     </div>
 
     <div class="infos">
-        {!! Form::select('tipo', $tipos, null, ['class' => 'selectpicker tipo', 'title' => 'Tipo', 'required']) !!}
+        {!! Form::select('tipo', $tipos, null, ['class' => 'selectpicker tipo', 'title' => 'Tipo *', 'required']) !!}
 
-        {!! Form::text('nome', null, ['placeholder' => 'Nome', 'class' => 'nome', 'required']) !!}
+        {!! Form::text('nome', null, ['placeholder' => 'Nome *', 'class' => 'nome', 'required']) !!}
 
-        {!! Form::select('area_id', isset($trabalho) ? $areas : [], null, ['class' => 'selectpicker area', 'title' => 'Área', 'required']) !!}
+        {!! Form::select('area_id', isset($trabalho) ? $areas : [], null, ['class' => 'selectpicker area', 'title' => 'Área *', 'required']) !!}
 
         <select name="categoria" title="Categoria" class="selectpicker categoria">
             @if(isset($trabalho))
@@ -96,9 +96,9 @@
 
             {!! Form::text('bairro', null, ['placeholder' => 'Bairro', 'class' => 'bairro', 'id' => 'bairro']) !!}
 
-            {!! Form::text('cidade', isset($trabalho) ? $trabalho->cidade->title : null, ['id' => 'cidade', 'placeholder' => 'Cidade', 'class' => 'cidade']) !!}
+            {!! Form::text('cidade', isset($trabalho) ? $trabalho->cidade->title : null, ['id' => 'cidade', 'placeholder' => 'Cidade *', 'class' => 'cidade']) !!}
 
-            {!! Form::text('estado', isset($trabalho) ? $trabalho->cidade->estado->letter : null, ['id' => 'estado', 'placeholder' => 'Estado', 'class' => 'estado']) !!}
+            {!! Form::text('estado', isset($trabalho) ? $trabalho->cidade->estado->letter : null, ['id' => 'estado', 'placeholder' => 'Estado *', 'class' => 'estado']) !!}
 
             {!! Form::text('logradouro', null, ['placeholder' => 'Endereço', 'class' => 'logradouro', 'id' => 'logradouro']) !!}
 

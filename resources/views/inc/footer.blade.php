@@ -23,7 +23,7 @@
                 <div class="modal-content">
                     <a href="#" class="arrow prev" data-position="1"></a>
 
-                    <img src="{{ asset('img/como-funciona/1.png') }}" class="img-responsivde" />
+                    <img src="{{ asset('img/como-funciona/1.png') }}" alt="Como funciona" />
 
                     <a href="#" class="arrow next" data-position="1"></a>
 
@@ -74,8 +74,8 @@
         </script>
         <!--End of Tawk.to Script-->
 
-        @yield('script')
-
         <script src="{{ mix('/js/global.js') }}"></script>
+
+        @yield('script')
     </body>
 </html>

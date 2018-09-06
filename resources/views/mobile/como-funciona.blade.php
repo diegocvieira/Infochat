@@ -14,7 +14,7 @@
                 <div class="slide-wrapper banner1">
                     <p>O infochat é o atendimento<br>online dos profissionais<br>e estabelecimentos<br>da sua cidade</p>
 
-                    <img class="slide-dimage" src="{{ asset('img/mobile-como-funciona/1.png') }}" />
+                    <img class="slide-dimage" src="{{ asset('img/mobile-como-funciona/1.png') }}" alt="Primeiro passo como funciona" />
 
                     <div class="deslizar"><span class="text">Deslize</span><span class="arrow right"></span></div>
                 </div>
@@ -22,7 +22,7 @@
                 <div class="slide-wrapper banner2">
                     <p>Você pode pedir<br>informações e tirar suas<br>dúvidas de um jeito rápido e fácil</p>
 
-                    <img class="slide-dimage" src="{{ asset('img/mobile-como-funciona/2.png') }}" />
+                    <img class="slide-dimage" src="{{ asset('img/mobile-como-funciona/2.png') }}" alt="Segundo passo como funciona" />
 
                     <div class="deslizar"><span class="arrow left"></span><span class="text">Deslize</span><span class="arrow right"></span></div>
                 </div>
@@ -30,7 +30,7 @@
                 <div class="slide-wrapper banner3">
                     <p>1. Encontre o estabelecimento ou<br>o profissional que você procura<br><br>2. Envie uma mensagem e<br>aguarde o atendimento</p>
 
-                    <img class="slide-dimage" src="{{ asset('img/mobile-como-funciona/3.png') }}" />
+                    <img class="slide-dimage" src="{{ asset('img/mobile-como-funciona/3.png') }}" alt="Terceiro passo como funciona" />
 
                     <div class="deslizar"><span class="arrow left"></span><span class="text">Deslize</span><span class="arrow right"></span></div>
                 </div>
@@ -38,7 +38,7 @@
                 <div class="slide-wrapper banner4">
                     <p>Você também pode usar o<br>infochat no seu computador</p>
 
-                    <img class="slide-dimage" src="{{ asset('img/mobile-como-funciona/4.png') }}" />
+                    <img class="slide-dimage" src="{{ asset('img/mobile-como-funciona/4.png') }}" alt="Terceiro passo como funciona" />
 
                     <div class="deslizar"><span class="arrow left"></span><span class="text">Deslize</span><span class="arrow right"></span></div>
                 </div>
@@ -46,7 +46,7 @@
                 <div class="slide-wrapper banner5">
                     <p>E ainda pode ativar seu perfil<br>de trabalho para atender<br>seus clientes online<br><br><i>É totalmente grátis!</i></p>
 
-                    <img class="slide-dimage" src="{{ asset('img/mobile-como-funciona/5.png') }}" />
+                    <img class="slide-dimage" src="{{ asset('img/mobile-como-funciona/5.png') }}" alt="Quarto passo como funciona" />
 
                     <div class="deslizar"><span class="arrow left"></span><span class="text">Deslize</span></div>
                 </div>
