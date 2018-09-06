@@ -1,6 +1,6 @@
 <header class="top-nav">
     <a href="{{ url('/') }}">
-        <img src="{{ asset('img/logo-infochat.png') }}" id="logo-infochat" />
+        <img src="{{ asset('img/logo-infochat.png') }}" id="logo-infochat" alt="Logo infochat" />
     </a>
 
     <nav>

@@ -37,7 +37,7 @@
         @include('inc.list-mensagens-chat')
     @else
         <div class="sem-mensagens">
-            <img src="{{ asset('img/icon-logo.png') }}" />
+            <img src="{{ asset('img/icon-logo.png') }}" alt="Escreva uma mensagem" />
             <p>Escreva uma mensagem<br>para iniciar o atendimento</p>
         </div>
     @endif

@@ -1,7 +1,7 @@
 <header class="container-fluid top-nav">
     <div class="col-xs-2">
         <a href="{{ url('/') }}">
-            <img src="{{ asset('img/logo-infochat.png') }}" id="logo-infochat" class="img-responsive" />
+            <img src="{{ asset('img/logo-infochat.png') }}" id="logo-infochat" class="img-responsive" alt="Logo infochat" />
         </a>
     </div>
 

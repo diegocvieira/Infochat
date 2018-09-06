@@ -17,7 +17,7 @@
 
             <div class="col-xs-5 chat">
                 <div class="sem-selecao">
-                    <img src="{{ asset('img/icon-logo.png') }}" />
+                    <img src="{{ asset('img/icon-logo.png') }}" alt="Selecione um profissional ou estabelecimento" />
 
                     @if(Auth::guard('web')->check())
                         <p>Selecione um profissional ou estabelecimento<br>para pedir informações ou tirar dúvidas</p>
