@@ -158,7 +158,6 @@
     #categorias {
         width: 100%;
         float: left;
-        margin-bottom: 20px;
 
         li {
             float: left;
@@ -186,41 +185,46 @@
                     background-repeat: no-repeat;
                     padding-left: 50px;
                 }
-
-                &.close-area {
-                    position: relative;
-                    padding-left: 45px;
-
-                    &:after {
-                        content: '';
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        width: 28px;
-                        height: 28px;
-                        background-position: 2px 4px;
-                        background-size: contain;
-                        background-image: url('../img/arrow.png');
-                        background-repeat: no-repeat;
-                        -webkit-transform: rotate(90deg);
-                        -moz-transform: rotate(90deg);
-                        -ms-transform: rotate(90deg);
-                        -o-transform: rotate(90deg);
-                        transform: rotate(90deg);
-                        filter: brightness(20%);
-                    }
-
-                    &:hover {
-                        background-color: inherit;
-                    }
-                }
             }
+        }
+
+        .cats a {
+            padding-left: 30px;
         }
 
         .subs a {
             font-weight: normal;
             font-size: 16.5px;
-            padding-left: 40px;
+            padding-left: 45px;
+        }
+    }
+
+    .social-links {
+        float: left;
+        width: 100%;
+        text-align: right;
+        margin: 15px 0;
+
+        a {
+            display: inline-block;
+            width: 26px;
+            height: 26px;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            margin-left: 3px;
+
+            &.social-facebook {
+                background-image: url('../img/icon-facebook.png');
+            }
+
+            &.social-instagram {
+                background-image: url('../img/icon-instagram.png');
+            }
+
+            &.social-twitter {
+                background-image: url('../img/icon-twitter.png');
+            }
         }
     }
 }
