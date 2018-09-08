@@ -228,30 +228,6 @@
                         background-size: 25px;
                     }
                 }
-
-                &.termos {
-                    border-top: 1px solid rgb(240, 240, 240);
-                    text-align: center;
-                    margin-top: 7px;
-
-                    a {
-                        font-size: 10.8px;
-                        color: rgb(150, 150, 150);
-                        width: auto;
-                        padding: 15px 3px;
-                        clear: inherit;
-
-                        &:first-child {
-                            margin-left: 12px;
-                        }
-                    }
-
-                    span {
-                        float: left;
-                        margin: 12px 4px 0 4px;
-                        color: rgb(150, 150, 150);
-                    }
-                }
             }
         }
     }

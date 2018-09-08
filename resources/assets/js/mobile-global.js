@@ -344,7 +344,7 @@ $(document).ready(function() {
          e.preventDefault();
 
          $('.aside-categorias').css({
-             'width' : '80%',
+             'width' : '90%',
              'left' : '0'
          });
 

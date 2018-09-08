@@ -159,34 +159,6 @@
                         background-image: url('../img/icon-logout.png');
                     }
                 }
-
-                &.termos {
-                    border-top: 1px solid rgb(240, 240, 240);
-                    text-align: center;
-                    margin-top: 7px;
-
-                    a {
-                        font-size: 10.8px;
-                        color: rgb(150, 150, 150);
-                        width: auto;
-                        padding: 8px 0;
-                        clear: inherit;
-
-                        &:first-child {
-                            margin-left: 15px;
-                        }
-
-                        &:hover, &:active {
-                            background-color: transparent;
-                        }
-                    }
-
-                    span {
-                        float: left;
-                        margin: 6px 4px 0 4px;
-                        color: rgb(150, 150, 150);
-                    }
-                }
             }
         }
 
