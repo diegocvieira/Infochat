@@ -206,31 +206,77 @@
         }
     }
 
-    .social-links {
+    .aside-bottom {
         float: left;
         width: 100%;
-        margin-bottom: 20px;
-        text-align: right;
+        margin: 15px 0;
 
-        a {
-            display: inline-block;
-            width: 26px;
-            height: 26px;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: contain;
-            margin-left: 3px;
+        .termos {
+            text-align: center;
+            margin-top: 2px;
+            float: left;
 
-            &.social-facebook {
-                background-image: url('../../img/icon-facebook.png');
+            a {
+                font-size: 10.8px;
+                color: rgb(200, 200, 200);
+                width: auto;
+                padding: 8px 5px;
+                clear: inherit;
+                position: relative;
+
+                &:first-child {
+                    margin-left: 5px;
+                }
+
+                &:last-child, &:nth-child(2) {
+                    padding-left: 10px;
+
+                    &:after {
+                        content: '-';
+                        position: absolute;
+                        left: 0;
+                        top: 6px;
+                        font-size: 10.8px;
+                        color: rgb(200, 200, 200);
+                    }
+                }
+
+                &:hover, &:active {
+                    background-color: transparent;
+                }
             }
 
-            &.social-instagram {
-                background-image: url('../../img/icon-instagram.png');
+            span {
+                float: left;
+                margin: 6px 4px 0 4px;
+                color: rgb(200, 200, 2000);
             }
+        }
 
-            &.social-twitter {
-                background-image: url('../../img/icon-twitter.png');
+        .social-links {
+            float: right;
+            text-align: right;
+
+            a {
+                display: inline-block;
+                width: 26px;
+                height: 26px;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: contain;
+                margin-left: 3px;
+
+                &.social-facebook {
+                    background-image: url('../../img/icon-facebook.png');
+                }
+
+                &.social-instagram {
+                    background-image: url('../../img/icon-instagram.png');
+                }
+
+                &.social-twitter {
+                    background-image: url('../../img/icon-twitter.png');
+                }
             }
         }
     }

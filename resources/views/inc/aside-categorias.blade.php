@@ -42,8 +42,16 @@
     @endforeach
 </ul>
 
-<div class="social-links">
-    <a href="https://www.facebook.com/infochatapp" target="_blank" class="social-facebook"></a>
-    <a href="https://www.instagram.com/infochatapp" target="_blank" class="social-instagram"></a>
-    <a href="https://twitter.com/infochatapp" target="_blank" class="social-twitter"></a>
+<div class="aside-bottom">
+    <div class="termos">
+        <a href="#" id="open-contato">Contato</a>
+        <a href="{{ route('termos-uso') }}" target="_blank">Termos</a>
+        <a href="{{ route('termos-privacidade') }}" target="_blank">Privacidade</a>
+    </div>
+
+    <div class="social-links">
+        <a href="https://www.facebook.com/infochatapp" target="_blank" class="social-facebook"></a>
+        <a href="https://www.instagram.com/infochatapp" target="_blank" class="social-instagram"></a>
+        <a href="https://twitter.com/infochatapp" target="_blank" class="social-twitter"></a>
+    </div>
 </div>
