@@ -129,7 +129,7 @@
         {!! Form::hidden('trabalho_id', $trabalho->id) !!}
 
         <div class="nota">
-            <p>Avalie este usuário</p>
+            <p>Avaliação do {{ $trabalho->tipoNome($trabalho->tipo) }}</p>
 
             @for($q = 1; $q <= 5; $q++)
                 {!! Form::radio('nota', $q, @!empty($q == $avaliacao_usuario->nota), ['id' => 'nota' . $q, 'required']) !!}
