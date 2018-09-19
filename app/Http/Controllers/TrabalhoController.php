@@ -18,6 +18,9 @@ use Cookie;
 use App\Chat;
 use App\Estado;
 use Agent;
+use ZIPARCHIVE;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
 
 class TrabalhoController extends Controller
 {
@@ -376,36 +379,72 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
-        /*for($i = 1; $i <= 2; $i++) {
-            $image = new \Imagick(resource_path('assets/img/material-divulgacao/' . $i . '.png'));
-            $draw = new \ImagickDraw();
+        $folder = 'a3';
+        $trabalho_slug = Auth::guard('web')->user()->trabalho->slug;
+        $path = public_path() . '/material-divulgacao/' . Auth::guard('web')->user()->id;
+        $zipFile = $path . '/' . $trabalho_slug . '_' . $folder . '.zip';
 
-            /* Font properties */
-            /*$draw->setFillColor('black');
-            $draw->setFont('Bookman-DemiItalic');
-            $draw->setFontSize(30);
+        if(!file_exists($zipFile)) {
+            for($i = 1; $i <= 2; $i++) {
+                $image = new \Imagick(resource_path('assets/img/material-divulgacao/' . $folder . '/' . $i . '.jpg'));
+                $draw = new \ImagickDraw();
 
-            /* Create text */
-            //$image->annotateImage($draw, 10, 45, 0, 'The quick brown fox jumps over the lazy dog');
+                // Font properties
+                $font_color = $i == 1 ? '#fff' : '#23418c';
 
-            /* Output the image with headers */
-            //header('Content-type: image/png');
+                $draw->setFillColor($font_color);
+                $draw->setFont(resource_path('assets/fonts/AgencyFB-Bold.ttf'));
+                $draw->setFontSize(150);
 
-            //echo $image;
+                // Create text
+                $image->annotateImage($draw, 1310, 4195, 0, $trabalho_slug);
 
-            //$path = 'material-divulgacao/' . Auth::guard('web')->user()->id;
+                if(!is_dir($path)) {
+                    mkdir($path, 0777, true);
+                }
 
-            //if(!is_dir($path)) {
-                //mkdir($path, 0777, true);
-            //}
+                $image->writeImage($path . '/' . $i . '.jpg');
+            }
 
-            //$image->writeImage($path . '/' . $i . '.png');
-        //}
+            $filesToDelete = array();
 
-        \Mail::send('emails.nova_mensagem', [], function($q) {
-            $q->from('no-reply@infochat.com.br', 'Infochat');
-            $q->to('diegovc10@hotmail.com')->subject('Teste hotmail');
-        });
+            $zip = new ZipArchive();
+
+            $zip->open($zipFile, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+
+            $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::LEAVES_ONLY);
+
+            foreach($files as $file) {
+                // Skip directories (they would be added automatically)
+                if(!$file->isDir()) {
+                    // Get real and relative path for current file
+                    $filePath = $file->getRealPath();
+                    $relativePath = explode($path . '/', $filePath);
+                    $relativePath = $relativePath[1];
+
+                    // Add current file to archive
+                    $zip->addFile($filePath, $relativePath);
+
+                    $filesToDelete[] = $filePath;
+                }
+            }
+
+            $zip->close();
+
+            foreach($filesToDelete as $file) {
+                unlink($file);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
 
         /*$mensagem = Mensagem::selectRaw("CONCAT(FLOOR(sum(diferenca)/60),'h',MOD(sum(diferenca),60),'m') as tempo")
     ->whereIn('id', function($query) {
