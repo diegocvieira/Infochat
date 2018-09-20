@@ -1,6 +1,53 @@
 $(document).ready(function() {
     $('body').css('opacity', '1');
 
+
+
+
+
+
+    $.ajax({
+        url: 'trabalho/material/preview',
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            var modal = $('#modal-default');
+            modal.removeAttr('class');
+            modal.addClass('modal fade modal-material');
+            modal.find('.modal-body').html(data.material);
+            modal.modal('show');
+        }
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // Aparecer e ocultar mensagens flash session
     setTimeout(function() {
         $('.session-flash').fadeOut();

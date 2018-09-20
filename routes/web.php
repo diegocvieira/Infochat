@@ -103,6 +103,9 @@ Route::group(['prefix' => 'trabalho'], function() {
         Route::post('avaliar', 'AvaliarController@avaliar')->name('avaliar-trabalho');
 
         Route::get('favoritar/{id}', 'TrabalhoController@favoritar');
+
+        Route::get('material/preview', 'MaterialController@preview')->name('material-preview');
+        Route::get('material/create', 'MaterialController@create');
     });
 });
 
@@ -146,4 +149,4 @@ Route::group(['prefix' => 'recuperar-senha'], function() {
 
 
 
-Route::get('teste/teste', 'TrabalhoController@teste');
+Route::get('teste/teste', 'MaterialController@create');

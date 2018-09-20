@@ -1,0 +1,104 @@
+.modal-material {
+	.modal-dialog {
+		width: 90%;
+		margin: 0;
+        height: 500px;
+    }
+
+    .modal-body {
+        height: 100%;
+        padding: 0;
+    }
+
+	.modal-content {
+		width: 100%;
+		height: 100%;
+        text-align: left;
+        background-color: rgb(240, 240, 240);
+	}
+
+    .divulgar {
+        width: calc(100% - 700px);
+        float: left;
+
+        .download, .link {
+            float: left;
+            width: 100%;
+            padding: 40px 0 40px 40px;
+
+            &.link {
+                border-bottom: 1px solid rgb(220, 220, 220);
+            }
+
+            h2 {
+                margin: 0 0 15px 0;
+                font-size: 14.5px;
+                color: rgb(50, 50, 50);
+                font-weight: 700;
+            }
+
+            ol {
+                padding: 0 0 0 15px;
+
+                li {
+                    list-style: inherit;
+                    font-size: 14.5px;
+                    color: rgb(100, 100, 100);
+                }
+            }
+
+            button {
+                border-radius: 3px;
+                background-color: rgb(220, 220, 220);
+                width: 100px;
+                height: 40px;
+                font-size: 14.5px;
+                color: rgb(100, 100, 100);
+                font-weight: 700;
+            }
+        }
+    }
+
+    .images-preview {
+        float: right;
+        border: 1px solid red;
+        width: 700px;
+        height: 100%;
+
+        .preview {
+            float: left;
+            height: 100%;
+            width: calc(50% - 5px);
+            position: relative;
+
+            &:first-child {
+                margin-right: 5px;
+
+                span {
+                    color: #fff;
+                }
+            }
+
+            &:last-child {
+                margin-left: 5px;
+
+                span {
+                    color: #23418c;
+                }
+            }
+
+            img {
+                height: 100%;
+                width: 100%;
+                float: left;
+            }
+
+            span {
+                position: absolute;
+                top: 405px;
+                left: 130px;
+                font-family: 'AgencyFB';
+            }
+        }
+    }
+}
