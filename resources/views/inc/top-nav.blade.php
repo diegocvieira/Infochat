@@ -44,6 +44,10 @@
                             </li>
 
                             <li>
+                                <a href="{{ route('material-preview') }}" class="icon-material" id="open-material">Divulgar perfil</a>
+                            </li>
+
+                            <li>
                                 <a href="{{ route('get-usuario-config') }}" id="open-usuario-config" class="icon-conta">Configurações</a>
                             </li>
 

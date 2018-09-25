@@ -1,6 +1,12 @@
 <div class="divulgar">
     <div class="link">
         <h2>Divulgar link para o perfil</h2>
+
+        <span id="material-slug">infochat.com.br/{{ Auth::guard('web')->user()->trabalho->slug }}</span>
+
+        <button type="button" class="copy-link">copiar</button>
+
+        {!! Form::text('slug', 'infochat.com.br/' . Auth::guard('web')->user()->trabalho->slug, ['id' => 'input-material-slug']) !!}
     </div>
 
     <div class="download">
@@ -12,19 +18,18 @@
             <li>Cole no estabelecimento e divulgue</li>
         </ol>
 
-        {!! Form::select('size', ['' => ''] + $sizes, null, ['class' => 'selectpicker', 'title' => 'selecione aqui']) !!}
-        <button type="button">BAIXAR</button>
+        {!! Form::select('size', $sizes, null, ['class' => 'selectpicker material-size', 'title' => 'selecione aqui']) !!}
+
+        <button type="button" class="material-download">BAIXAR</button>
     </div>
 </div>
 
 <div class="images-preview">
-    <div class="preview">
-        <img src="{{ asset('img/material-divulgacao/preview/desktop_blue.jpg') }}" />
-        <span>diego</span>
-    </div>
+    @for($i = 1; $i <= 2; $i++)
+        <div class="preview">
+            <img src="/img/material-divulgacao/preview/{{ $i == 1 ? 'desktop_blue' : 'desktop_white' }}.jpg" />
 
-    <div class="preview">
-        <img src="{{ asset('img/material-divulgacao/preview/desktop_white.jpg') }}" />
-        <span>diego</span>
-    </div>
+            <span>{{ Auth::guard('web')->user()->trabalho->slug }}</span>
+        </div>
+    @endfor
 </div>

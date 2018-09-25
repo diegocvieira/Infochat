@@ -105,7 +105,7 @@ Route::group(['prefix' => 'trabalho'], function() {
         Route::get('favoritar/{id}', 'TrabalhoController@favoritar');
 
         Route::get('material/preview', 'MaterialController@preview')->name('material-preview');
-        Route::get('material/create', 'MaterialController@create');
+        Route::get('material/create/{folder}', 'MaterialController@create');
     });
 });
 
@@ -144,9 +144,3 @@ Route::group(['prefix' => 'recuperar-senha'], function() {
     Route::get('check/{token}', 'RecuperarSenhaController@check');
     Route::post('alterar', 'RecuperarSenhaController@alterar');
 });
-
-
-
-
-
-Route::get('teste/teste', 'MaterialController@create');

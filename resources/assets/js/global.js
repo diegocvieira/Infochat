@@ -1,53 +1,6 @@
 $(document).ready(function() {
     $('body').css('opacity', '1');
 
-
-
-
-
-
-    $.ajax({
-        url: 'trabalho/material/preview',
-        method: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            var modal = $('#modal-default');
-            modal.removeAttr('class');
-            modal.addClass('modal fade modal-material');
-            modal.find('.modal-body').html(data.material);
-            modal.modal('show');
-        }
-    });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // Aparecer e ocultar mensagens flash session
     setTimeout(function() {
         $('.session-flash').fadeOut();
@@ -192,6 +145,60 @@ $(document).ready(function() {
             $(this).prev().prev().removeClass('error');
             $(this).parent().removeClass('error');
         }
+    });
+
+    ////////////////////////////// MATERIAL //////////////////////////////
+
+    $(document).on('click', '#open-material', function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: $(this).attr('href'),
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                var modal = $('#modal-default');
+                modal.removeAttr('class');
+                modal.addClass('modal fade modal-material');
+                modal.find('.modal-body').html(data.material);
+                modal.modal('show');
+
+                $('.selectpicker').selectpicker('refresh');
+            }
+        });
+    });
+
+    $(document).on('click', '.material-download', function() {
+        var $this = $(this),
+            val = $('select.material-size').val();
+
+        if(val) {
+            $this.text('BAIXANDO').prop('disabled', true);
+
+            $.ajax({
+                url: 'trabalho/material/create/' + val,
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $this.text('BAIXAR').prop('disabled', false);
+
+                    window.location.assign(data.url);
+                }
+            });
+        }
+    });
+
+    $(document).on('click', '.copy-link', function() {
+        var slug = document.getElementById('input-material-slug');
+
+        slug.select();
+        document.execCommand('copy');
+
+        $(this).text('copiado');
+
+        setTimeout(function() {
+            $('.copy-link').text('copiar');
+        }, 5000);
     });
 
     ////////////////////////////// ASIDE (CATEGORIAS E CIDADE) //////////////////////////////

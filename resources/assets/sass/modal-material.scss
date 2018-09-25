@@ -1,9 +1,9 @@
 .modal-material {
 	.modal-dialog {
-		width: 90%;
+		width: 1200px;
 		margin: 0;
         height: 500px;
-    }
+	}
 
     .modal-body {
         height: 100%;
@@ -24,7 +24,7 @@
         .download, .link {
             float: left;
             width: 100%;
-            padding: 40px 0 40px 40px;
+            padding: 40px 0 40px 50px;
 
             &.link {
                 border-bottom: 1px solid rgb(220, 220, 220);
@@ -37,8 +37,32 @@
                 font-weight: 700;
             }
 
+			#input-material-slug {
+				position: relative;
+				left: -9999px;
+			}
+
+			#material-slug {
+				font-size: 14.5px;
+				color: rgb(100, 100, 100);
+			}
+
+			.copy-link {
+				font-size: 14.5px;
+				color: rgb(122, 162, 244);
+				background-image: url('../img/icon-copy.png');
+				background-color: transparent;
+				background-position: left;
+				background-size: contain;
+				background-repeat: no-repeat;
+				border: none;
+				margin-left: 20px;
+				padding-left: 25px;
+			}
+
             ol {
                 padding: 0 0 0 15px;
+				margin-bottom: 40px;
 
                 li {
                     list-style: inherit;
@@ -47,7 +71,30 @@
                 }
             }
 
-            button {
+			.bootstrap-select {
+				float: left !important;
+				width: 298px;
+
+				.btn {
+					line-height: 20px;
+					background-image: none;
+					color: rgb(100, 100, 100);
+					box-shadow: none;
+					font-size: 13.3px;
+					padding-left: 15px;
+					border: 1px solid rgb(255, 255, 255);
+					border-radius: 3px;
+					background-color: #fff;
+					width: 100%;
+					height: 38px;
+
+					&.dropdown-toggle {
+						outline: none !important;
+					}
+				}
+			}
+
+            .material-download {
                 border-radius: 3px;
                 background-color: rgb(220, 220, 220);
                 width: 100px;
@@ -55,13 +102,15 @@
                 font-size: 14.5px;
                 color: rgb(100, 100, 100);
                 font-weight: 700;
+				border: none;
+				float: left;
+				margin-left: 15px;
             }
         }
     }
 
     .images-preview {
-        float: right;
-        border: 1px solid red;
+        float: left;
         width: 700px;
         height: 100%;
 
@@ -88,17 +137,18 @@
             }
 
             img {
-                height: 100%;
                 width: 100%;
                 float: left;
+				height: 100%;
             }
 
             span {
                 position: absolute;
-                top: 405px;
-                left: 130px;
+                top: 402px;
+                left: 128px;
                 font-family: 'AgencyFB';
-            }
+				font-size: 20px;
+			}
         }
     }
 }
