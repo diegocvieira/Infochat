@@ -152,7 +152,7 @@
 
             <div class="form-group redes-sociais">
                 <div class="row social slug">
-                    {!! Form::text('slug', null, ['id' => 'slug', 'required']) !!}
+                    {!! Form::text('slug', null, ['id' => 'slug', 'placeholder' => '*', 'required']) !!}
                 </div>
 
                 @if(isset($trabalho) && count($trabalho->redes) > 0)
