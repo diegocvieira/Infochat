@@ -225,7 +225,7 @@
             background-image: url('../img/icon-lock.png');
             background-repeat: no-repeat;
             background-size: 20px;
-            height: 40px;
+            height: 60px;
             width: 40px;
             background-color: rgb(255, 255, 255);
             border-radius: 20px 0 0 20px;
@@ -235,7 +235,7 @@
             &+ input[type=text] {
                 border-radius: 0 20px 20px 0;
                 padding-left: 0;
-                width: calc(90% - 40px);
+                width: calc(100% - 210px);
             }
 
             &:hover > .balao {

@@ -76,8 +76,7 @@
         height: 100%;
         margin-right: 20px;
 
-        .nav-logged {
-            margin-right: 30%;
+        ul li {
             position: relative;
         }
 
@@ -127,7 +126,7 @@
             width: 200px;
             left: auto;
             height: auto;
-            padding: 10px 0 0 0;
+            padding: 10px 0;
             top: 60px;
 
             li {
