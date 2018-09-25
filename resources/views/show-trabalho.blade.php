@@ -30,7 +30,7 @@
         </div>
 
         <div class="info avaliacao">
-            <p>{{ $trabalho->calc_avaliacao($trabalho->id) }} avaliação da empresa</p>
+            <p>{{ $trabalho->calc_avaliacao($trabalho->id) }} avaliação do {{ $trabalho->tipoNome($trabalho->tipo) }}</p>
         </div>
 
         <div class="add-favoritos">
