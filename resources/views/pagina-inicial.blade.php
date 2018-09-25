@@ -15,7 +15,7 @@
                 @include('inc.abas-resultados')
             </div>
 
-            <div class="col-xs-5 chat">
+            <div class="col-xs-7 chat">
                 <div class="sem-selecao">
                     <img src="{{ asset('img/icon-logo.png') }}" alt="Selecione um profissional ou estabelecimento" />
 
@@ -25,10 +25,6 @@
                         <p>Acesse sua conta e selecione um profissional<br>ou estabelecimento para ser atendido</p>
                     @endif
                 </div>
-            </div>
-
-            <div class="col-xs-2">
-
             </div>
         </div>
     </div>

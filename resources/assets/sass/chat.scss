@@ -3,6 +3,7 @@
     height: 100%;
     position: relative;
     background-color: #fff;
+    width: calc(100% - 800px);
 
     .sem-selecao, .sem-mensagens {
         text-align: center;
@@ -113,7 +114,7 @@
     }
 
     .mensagens {
-        $height: calc(100% - 140px);
+        $height: calc(100% - 160px);
         float: left;
         width: 100%;
         height: $height;
@@ -215,7 +216,7 @@
     #form-enviar-msg {
         background-color: rgb(230, 230, 230);
         width: 100%;
-        height: 70px;
+        height: 90px;
         float: left;
         padding: 15px 0 15px 20px;
 
@@ -266,8 +267,8 @@
         input[type=text] {
             border-radius: 20px;
             background-color: rgb(255, 255, 255);
-            width: 90%;
-            height: 40px;
+            width: calc(100% - 170px);
+            height: 60px;
             font-size: 13.7px;
             color: #000;
             float: left;
@@ -279,9 +280,9 @@
             background-image: url('../img/icon-send.png');
             background-position: center;
             background-repeat: no-repeat;
-            background-size: 25px;
-            width: 10%;
-            height: 40px;
+            background-size: 45px;
+            width: 90px;
+            height: 60px;
             float: left;
             border: none;
             background-color: transparent;
