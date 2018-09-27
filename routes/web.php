@@ -26,7 +26,7 @@ Route::get('categorias/get/{area}', 'GlobalController@getCategorias');
 Route::get('areas/get/{tipo}', 'GlobalController@getAreas');
 
 // Aside categorias
-Route::get('aside/categorias/{slug}', 'GlobalController@asideCategorias');
+Route::get('aside/categorias/{slug}/{type}', 'GlobalController@asideCategorias');
 Route::get('aside/subcategorias/{slug}', 'GlobalController@asideSubcategorias');
 Route::get('aside/areas/{tipo}', 'GlobalController@asideAreas');
 Route::post('categorias/busca', 'GlobalController@buscaCategorias');

@@ -222,7 +222,7 @@ $(document).ready(function() {
             $('.aside-categorias').find('.cats').remove();
 
             $.ajax({
-                url: 'aside/categorias/' + $(this).data('search'),
+                url: 'aside/categorias/' + $(this).data('search') + '/' + $('#form-search-tipo').val(),
                 method: 'GET',
                 dataType:'json',
                 success: function(data) {

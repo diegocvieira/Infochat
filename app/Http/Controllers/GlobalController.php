@@ -106,10 +106,11 @@ class GlobalController extends Controller
         return json_encode(['subcategorias' => $subcategorias]);
     }
 
-    public function asideCategorias($slug)
+    public function asideCategorias($slug, $type)
     {
-        $categorias = Categoria::whereHas('area', function($q) use($slug) {
-                $q->where('slug', $slug);
+        $categorias = Categoria::whereHas('area', function($q) use($slug, $type) {
+                $q->where('slug', $slug)
+                    ->typeFilter($type);
             })
             ->where(DB::raw("(SELECT COUNT(*) FROM tags JOIN trabalhos WHERE trabalhos.id = tags.trabalho_id AND trabalhos.cidade_id = " . Cookie::get('sessao_cidade_id') . " AND tags.tag LIKE CONCAT('%', categorias.titulo, '%'))"), '>=', 1)
             ->orderBy('titulo', 'asc')
@@ -123,32 +124,20 @@ class GlobalController extends Controller
     public function asideSubcategorias($slug)
     {
         $subcategorias = Subcategoria::whereHas('categoria', function($q) use($slug) {
-            $q->where('slug', $slug);
-        })
-        ->where(DB::raw("(SELECT COUNT(*) FROM tags JOIN trabalhos WHERE trabalhos.id = tags.trabalho_id AND trabalhos.cidade_id = " . Cookie::get('sessao_cidade_id') . " AND tags.tag LIKE CONCAT('%', subcategorias.titulo, '%'))"), '>=', 1)
-        ->orderBy('titulo', 'asc')
-        ->select('titulo', 'slug')
-        ->distinct()
-        ->get();
+                $q->where('slug', $slug);
+            })
+            ->where(DB::raw("(SELECT COUNT(*) FROM tags JOIN trabalhos WHERE trabalhos.id = tags.trabalho_id AND trabalhos.cidade_id = " . Cookie::get('sessao_cidade_id') . " AND tags.tag LIKE CONCAT('%', subcategorias.titulo, '%'))"), '>=', 1)
+            ->orderBy('titulo', 'asc')
+            ->select('titulo', 'slug')
+            ->distinct()
+            ->get();
 
         return json_encode(['subcategorias' => $subcategorias]);
     }
 
-    public function asideAreas($tipo)
+    public function asideAreas($type)
     {
-        if($tipo == 'profissionais') {
-            $tipo = 1;
-        } else if($tipo == 'estabelecimentos') {
-            $tipo = 2;
-        } else {
-            $tipo = '';
-        }
-
-        if($tipo) {
-            $areas = Area::where('tipo', $tipo)->ordered()->get();
-        } else {
-            $areas = Area::ordered()->get();
-        }
+        $areas = Area::typeFilter($type)->ordered()->get();
 
         return json_encode(['areas' => $areas]);
     }
