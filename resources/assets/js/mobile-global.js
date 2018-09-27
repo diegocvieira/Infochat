@@ -1460,7 +1460,9 @@ $(document).ready(function() {
         });
 
         if(logged == true) {
-            interval = null;
+            if(typeof interval === 'undefined') {
+                interval = null;
+            }
 
             // Limpar setinterval anterior
             clearInterval(interval);
