@@ -70,14 +70,14 @@ class ChatController extends Controller
 
         if(Agent::isMobile()) {
             return response()->json([
-                'trabalho' => view('mobile.inc.chat', compact('destinatario', 'chat', 'tipo', 'destinatario_id', 'messages'))->render(),
+                'trabalho' => view('mobile.inc.chat', compact('destinatario', 'tipo', 'chat_id', 'destinatario_id', 'messages'))->render(),
                 'new_messages_trabalho' => $new_messages_trabalho,
                 'new_messages_pessoal' => $new_messages_pessoal,
                 'destinatario_slug' => $destinatario_slug
             ]);
         } else {
             return response()->json([
-                'trabalho' => view('inc.chat', compact('destinatario', 'chat', 'tipo', 'destinatario_id', 'messages'))->render(),
+                'trabalho' => view('inc.chat', compact('destinatario', 'tipo', 'chat_id', 'destinatario_id', 'messages'))->render(),
                 'new_messages_trabalho' => $new_messages_trabalho,
                 'new_messages_pessoal' => $new_messages_pessoal,
                 'destinatario_slug' => $destinatario_slug
@@ -130,21 +130,16 @@ class ChatController extends Controller
                     }
                 }
 
-                $chat = Chat::with(['messages' => function($q) use($logged_user) {
-                        $q->where('deleted', '!=', $logged_user)
-                            ->orWhereNull('deleted')
-                            ->limit(20)
-                            ->orderBy('id', 'desc');
-                    }])->find($chat_id);
+                $messages = app('App\Http\Controllers\MessageController')->list($chat_id, 1);
 
                 // Visualizar as mensagens
                 app('App\Http\Controllers\MessageController')->read($chat_id);
             }
 
             if(Agent::isMobile()) {
-                return view('mobile.show-chat-url', compact('palavra_chave', 'trabalhos', 'chat', 'tipo', 'destinatario', 'destinatario_id', 'header_desc', 'header_title'));
+                return view('mobile.show-chat-url', compact('palavra_chave', 'chat_id', 'trabalhos', 'messages', 'tipo', 'destinatario', 'destinatario_id', 'header_desc', 'header_title'));
             } else {
-                return view('show-chat-url', compact('palavra_chave', 'trabalhos', 'chat', 'tipo', 'destinatario', 'destinatario_id', 'header_desc', 'header_title'));
+                return view('show-chat-url', compact('palavra_chave', 'chat_id', 'trabalhos', 'messages', 'tipo', 'destinatario', 'destinatario_id', 'header_desc', 'header_title'));
             }
         } else {
             return view('errors.404');

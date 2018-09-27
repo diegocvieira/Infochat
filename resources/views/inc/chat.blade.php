@@ -52,7 +52,7 @@
 
     {!! Form::text('message', null, ['placeholder' => 'Digite uma mensagem']) !!}
 
-    {!! Form::hidden('chat_id', isset($messages) ? $messages->first()->chat_id : '') !!}
+    {!! Form::hidden('chat_id', isset($chat_id) ? $chat_id : '') !!}
 
     {!! Form::submit('', ['class' => 'button']) !!}
 {!! Form::close() !!}

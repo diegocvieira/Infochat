@@ -46,7 +46,7 @@
 {!! Form::open(['method' => 'post', 'action' => 'MessageController@send', 'id' => 'form-enviar-msg']) !!}
     {!! Form::text('message', null, ['autofocus', 'placeholder' => 'Digite aqui...', 'class' => !Auth::guard('web')->check() ? 'lock' : '']) !!}
 
-    {!! Form::hidden('chat_id', isset($messages) ? $messages->first()->chat_id : '') !!}
+    {!! Form::hidden('chat_id', isset($chat_id) ? $chat_id : '') !!}
 
     {!! Form::submit('', ['class' => 'button']) !!}
 {!! Form::close() !!}
