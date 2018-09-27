@@ -54,12 +54,7 @@ class ChatController extends Controller
                 }
             }
 
-            $chat = Chat::with(['messages' => function($q) use($logged_user) {
-                    $q->where('deleted', '!=', $logged_user)
-                        ->orWhereNull('deleted')
-                        ->limit(20)
-                        ->orderBy('id', 'desc');
-                }])->find($chat_id);
+            $messages = app('App\Http\Controllers\MessageController')->list($chat_id, 1);
 
             // Visualizar as mensagens
             app('App\Http\Controllers\MessageController')->read($chat_id);
@@ -75,14 +70,14 @@ class ChatController extends Controller
 
         if(Agent::isMobile()) {
             return response()->json([
-                'trabalho' => view('mobile.inc.chat', compact('destinatario', 'chat', 'tipo', 'destinatario_id'))->render(),
+                'trabalho' => view('mobile.inc.chat', compact('destinatario', 'chat', 'tipo', 'destinatario_id', 'messages'))->render(),
                 'new_messages_trabalho' => $new_messages_trabalho,
                 'new_messages_pessoal' => $new_messages_pessoal,
                 'destinatario_slug' => $destinatario_slug
             ]);
         } else {
             return response()->json([
-                'trabalho' => view('inc.chat', compact('destinatario', 'chat', 'tipo', 'destinatario_id'))->render(),
+                'trabalho' => view('inc.chat', compact('destinatario', 'chat', 'tipo', 'destinatario_id', 'messages'))->render(),
                 'new_messages_trabalho' => $new_messages_trabalho,
                 'new_messages_pessoal' => $new_messages_pessoal,
                 'destinatario_slug' => $destinatario_slug

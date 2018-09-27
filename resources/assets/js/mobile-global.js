@@ -1469,7 +1469,7 @@ $(document).ready(function() {
             interval = setInterval(function() {
                 if($('.chat').is(':visible')) {
                     $.ajax({
-                        url: 'mensagem/list/' + $('.chat').find('input[name=chat_id]').val() + '/0',
+                        url: 'mensagem/list/' + $('.chat').find('input[name=chat_id]').val() + '/0/true',
                         method: 'GET',
                         dataType: 'json',
                         success: function(data) {
@@ -1557,15 +1557,17 @@ $(document).ready(function() {
 
     // Scroll infinito nas mensagens do chat
     $(document).on('custom-scroll', '.chat .mensagens', function() {
-        if($(this).scrollTop() == 0) {
-            var div = $('.chat').find('.mensagens');
+        var btn = $('.load-more-messages');
 
+        if($(this).scrollTop() == 0 && btn.length) {
             $.ajax({
-                url: 'mensagem/list/' + $('.chat').find('input[name=chat_id]').val() + '/' + div.find('.msg').length,
+                url: 'mensagem/list/' + $('.chat').find('input[name=chat_id]').val() + '/' + btn.data('page'),
                 method: 'GET',
                 dataType:'json',
                 success: function(data) {
-                    div.prepend(data.mensagens);
+                    btn.remove();
+
+                    $('.chat').find('.mensagens').prepend(data.mensagens);
 
                     // Verifica se o nome do dia ja existe e o remove
                     var seen = {};

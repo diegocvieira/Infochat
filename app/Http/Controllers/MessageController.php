@@ -11,6 +11,7 @@ use DB;
 use Mail;
 use App\Chat;
 use App\BlockedUser;
+use Illuminate\Pagination\Paginator;
 
 class MessageController extends Controller
 {
@@ -84,17 +85,21 @@ class MessageController extends Controller
     }
 
     // Listar as mensagens do chat
-    public function list($id, $offset)
+    public function list($id, $page, $new_messages = null)
     {
+        Paginator::currentPageResolver(function() use ($page) {
+            return $page;
+        });
+
         $user_id = Auth::guard('web')->user()->id;
 
-        $chat = Chat::with(['messages' => function($q) use($offset, $user_id) {
-                $q->where('deleted', '!=', $user_id)
-                    ->orWhereNull('deleted')
-                    ->offset($offset)
-                    ->limit(20)
-                    ->orderBy('id', 'desc');
-            }])->find($id);
+        $messages = Message::where(function($query) use($user_id) {
+                $query->where('deleted', '!=', $user_id)
+                    ->orWhereNull('deleted');
+            })
+            ->where('chat_id', $id)
+            ->orderBy('id', 'desc')
+            ->paginate(20);
 
         $last_msg = Message::where('chat_id', $id)
             ->where('user_id', '!=', $user_id)
@@ -102,13 +107,17 @@ class MessageController extends Controller
             ->orderBy('id', 'desc')
             ->first();
 
-        // Visualizar as mensagens
-        $this->read($chat->id);
+        // Read messages
+        $this->read($id);
 
-        return response()->json([
-            'mensagens' => view('inc.list-mensagens-chat', compact('chat'))->render(),
-            'last_msg' => isset($last_msg) ? $last_msg->message : ''
-        ]);
+        if($page == 1 && !$new_messages) {
+            return $messages;
+        } else {
+            return response()->json([
+                'mensagens' => view('inc.list-mensagens-chat', compact('messages'))->render(),
+                'last_msg' => isset($last_msg) ? $last_msg->message : ''
+            ]);
+        }
     }
 
     // Ler mensagens

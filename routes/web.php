@@ -73,7 +73,7 @@ Route::group(['prefix' => 'mensagem'], function() {
         // Enviar
         Route::post('send', 'MessageController@send');
         // Listar mensagens do chat
-        Route::get('list/{id}/{offset}', 'MessageController@list');
+        Route::get('list/{id}/{page}/{new_messages?}', 'MessageController@list');
         // Finalizar chat
         Route::get('chat/close/{id}', 'ChatController@close')->name('close-chat');
         // Retomar chat
