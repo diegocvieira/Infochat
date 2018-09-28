@@ -552,11 +552,33 @@ $(document).ready(function() {
                      modal.length ? modal.find('li').remove() : $('#form-busca-cidade').append("<div id='modal-busca-cidade'><ul></ul></div>");
 
                      $(data.cidades).each(function(index, element) {
-                         $('#modal-busca-cidade').find('ul').append("<li><a href='/cidades/set/" + element.id + "'>" + element.title + ' - ' + element.estado.letter + "</a></li>");
+                         $('#modal-busca-cidade').find('ul').append("<li><a class='change-city' href='/cidades/set/" + element.id + "'>" + element.title + ' - ' + element.estado.letter + "</a></li>");
                      });
                  }
              });
          }
+
+         return false;
+     });
+
+     $(document).on('click', '.change-city', function(e) {
+         e.preventDefault();
+
+         $.ajax({
+             url: $(this).attr('href'),
+             method: 'GET',
+             dataType: 'json',
+             success: function (data) {
+                 if(data.status) {
+                     window.location = '/';
+                 } else {
+                     var modal = $('#modal-alert');
+                     modal.find('.modal-body').html('Ainda não estamos operando nesta cidade.' + "<br>" + 'Volte outro dia, estamos trabalhando para levar o infochat para o mundo todo.');
+                     modal.find('.modal-footer .btn').text('OK');
+                     modal.modal('show');
+                 }
+             }
+         });
 
          return false;
      });
