@@ -40,16 +40,18 @@
 
                         <ul class="dropdown-menu">
                             <li>
+                                <a href="{{ route('get-usuario-config') }}" id="open-usuario-config" class="icon-conta">Perfil de usuário</a>
+                            </li>
+
+                            <li>
                                 <a href="{{ action('TrabalhoController@getConfig') }}" class="icon-perfil-trabalho" id="open-trabalho-config">Perfil de trabalho</a>
                             </li>
 
-                            <li>
-                                <a href="{{ route('material-preview') }}" class="icon-material" id="open-material">Divulgar perfil</a>
-                            </li>
-
-                            <li>
-                                <a href="{{ route('get-usuario-config') }}" id="open-usuario-config" class="icon-conta">Configurações</a>
-                            </li>
+                            @if(Auth::guard('web')->user()->trabalho && Auth::guard('web')->user()->trabalho->status)
+                                <li>
+                                    <a href="{{ route('material-preview') }}" class="icon-material" id="open-material">Divulgar perfil</a>
+                                </li>
+                            @endif
 
                             <li>
                                 <a href="{{ route('usuario-logout') }}" class="icon-logout">Sair</a>
