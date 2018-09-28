@@ -222,8 +222,10 @@ class TrabalhoController extends Controller
                     continue;
                 }
 
-                $trabalhos = $trabalhos->where('nome', 'LIKE', '%' . $palavra_cada . '%')->orWhereHas('tags', function($q) use($palavra_cada) {
-                    $q->where('tag', 'LIKE', '%' . $palavra_cada . '%');
+                $trabalhos = $trabalhos->where(function($q) use($palavra_cada) {
+                    $q->where('nome', 'LIKE', '%' . $palavra_cada . '%')->orWhereHas('tags', function($q) use($palavra_cada) {
+                            $q->where('tag', 'LIKE', '%' . $palavra_cada . '%');
+                        });
                 });
             }
         }
