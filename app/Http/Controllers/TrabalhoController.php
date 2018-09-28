@@ -83,7 +83,7 @@ class TrabalhoController extends Controller
 
             if(!$cidade) {
                 $return['msg'] = 'Não identificamos a sua cidade, confira o nome e tente novamente. Se o problema persistir, entre em contato conosco.';
-            } else if($cidade && $cidade->id != 4927) {
+            } else if($cidade && !in_array($cidade->id, _openCitys())) {
                 $return['msg'] = 'Ainda não estamos operando nesta cidade.' . "<br>" . 'Volte outro dia, estamos trabalhando para levar o infochat para o mundo todo.';
             } else {
                 $trabalho->cidade_id = $cidade->id;
@@ -222,8 +222,10 @@ class TrabalhoController extends Controller
                     continue;
                 }
 
-                $trabalhos = $trabalhos->where('nome', 'LIKE', '%' . $palavra_cada . '%')->orWhereHas('tags', function($q) use($palavra_cada) {
-                    $q->where('tag', 'LIKE', '%' . $palavra_cada . '%');
+                $trabalhos = $trabalhos->where(function($q) use($palavra_cada) {
+                    $q->where('nome', 'LIKE', '%' . $palavra_cada . '%')->orWhereHas('tags', function($q) use($palavra_cada) {
+                            $q->where('tag', 'LIKE', '%' . $palavra_cada . '%');
+                        });
                 });
             }
         }
@@ -376,37 +378,6 @@ class TrabalhoController extends Controller
 
     public function teste()
     {
-        /*for($i = 1; $i <= 2; $i++) {
-            $image = new \Imagick(resource_path('assets/img/material-divulgacao/' . $i . '.png'));
-            $draw = new \ImagickDraw();
-
-            /* Font properties */
-            /*$draw->setFillColor('black');
-            $draw->setFont('Bookman-DemiItalic');
-            $draw->setFontSize(30);
-
-            /* Create text */
-            //$image->annotateImage($draw, 10, 45, 0, 'The quick brown fox jumps over the lazy dog');
-
-            /* Output the image with headers */
-            //header('Content-type: image/png');
-
-            //echo $image;
-
-            //$path = 'material-divulgacao/' . Auth::guard('web')->user()->id;
-
-            //if(!is_dir($path)) {
-                //mkdir($path, 0777, true);
-            //}
-
-            //$image->writeImage($path . '/' . $i . '.png');
-        //}
-
-        \Mail::send('emails.nova_mensagem', [], function($q) {
-            $q->from('no-reply@infochat.com.br', 'Infochat');
-            $q->to('diegovc10@hotmail.com')->subject('Teste hotmail');
-        });
-
         /*$mensagem = Mensagem::selectRaw("CONCAT(FLOOR(sum(diferenca)/60),'h',MOD(sum(diferenca),60),'m') as tempo")
     ->whereIn('id', function($query) {
      $query->selectRaw('TIMESTAMPDIFF(MINUTE, m1.created_at, min(m2.created_at)) as diferenca')

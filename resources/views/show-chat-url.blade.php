@@ -15,12 +15,8 @@
                 @include('inc.abas-resultados')
             </div>
 
-            <div class="col-xs-5 chat">
+            <div class="col-xs-7 chat">
                 @include('inc.chat')
-            </div>
-
-            <div class="col-xs-2">
-
             </div>
         </div>
     </div>

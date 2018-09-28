@@ -26,7 +26,7 @@ Route::get('categorias/get/{area}', 'GlobalController@getCategorias');
 Route::get('areas/get/{tipo}', 'GlobalController@getAreas');
 
 // Aside categorias
-Route::get('aside/categorias/{slug}', 'GlobalController@asideCategorias');
+Route::get('aside/categorias/{slug}/{type}', 'GlobalController@asideCategorias');
 Route::get('aside/subcategorias/{slug}', 'GlobalController@asideSubcategorias');
 Route::get('aside/areas/{tipo}', 'GlobalController@asideAreas');
 Route::post('categorias/busca', 'GlobalController@buscaCategorias');
@@ -73,7 +73,7 @@ Route::group(['prefix' => 'mensagem'], function() {
         // Enviar
         Route::post('send', 'MessageController@send');
         // Listar mensagens do chat
-        Route::get('list/{id}/{offset}', 'MessageController@list');
+        Route::get('list/{id}/{page}/{new_messages?}', 'MessageController@list');
         // Finalizar chat
         Route::get('chat/close/{id}', 'ChatController@close')->name('close-chat');
         // Retomar chat
@@ -103,6 +103,9 @@ Route::group(['prefix' => 'trabalho'], function() {
         Route::post('avaliar', 'AvaliarController@avaliar')->name('avaliar-trabalho');
 
         Route::get('favoritar/{id}', 'TrabalhoController@favoritar');
+
+        Route::get('material/preview', 'MaterialController@preview')->name('material-preview');
+        Route::get('material/create/{folder}', 'MaterialController@create');
     });
 });
 
@@ -141,9 +144,3 @@ Route::group(['prefix' => 'recuperar-senha'], function() {
     Route::get('check/{token}', 'RecuperarSenhaController@check');
     Route::post('alterar', 'RecuperarSenhaController@alterar');
 });
-
-
-
-
-
-Route::get('teste/teste', 'TrabalhoController@teste');

@@ -3,6 +3,7 @@
     height: 100%;
     position: relative;
     background-color: #fff;
+    width: calc(100% - 800px);
 
     .sem-selecao, .sem-mensagens {
         text-align: center;
@@ -120,7 +121,7 @@
         min-height: $height;
         max-height: $height;
         overflow: auto;
-        padding: 0 30px;
+        padding: 0 100px;
         margin: 60px 0 10px 0;
 
         .error-msg {
@@ -234,7 +235,7 @@
             &+ input[type=text] {
                 border-radius: 0 20px 20px 0;
                 padding-left: 0;
-                width: calc(90% - 40px);
+                width: calc(100% - 110px);
             }
 
             &:hover > .balao {
@@ -266,7 +267,7 @@
         input[type=text] {
             border-radius: 20px;
             background-color: rgb(255, 255, 255);
-            width: 90%;
+            width: calc(100% - 70px);
             height: 40px;
             font-size: 13.7px;
             color: #000;
@@ -280,7 +281,7 @@
             background-position: center;
             background-repeat: no-repeat;
             background-size: 25px;
-            width: 10%;
+            width: 70px;
             height: 40px;
             float: left;
             border: none;

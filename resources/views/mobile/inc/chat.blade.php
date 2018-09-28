@@ -33,7 +33,7 @@
 </div>
 
 <div class="mensagens">
-    @if(isset($chat) && count($chat->messages) > 0)
+    @if(isset($messages) && count($messages) > 0)
         @include('inc.list-mensagens-chat')
     @else
         <div class="sem-mensagens">
@@ -46,7 +46,7 @@
 {!! Form::open(['method' => 'post', 'action' => 'MessageController@send', 'id' => 'form-enviar-msg']) !!}
     {!! Form::text('message', null, ['autofocus', 'placeholder' => 'Digite aqui...', 'class' => !Auth::guard('web')->check() ? 'lock' : '']) !!}
 
-    {!! Form::hidden('chat_id', isset($chat) ? $chat->id : '') !!}
+    {!! Form::hidden('chat_id', isset($chat_id) ? $chat_id : '') !!}
 
     {!! Form::submit('', ['class' => 'button']) !!}
 {!! Form::close() !!}

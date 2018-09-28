@@ -45,6 +45,11 @@ a, a:hover, a:active, a:focus {
     src: url('/fonts/KeepCalm.ttf') format('truetype');
 }
 
+@font-face {
+    font-family: 'AgencyFB';
+    src: url('/fonts/AgencyFB-Bold.ttf') format('truetype');
+}
+
 .session-flash {
     padding: 20px;
     background-color: rgb(67, 176, 42);
@@ -296,3 +301,4 @@ a, a:hover, a:active, a:focus {
 @import 'termos.scss';
 @import 'recuperar-senha.scss';
 @import 'errors.scss';
+@import 'modal-material.scss';

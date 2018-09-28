@@ -386,7 +386,7 @@ $(document).ready(function() {
              $('.aside-categorias').find('.cats').remove();
 
              $.ajax({
-                 url: 'aside/categorias/' + $(this).data('search'),
+                 url: 'aside/categorias/' + $(this).data('search') + '/' + $('#form-search-tipo').val(),
                  method: 'GET',
                  dataType:'json',
                  success: function(data) {
@@ -552,11 +552,33 @@ $(document).ready(function() {
                      modal.length ? modal.find('li').remove() : $('#form-busca-cidade').append("<div id='modal-busca-cidade'><ul></ul></div>");
 
                      $(data.cidades).each(function(index, element) {
-                         $('#modal-busca-cidade').find('ul').append("<li><a href='/cidades/set/" + element.id + "'>" + element.title + ' - ' + element.estado.letter + "</a></li>");
+                         $('#modal-busca-cidade').find('ul').append("<li><a class='change-city' href='/cidades/set/" + element.id + "'>" + element.title + ' - ' + element.estado.letter + "</a></li>");
                      });
                  }
              });
          }
+
+         return false;
+     });
+
+     $(document).on('click', '.change-city', function(e) {
+         e.preventDefault();
+
+         $.ajax({
+             url: $(this).attr('href'),
+             method: 'GET',
+             dataType: 'json',
+             success: function (data) {
+                 if(data.status) {
+                     window.location = '/';
+                 } else {
+                     var modal = $('#modal-alert');
+                     modal.find('.modal-body').html('Ainda não estamos disponíveis nesta cidade.' + "<br>" + 'Volte outro dia.');
+                     modal.find('.modal-footer .btn').text('OK');
+                     modal.modal('show');
+                 }
+             }
+         });
 
          return false;
      });
@@ -1460,7 +1482,9 @@ $(document).ready(function() {
         });
 
         if(logged == true) {
-            interval = null;
+            if(typeof interval === 'undefined') {
+                interval = null;
+            }
 
             // Limpar setinterval anterior
             clearInterval(interval);
@@ -1469,7 +1493,7 @@ $(document).ready(function() {
             interval = setInterval(function() {
                 if($('.chat').is(':visible')) {
                     $.ajax({
-                        url: 'mensagem/list/' + $('.chat').find('input[name=chat_id]').val() + '/0',
+                        url: 'mensagem/list/' + $('.chat').find('input[name=chat_id]').val() + '/0/true',
                         method: 'GET',
                         dataType: 'json',
                         success: function(data) {
@@ -1557,15 +1581,17 @@ $(document).ready(function() {
 
     // Scroll infinito nas mensagens do chat
     $(document).on('custom-scroll', '.chat .mensagens', function() {
-        if($(this).scrollTop() == 0) {
-            var div = $('.chat').find('.mensagens');
+        var btn = $('.load-more-messages');
 
+        if($(this).scrollTop() == 0 && btn.length) {
             $.ajax({
-                url: 'mensagem/list/' + $('.chat').find('input[name=chat_id]').val() + '/' + div.find('.msg').length,
+                url: 'mensagem/list/' + $('.chat').find('input[name=chat_id]').val() + '/' + btn.data('page'),
                 method: 'GET',
                 dataType:'json',
                 success: function(data) {
-                    div.prepend(data.mensagens);
+                    btn.remove();
+
+                    $('.chat').find('.mensagens').prepend(data.mensagens);
 
                     // Verifica se o nome do dia ja existe e o remove
                     var seen = {};

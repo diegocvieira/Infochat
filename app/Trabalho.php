@@ -123,15 +123,6 @@ class Trabalho extends Model
         }
     }
 
-    public function scopeFiltroPalavraChave($query, $palavra_chave)
-    {
-        if($palavra_chave && $palavra_chave != 'area') {
-            return $query->where('nome', 'LIKE', '%' . $palavra_chave . '%')->orWhereHas('tags', function($q) use($palavra_chave) {
-                $q->where('tag', 'LIKE', '%' . $palavra_chave . '%');
-            });
-        }
-    }
-
     public function scopeFiltroRandom($query)
     {
         return $query->inRandomOrder();
@@ -170,11 +161,14 @@ class Trabalho extends Model
 
     public function scopeFiltroCidade($query)
     {
-        return $query->where('cidade_id', Cookie::get('sessao_cidade_id'));
+        return $query->where(function($q) {
+            $q->where('cidade_id', Cookie::get('sessao_cidade_id'))
+                ->orWhere('trabalhos.id', '<', '101');
+        });
     }
 
     public function scopeFiltroStatus($query)
     {
-        return $query->where('status', 1);
+        return $query->where('status', '1');
     }
 }

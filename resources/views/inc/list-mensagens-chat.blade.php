@@ -2,7 +2,7 @@
     $dia = '';
     $id = '';
 ?>
-@foreach(array_reverse($chat->messages->all()) as $mensagem)
+@foreach(array_reverse($messages->all()) as $mensagem)
     @if(diaSemana($mensagem->created_at) != $dia)
         <?php $dia = diaSemana($mensagem->created_at); ?>
 
@@ -21,3 +21,7 @@
 
     <?php $id = $mensagem->user_id; ?>
 @endforeach
+
+@if($messages->currentPage() < $messages->lastPage())
+    <button class="load-more-messages" data-page="{{ $messages->currentPage() + 1 }}" style="display: none;"></button>
+@endif

@@ -15,7 +15,7 @@
                 @include('inc.abas-resultados')
             </div>
 
-            <div class="col-xs-5 chat">
+            <div class="col-xs-7 chat">
                 <div class="sem-selecao">
                     <img src="{{ asset('img/icon-logo.png') }}" alt="Selecione um profissional ou estabelecimento" />
 
@@ -26,23 +26,6 @@
                     @endif
                 </div>
             </div>
-
-            <div class="col-xs-2">
-
-            </div>
         </div>
     </div>
 @endsection
-
-@if(session('session_flash_cidade_fechada'))
-    @section('script')
-        <script>
-            $(function() {
-                var modal = $('#modal-alert');
-                modal.find('.modal-body').html('Ainda não estamos operando nesta cidade.' + "<br>" + 'Volte outro dia, estamos trabalhando para levar o infochat para o mundo todo.');
-                modal.find('.modal-footer .btn').text('OK');
-                modal.modal('show');
-            });
-        </script>
-    @endsection
-@endif

@@ -26,6 +26,21 @@
         padding: 0;
     }
 
+    // Logo
+    .col-xs-2 {
+        width: 320px;
+    }
+
+    // Search
+    .col-xs-3 {
+        width: 480px;
+    }
+
+    // Menu
+    .col-xs-7 {
+        width: calc(100% - 800px);
+    }
+
     #form-search {
         width: 100%;
         float: left;
@@ -76,8 +91,7 @@
         height: 100%;
         margin-right: 20px;
 
-        .nav-logged {
-            margin-right: 30%;
+        ul li {
             position: relative;
         }
 
@@ -127,7 +141,7 @@
             width: 200px;
             left: auto;
             height: auto;
-            padding: 10px 0 0 0;
+            padding: 10px 0;
             top: 60px;
 
             li {
@@ -148,7 +162,7 @@
                     line-height: normal;
 
                     &.icon-conta {
-                        background-image: url('../img/icon-settings.png');
+                        background-image: url('../img/icon-profile.png');
                     }
 
                     &.icon-perfil-trabalho {
@@ -157,6 +171,10 @@
 
                     &.icon-logout {
                         background-image: url('../img/icon-logout.png');
+                    }
+
+                    &.icon-material {
+                        background-image: url('../img/icon-mega.png');
                     }
                 }
             }

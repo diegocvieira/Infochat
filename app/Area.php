@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
@@ -20,5 +21,20 @@ class Area extends Model
                     ->distinct()
                     ->orderByRaw("FIELD(titulo, 'Outros'), 'titulo' ASC")
                     ->orderBy('titulo', 'ASC');
+    }
+
+    public function scopeTypeFilter($query, $type)
+    {
+        if($type == 'profissionais') {
+            $type = 1;
+        } else if($type == 'estabelecimentos') {
+            $type = 2;
+        } else {
+            $type = '';
+        }
+
+        if($type) {
+            return $query->where('tipo', $type);
+        }
     }
 }

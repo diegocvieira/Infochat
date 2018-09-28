@@ -22,7 +22,7 @@
     </div>
 
     <div class="info avaliacao">
-        <p>{{ $trabalho->calc_avaliacao($trabalho->id) }} avaliação da empresa</p>
+        <p>{{ $trabalho->calc_avaliacao($trabalho->id) }} avaliação do {{ $trabalho->tipoNome($trabalho->tipo) }}</p>
     </div>
 
     <div class="add-favoritos">
@@ -129,7 +129,7 @@
         {!! Form::hidden('trabalho_id', $trabalho->id) !!}
 
         <div class="nota">
-            <p>Avalie este usuário</p>
+            <p>Avaliação do {{ $trabalho->tipoNome($trabalho->tipo) }}</p>
 
             @for($q = 1; $q <= 5; $q++)
                 {!! Form::radio('nota', $q, @!empty($q == $avaliacao_usuario->nota), ['id' => 'nota' . $q, 'required']) !!}
