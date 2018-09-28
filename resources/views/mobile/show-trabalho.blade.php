@@ -55,19 +55,31 @@
 
 <div class="informacoes aba-aberta">
     <div class="group endereco">
-        <p>
-            {{ $trabalho->logradouro }}, {{ $trabalho->numero }}
+        @if($trabalho->logradouro)
+            <p>
+                {{ $trabalho->logradouro }}, {{ $trabalho->numero }}
 
-            @if($trabalho->complemento)
-                - {{ $trabalho->complemento }}
+                @if($trabalho->complemento)
+                    - {{ $trabalho->complemento }}
+                @endif
+            </p>
+        @endif
+
+        <p>
+            @if($trabalho->bairro)
+                {{ $trabalho->bairro }} -
             @endif
+
+            {{ $trabalho->cidade->title }}/{{ $trabalho->cidade->estado->letter }} - Brasil
         </p>
 
-        <p>{{ $trabalho->bairro }} - {{ $trabalho->cidade->title }}/{{ $trabalho->cidade->estado->letter }} - Brasil</p>
+        @if($trabalho->cep)
+            <p>{{ $trabalho->cep }}</p>
+        @endif
 
-        <p>{{ $trabalho->cep }}</p>
-
-        <a class="ver-no-mapa" href="//maps.google.com/?q={{ $trabalho->logradouro }}, {{ $trabalho->numero }}, {{ $trabalho->bairro }}, {{ $trabalho->cidade->title }}, {{ $trabalho->cidade->estado->letter }}" target="_blanck">ver no mapa</a>
+        @if($trabalho->logradouro && $trabalho->numero && $trabalho->bairro)
+            <a class="ver-no-mapa" href="//maps.google.com/?q={{ $trabalho->logradouro }}, {{ $trabalho->numero }}, {{ $trabalho->bairro }}, {{ $trabalho->cidade->title }}, {{ $trabalho->cidade->estado->letter }}" target="_blanck">ver no mapa</a>
+        @endif
     </div>
 
     @if(count($trabalho->telefones) > 0)
