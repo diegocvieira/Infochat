@@ -409,7 +409,7 @@ $(document).ready(function() {
                     window.location = '/';
                 } else {
                     var modal = $('#modal-alert');
-                    modal.find('.modal-body').html('Ainda não estamos operando nesta cidade.' + "<br>" + 'Volte outro dia, estamos trabalhando para levar o infochat para o mundo todo.');
+                    modal.find('.modal-body').html('Ainda não estamos disponíveis nesta cidade.' + "<br>" + 'Volte outro dia.');
                     modal.find('.modal-footer .btn').text('OK');
                     modal.modal('show');
                 }
