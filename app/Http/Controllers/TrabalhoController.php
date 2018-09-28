@@ -83,7 +83,7 @@ class TrabalhoController extends Controller
 
             if(!$cidade) {
                 $return['msg'] = 'Não identificamos a sua cidade, confira o nome e tente novamente. Se o problema persistir, entre em contato conosco.';
-            } else if($cidade && $cidade->id != 4927) {
+            } else if($cidade && !in_array($cidade->id, _openCitys())) {
                 $return['msg'] = 'Ainda não estamos operando nesta cidade.' . "<br>" . 'Volte outro dia, estamos trabalhando para levar o infochat para o mundo todo.';
             } else {
                 $trabalho->cidade_id = $cidade->id;
