@@ -10,7 +10,7 @@ use Validator;
 
 class ClaimedController extends Controller
 {
-    public function createToken()
+    public function createToken($email)
     {
         // Token generate
         $token = hash('sha256', random_bytes(32));
