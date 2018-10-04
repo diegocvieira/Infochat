@@ -32,14 +32,36 @@
                 </tr>
 
                 <tr>
+                    <td style="background-color: #fff; padding: 40px 50px 0 50px;">
+                        @if($client['image'])
+                            <img src="{{ asset('uploads/' . $client['id'] . '/' . _getOriginalImage($client['image'])) }}" style="float: left; width: 38px; height: 38px; object-fit: cover;" />
+                        @else
+                            <span style="float: left; width: 38px; text-align: center; height: 38px; border: 1px solid rgb(230, 230, 230);">
+                                <img src="{{ asset('img/paisagem.png') }}" style="width: 18px; height: 18px; position: relative; top: 50%; transform: translateY(-50%);" />
+                            </span>
+                        @endif
+
+                        <span style="float: left; margin: 10px 0 0 10px; cursor: default; font-weight: 700; font-size: 16.6; color: rgb(100, 100, 100);">
+                            {{ $client['name'] }}
+                        </span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="background-color: #fff; padding: 0 50px 30px 50px;">
+                        <span style="display: block; border-bottom: 1px solid rgb(235, 235, 235); padding: 0 0 50px 0; cursor: default; margin: 10px 0; font-size: 14.5; color: rgb(150, 150, 150);">{{ $client['message'] }}</span>
+                    </td>
+                </tr>
+
+                <tr>
                     <td style="background-color: #fff; padding: 0 50px;">
-                        <span style="display: block; cursor: default; margin: 10px 0; font-size: 16.6; color: rgb(100, 100, 100);">Para visualizar clique no botão abaixo ou acesse sua conta em <a href="{{ url('/') }}" style="color: rgb(118, 145, 198);">infochat.com.br</a></span>
+                        <span style="display: block; cursor: default; margin: 10px 0; font-size: 16.6; color: rgb(100, 100, 100);">Para responder clique no botão abaixo ou acesse sua conta em <a href="{{ url('/') }}" style="color: rgb(118, 145, 198);">infochat.com.br</a></span>
                     </td>
                 </tr>
 
                 <tr>
                     <td style="background-color: #fff; padding: 0 50px 40px 50px;">
-                        <a href="{{ url('/') }}" style="float: left; font-weight: 700; border-radius: 20px; cursor: pointer; font-size: 14.5; margin-top: 10px; background-color: rgb(241, 240, 240); color: rgb(100, 100, 100); padding: 13px 40px;">VER MENSAGEM</a>
+                        <a href="{{ url('/') }}" style="float: left; font-weight: 700; border-radius: 25px; cursor: pointer; font-size: 14.5; margin-top: 10px; background-color: rgb(241, 240, 240); color: rgb(100, 100, 100); padding: 13px 25px;">RESPONDER CLIENTE</a>
                     </td>
                 </tr>
             </table>

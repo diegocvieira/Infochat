@@ -67,10 +67,25 @@ class MessageController extends Controller
                     if($check) {
                         $email = $check->from_id == $user_logged ? $check->user_to->email : $check->user_from->email;
 
-                        Mail::send('emails.nova_mensagem', [], function($q) use($email) {
-                            $q->from('no-reply@infochat.com.br', 'Infochat');
-                            $q->to($email)->subject('Nova mensagem');
-                        });
+                        $client['name'] = Auth::guard('web')->user()->nome;
+                        $client['image'] = Auth::guard('web')->user()->imagem;
+                        $client['message'] = $request->message;
+                        $client['id'] = $user_logged;
+
+                        if($chat->from_id == $user_logged && !$chat->user_to->claimed) {
+                            $claimed_url = url('/') . '/reivindicar-conta/check/' . app('App\Http\Controllers\ClaimedController')->createToken();
+                            $work_url = route('show-chat', $chat->user_to->trabalho->slug);
+
+                            Mail::send('emails.new_message_claimed', ['client' => $client, 'work_url' => $work_url, 'claimed_url' => $claimed_url], function($q) use($email) {
+                                $q->from('no-reply@infochat.com.br', 'Infochat');
+                                $q->to($email)->subject('Nova mensagem');
+                            });
+                        } else {
+                            Mail::send('emails.new_message', ['client' => $client], function($q) use($email) {
+                                $q->from('no-reply@infochat.com.br', 'Infochat');
+                                $q->to($email)->subject('Nova mensagem');
+                            });
+                        }
                     }
                 } else {
                     $return['status'] = 2;

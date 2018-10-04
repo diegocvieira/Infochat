@@ -10,11 +10,13 @@
         {!! Form::open(['method' => 'post', 'id' => 'form-recuperar-senha', 'action' => 'RecuperarSenhaController@alterar']) !!}
             {!! Form::hidden('email', $email) !!}
 
-            <p>Cadastre uma senha nova.</p>
+            <h1>Recuperar acesso</h1>
 
-            {!! Form::input('password', 'password', null, ['required', 'placeholder' => 'senha']) !!}
+            <p>Cadastre uma nova senha abaixo</p>
 
-            {!! Form::input('password', 'password_confirmation', null, ['required', 'placeholder' => 'confirmar senha']) !!}
+            {!! Form::input('password', 'password', null, ['required', 'placeholder' => 'Senha']) !!}
+
+            {!! Form::input('password', 'password_confirmation', null, ['required', 'placeholder' => 'Repetir senha']) !!}
 
             {!! Form::submit('Enviar') !!}
 

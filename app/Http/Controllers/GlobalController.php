@@ -149,4 +149,137 @@ class GlobalController extends Controller
 
         return json_encode(['areas' => $areas]);
     }
+
+    public function automaticRegister(Request $request)
+    {
+        $file_name = $request->file->getClientOriginalName();
+        $request->file->move(public_path(), $file_name);
+
+        if(($handle = fopen(public_path() . '/' . $file_name, 'r')) !== FALSE) {
+            while(($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
+                $user = new \App\User;
+                $user->nome = $data[0];
+                $user->email = $data[1];
+                $user->password = bcrypt(time() . rand(0, 99999));
+                $user->claimed = 0;
+                $user->save();
+
+                $work = new Trabalho;
+                $work->user_id = $user->id;
+                $work->tipo = $request->type;
+                $work->nome = $data[0];
+                $work->cidade_id = 4927;
+                $work->status = 1;
+                $work->area_id = $request->area;
+                $work->slug = str_slug($data[0], '-');
+                $work->save();
+
+                $work->tags()->create(['tag' => $request->categorie]);
+            }
+
+            fclose($handle);
+
+            unlink(public_path() . '/' . $file_name);
+        }
+    }
+
+    public function automaticEmails(Request $request)
+    {
+        $tag = $request->categorie;
+        $message = $request->message;
+
+        $works = Trabalho::whereHas('tags', function($q) use($tag) {
+                $q->where('tag', $tag);
+            })
+            ->whereHas('user', function($q) use($tag) {
+                $q->where('claimed', 0);
+            })
+            ->get();
+
+        foreach($works as $work) {
+            $token = hash('sha256', random_bytes(32));
+
+            $pr = new \App\PasswordReset;
+            $pr->email = $work->user->email;
+            $pr->token = $token;
+            $pr->created_at = date('Y-m-d H:i:s');
+            $pr->save();
+
+            $url = url('/') . '/recuperar-senha/check/' . $token;
+
+            \Mail::send('emails.nova_mensagem', ['url' => $url, 'message' => $message], function($q) use($work) {
+                $q->from('no-reply@infochat.com.br', 'Infochat');
+                $q->to($work->user->email)->subject('Nova mensagem');
+            });
+        }
+    }
+
+    public function automaticImages(Request $request)
+    {
+        foreach($request->images as $key_image => $image) {
+            foreach($request->emails as $key_email => $email) {
+                if($key_image == $key_email) {
+                    $work = Trabalho::whereHas('user', function($q) use($email) {
+                        $q->where('email', $email);
+                    })->first();
+
+                    $work->imagem = $this->uploadImage($image, $work->imagem, $work->user->id);
+                    $work->save();
+                }
+            }
+        }
+
+        return redirect('adm/automatic');
+    }
+
+    public function uploadImage($file, $old_file, $id)
+    {
+        $path = public_path() . '/uploads/' . $id;
+        $microtime = microtime(true);
+        $filename_thumb = $microtime . '.thumb.jpg';
+        $filename_original = $microtime . '.original.jpg';
+
+        // Remove old images
+        if($old_file) {
+            $old_image_thumb = $path . '/' . $old_file;
+            $old_image_original = $path . '/' . str_replace('thumb', 'original', $old_file);
+
+            if(file_exists($old_image_thumb)) {
+                unlink($old_image_thumb);
+            }
+
+            if(file_exists($old_image_original)) {
+                unlink($old_image_original);
+            }
+        }
+
+        // Create the folder if not exists
+        if(!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        for($i = 1; $i <= 2; $i++) {
+            $image = new \Imagick($file->path());
+            $image->setColorspace(\Imagick::COLORSPACE_SRGB);
+            $image->setImageFormat('jpg');
+            $image->stripImage();
+            $image->setImageCompressionQuality(70);
+            $image->setSamplingFactors(array('2x2', '1x1', '1x1'));
+            $image->setInterlaceScheme(\Imagick::INTERLACE_JPEG);
+
+            if($i == 1) {
+                // THUMB
+                $image->cropThumbnailImage(78, 78);
+                $image->writeImage($path . '/' . $filename_thumb);
+            } else {
+                // ORIGINAL
+                $image->cropThumbnailImage(250, 250);
+                $image->writeImage($path . '/' . $filename_original);
+            }
+
+            $image->destroy();
+        }
+
+        return $filename_thumb;
+    }
 }
