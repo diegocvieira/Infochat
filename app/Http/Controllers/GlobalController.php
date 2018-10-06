@@ -180,13 +180,15 @@ class GlobalController extends Controller
             fclose($handle);
 
             unlink(public_path() . '/' . $file_name);
+
+            return redirect('adm/automatic');
         }
     }
 
     public function automaticEmails(Request $request)
     {
         $tag = $request->categorie;
-        $message = $request->message;
+        $logged_user = Auth::guard('web')->user()->id;
 
         $works = Trabalho::whereHas('tags', function($q) use($tag) {
                 $q->where('tag', $tag);
@@ -197,21 +199,36 @@ class GlobalController extends Controller
             ->get();
 
         foreach($works as $work) {
-            $token = hash('sha256', random_bytes(32));
+            $chat = new \App\Chat;
+            $chat->from_id = $logged_user;
+            $chat->to_id = $work->user_id;
+            $chat->created_at = date('Y-m-d H:i:s');
+            $chat->save();
 
-            $pr = new \App\PasswordReset;
-            $pr->email = $work->user->email;
-            $pr->token = $token;
-            $pr->created_at = date('Y-m-d H:i:s');
-            $pr->save();
+            $message = new \App\Message;
+            $message->chat_id = $chat->id;
+            $message->user_id = $logged_user;
+            $message->message = $request->message;
+            $message->created_at = date('Y-m-d H:i:s');
+            $message->save();
 
-            $url = url('/') . '/recuperar-senha/check/' . $token;
+            $email = $work->user->email;
 
-            \Mail::send('emails.nova_mensagem', ['url' => $url, 'message' => $message], function($q) use($work) {
+            $client['name'] = Auth::guard('web')->user()->nome;
+            $client['image'] = Auth::guard('web')->user()->imagem;
+            $client['message'] = $request->message;
+            $client['id'] = $logged_user;
+
+            $claimed_url = url('/') . '/reivindicar-conta/check/' . app('App\Http\Controllers\ClaimedController')->createToken($email);
+            $work_url = route('show-chat', $work->slug);
+
+            \Mail::send('emails.new_message_claimed', ['client' => $client, 'work_url' => $work_url, 'claimed_url' => $claimed_url], function($q) use($email) {
                 $q->from('no-reply@infochat.com.br', 'Infochat');
-                $q->to($work->user->email)->subject('Nova mensagem');
+                $q->to($email)->subject('Nova mensagem');
             });
         }
+
+        return redirect('adm/automatic');
     }
 
     public function automaticImages(Request $request)

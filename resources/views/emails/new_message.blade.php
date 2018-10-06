@@ -37,7 +37,7 @@
                             <img src="{{ asset('uploads/' . $client['id'] . '/' . _getOriginalImage($client['image'])) }}" style="float: left; width: 38px; height: 38px; object-fit: cover;" />
                         @else
                             <span style="float: left; width: 38px; text-align: center; height: 38px; border: 1px solid rgb(230, 230, 230);">
-                                <img src="{{ asset('img/paisagem.png') }}" style="width: 18px; height: 18px; position: relative; top: 50%; transform: translateY(-50%);" />
+                                <img src="{{ asset('img/paisagem.png') }}" style="width: 18px; height: 18px; position: relative; top: 50%; margin-top: -9px;" />
                             </span>
                         @endif
 

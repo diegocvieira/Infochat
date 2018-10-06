@@ -152,11 +152,6 @@ Route::group(['prefix' => 'reivindicar-conta'], function() {
 
 
 
-Route::get('teste/teste', function() {
-    $email = 'ok';
-    return view('mobile.recuperar-senha', compact('email'));
-});
-
 
 
 
