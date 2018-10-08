@@ -89,10 +89,14 @@ class MessageController extends Controller
                         }
 
                         if($chat->from_id == $user_logged) {
-                            $no_response = NoResponse::firstOrNew(['user_id' => $user_logged, 'work_id' => $chat->to_id]);
-                            $no_response->user_id = $user_logged;
-                            $no_response->work_id = $chat->to_id;
-                            $no_response->save();
+                            $count_message = Message::where('chat_id', $chat->id)->where('user_id', $chat->to_id)->count();
+
+                            if($count_message == 0) {
+                                $no_response = NoResponse::firstOrNew(['user_id' => $user_logged, 'work_id' => $chat->to_id]);
+                                $no_response->user_id = $user_logged;
+                                $no_response->work_id = $chat->to_id;
+                                $no_response->save();
+                            }
 
                             $no_response_count = NoResponse::where('work_id', $chat->to_id)->count();
 
