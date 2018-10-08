@@ -168,7 +168,7 @@ class GlobalController extends Controller
                 $work->user_id = $user->id;
                 $work->tipo = $request->type;
                 $work->nome = $data[0];
-                $work->cidade_id = 4927;
+                $work->cidade_id = 4913;
                 $work->status = 1;
                 $work->area_id = $request->area;
                 $work->slug = str_slug($data[0], '-');
