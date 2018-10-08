@@ -18,11 +18,23 @@
 
 <div class="infos">
     <div class="info atendimento">
-        <p>{{ $trabalho->calc_atendimento($trabalho->id) }}% atendimento infochat</p>
+        <p>
+            @if($trabalho->calc_atendimento($trabalho->id))
+                {{ $trabalho->calc_atendimento($trabalho->id) }}% atendimento infochat
+            @else
+                sem avaliação de atendimento
+            @endif
+        </p>
     </div>
 
     <div class="info avaliacao">
-        <p>{{ $trabalho->calc_avaliacao($trabalho->id) }} avaliação do {{ $trabalho->tipoNome($trabalho->tipo) }}</p>
+        <p>
+            @if($trabalho->calc_avaliacao($trabalho->id))
+                {{ $trabalho->calc_avaliacao($trabalho->id) }} avaliação do {{ $trabalho->tipoNome($trabalho->tipo) }}
+            @else
+                sem avaliação do {{ $trabalho->tipoNome($trabalho->tipo) }}
+            @endif
+        </p>
     </div>
 
     <div class="add-favoritos">
