@@ -149,4 +149,154 @@ class GlobalController extends Controller
 
         return json_encode(['areas' => $areas]);
     }
+
+    public function automaticRegister(Request $request)
+    {
+        $file_name = $request->file->getClientOriginalName();
+        $request->file->move(public_path(), $file_name);
+
+        if(($handle = fopen(public_path() . '/' . $file_name, 'r')) !== FALSE) {
+            while(($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
+                $user = new \App\User;
+                $user->nome = $data[0];
+                $user->email = $data[1];
+                $user->password = bcrypt(time() . rand(0, 99999));
+                $user->claimed = 0;
+                $user->save();
+
+                $work = new Trabalho;
+                $work->user_id = $user->id;
+                $work->tipo = $request->type;
+                $work->nome = $data[0];
+                $work->cidade_id = 4927;
+                $work->status = 1;
+                $work->area_id = $request->area;
+                $work->slug = str_slug($data[0], '-');
+                $work->save();
+
+                $work->tags()->create(['tag' => $request->categorie]);
+            }
+
+            fclose($handle);
+
+            unlink(public_path() . '/' . $file_name);
+
+            return redirect('adm/automatic');
+        }
+    }
+
+    public function automaticEmails(Request $request)
+    {
+        $tag = $request->categorie;
+        $logged_user = Auth::guard('web')->user()->id;
+
+        $works = Trabalho::whereHas('tags', function($q) use($tag) {
+                $q->where('tag', $tag);
+            })
+            ->whereHas('user', function($q) use($tag) {
+                $q->where('claimed', 0);
+            })
+            ->get();
+
+        foreach($works as $work) {
+            $chat = new \App\Chat;
+            $chat->from_id = $logged_user;
+            $chat->to_id = $work->user_id;
+            $chat->created_at = date('Y-m-d H:i:s');
+            $chat->save();
+
+            $message = new \App\Message;
+            $message->chat_id = $chat->id;
+            $message->user_id = $logged_user;
+            $message->message = $request->message;
+            $message->created_at = date('Y-m-d H:i:s');
+            $message->save();
+
+            $email = $work->user->email;
+
+            $client['name'] = Auth::guard('web')->user()->nome;
+            $client['image'] = Auth::guard('web')->user()->imagem;
+            $client['message'] = $request->message;
+            $client['id'] = $logged_user;
+
+            $claimed_url = url('/') . '/reivindicar-conta/check/' . app('App\Http\Controllers\ClaimedController')->createToken($email);
+            $work_url = route('show-chat', $work->slug);
+
+            \Mail::send('emails.new_message_claimed', ['client' => $client, 'work_url' => $work_url, 'claimed_url' => $claimed_url], function($q) use($email) {
+                $q->from('no-reply@infochat.com.br', 'Infochat');
+                $q->to($email)->subject('Nova mensagem');
+            });
+        }
+
+        return redirect('adm/automatic');
+    }
+
+    public function automaticImages(Request $request)
+    {
+        foreach($request->images as $key_image => $image) {
+            foreach($request->emails as $key_email => $email) {
+                if($key_image == $key_email) {
+                    $work = Trabalho::whereHas('user', function($q) use($email) {
+                        $q->where('email', $email);
+                    })->first();
+
+                    $work->imagem = $this->uploadImage($image, $work->imagem, $work->user->id);
+                    $work->save();
+                }
+            }
+        }
+
+        return redirect('adm/automatic');
+    }
+
+    public function uploadImage($file, $old_file, $id)
+    {
+        $path = public_path() . '/uploads/' . $id;
+        $microtime = microtime(true);
+        $filename_thumb = $microtime . '.thumb.jpg';
+        $filename_original = $microtime . '.original.jpg';
+
+        // Remove old images
+        if($old_file) {
+            $old_image_thumb = $path . '/' . $old_file;
+            $old_image_original = $path . '/' . str_replace('thumb', 'original', $old_file);
+
+            if(file_exists($old_image_thumb)) {
+                unlink($old_image_thumb);
+            }
+
+            if(file_exists($old_image_original)) {
+                unlink($old_image_original);
+            }
+        }
+
+        // Create the folder if not exists
+        if(!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        for($i = 1; $i <= 2; $i++) {
+            $image = new \Imagick($file->path());
+            $image->setColorspace(\Imagick::COLORSPACE_SRGB);
+            $image->setImageFormat('jpg');
+            $image->stripImage();
+            $image->setImageCompressionQuality(70);
+            $image->setSamplingFactors(array('2x2', '1x1', '1x1'));
+            $image->setInterlaceScheme(\Imagick::INTERLACE_JPEG);
+
+            if($i == 1) {
+                // THUMB
+                $image->cropThumbnailImage(78, 78);
+                $image->writeImage($path . '/' . $filename_thumb);
+            } else {
+                // ORIGINAL
+                $image->cropThumbnailImage(250, 250);
+                $image->writeImage($path . '/' . $filename_original);
+            }
+
+            $image->destroy();
+        }
+
+        return $filename_thumb;
+    }
 }

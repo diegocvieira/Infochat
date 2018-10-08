@@ -144,3 +144,29 @@ Route::group(['prefix' => 'recuperar-senha'], function() {
     Route::get('check/{token}', 'RecuperarSenhaController@check');
     Route::post('alterar', 'RecuperarSenhaController@alterar');
 });
+
+Route::group(['prefix' => 'reivindicar-conta'], function() {
+    Route::get('check/{token}', 'ClaimedController@checkToken');
+    Route::post('claimed-account', 'ClaimedController@claimedAccount');
+});
+
+
+
+
+
+
+
+// Remove after execute all methods
+Route::get('adm/automatic', function() {
+    $areas = App\Area::orderBy('tipo', 'asc')->orderBy('titulo', 'asc')->pluck('titulo', 'id');
+    $categories = App\Categoria::orderBy('titulo', 'asc')->pluck('titulo', 'titulo');
+    $types = [
+        '1' => 'Profissional',
+        '2' => 'Estabelecimento'
+    ];
+
+    return view('automatic', compact('areas', 'categories', 'types'));
+});
+Route::post('adm/automatic-register', 'GlobalController@automaticRegister')->name('automatic-register');
+Route::post('adm/automatic-emails', 'GlobalController@automaticEmails')->name('automatic-emails');
+Route::post('adm/automatic-images', 'GlobalController@automaticImages')->name('automatic-images');

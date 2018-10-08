@@ -12,6 +12,7 @@ use Mail;
 use App\Chat;
 use App\BlockedUser;
 use Illuminate\Pagination\Paginator;
+use App\NoResponse;
 
 class MessageController extends Controller
 {
@@ -67,10 +68,51 @@ class MessageController extends Controller
                     if($check) {
                         $email = $check->from_id == $user_logged ? $check->user_to->email : $check->user_from->email;
 
-                        Mail::send('emails.nova_mensagem', [], function($q) use($email) {
-                            $q->from('no-reply@infochat.com.br', 'Infochat');
-                            $q->to($email)->subject('Nova mensagem');
-                        });
+                        $client['name'] = Auth::guard('web')->user()->nome;
+                        $client['image'] = Auth::guard('web')->user()->imagem;
+                        $client['message'] = $request->message;
+                        $client['id'] = $user_logged;
+
+                        if($chat->from_id == $user_logged && !$chat->user_to->claimed) {
+                            $claimed_url = url('/') . '/reivindicar-conta/check/' . app('App\Http\Controllers\ClaimedController')->createToken($email);
+                            $work_url = route('show-chat', $chat->user_to->trabalho->slug);
+
+                            Mail::send('emails.new_message_claimed', ['client' => $client, 'work_url' => $work_url, 'claimed_url' => $claimed_url], function($q) use($email) {
+                                $q->from('no-reply@infochat.com.br', 'Infochat');
+                                $q->to($email)->subject('Nova mensagem');
+                            });
+                        } else {
+                            Mail::send('emails.new_message', ['client' => $client], function($q) use($email) {
+                                $q->from('no-reply@infochat.com.br', 'Infochat');
+                                $q->to($email)->subject('Nova mensagem');
+                            });
+                        }
+
+                        if($chat->from_id == $user_logged) {
+                            $no_response = NoResponse::firstOrNew(['user_id' => $user_logged, 'work_id' => $chat->to_id]);
+                            $no_response->user_id = $user_logged;
+                            $no_response->work_id = $chat->to_id;
+                            $no_response->save();
+
+                            $no_response_count = NoResponse::where('work_id', $chat->to_id)->count();
+
+                            if($no_response_count >= 5) {
+                                if($chat->user_to->claimed) {
+                                    $work = Trabalho::where('user_id', $chat->to_id)->first();
+                                    $work->status = 0;
+                                    $work->save();
+
+                                    Mail::send('emails.disabled_profile', [], function($q) use($chat) {
+                                        $q->from('no-reply@infochat.com.br', 'Infochat');
+                                        $q->to($chat->user_to->email)->subject('Perfil desativado');
+                                    });
+                                } else {
+                                    User::find($chat->to_id)->delete();
+                                }
+                            }
+                        } else {
+                            NoResponse::where('user_id', $chat->from_id)->where('work_id', $user_logged)->delete();
+                        }
                     }
                 } else {
                     $return['status'] = 2;
