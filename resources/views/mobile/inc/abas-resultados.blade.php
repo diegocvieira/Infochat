@@ -6,7 +6,7 @@
         @endif
         </a>
     </a>
-    <a href="{{ route('msg-trabalho') }}" data-type="trabalho">TRABALHO
+    <a href="{{ route('msg-trabalho') }}" data-type="trabalho">CLIENTES
         @if($new_messages_trabalho)
             <span>{{ $new_messages_trabalho }}</span>
         @endif
