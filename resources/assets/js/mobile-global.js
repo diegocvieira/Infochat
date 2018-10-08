@@ -398,6 +398,10 @@ $(document).ready(function() {
                      $(data.categorias).each(function(index, element) {
                          $this.parent().next().append("<li><a href='#' class='categoria cat-search' data-search='" + element.titulo + "'>" + element.titulo + "</a></li>");
                      });
+
+                     if(!$this.parent().next().find('li').length) {
+                         $('#close-aside').trigger('click');
+                     }
                  }
              });
 
@@ -417,6 +421,10 @@ $(document).ready(function() {
                          });
 
                          $('.aside-categorias').find('.subs').not($this.parent().next()).hide();
+
+                         if(!$this.parent().next().find('li').length) {
+                             $('#close-aside').trigger('click');
+                         }
                      }
                  });
              } else {
@@ -464,6 +472,8 @@ $(document).ready(function() {
                          }
                      });
                  }
+
+                 $('#close-aside').trigger('click');
              }
 
              $('#form-search-tag').val($(this).data('search'));
