@@ -1,18 +1,19 @@
 $(document).ready(function() {
     $('body').css('opacity', '1');
 
-    // Abrir e fechar menu
+    // Open menu
     $(document).on('click', '#open-menu', function(e) {
         e.preventDefault()
 
         $(this).next().show();
-    });
-    $(document).click(function(e) {
-        if($('.top-nav').find('nav ul').is(':visible') && !$(e.target).closest('.top-nav nav').length) {
-            $('.top-nav').find('nav ul').hide();
 
-            e.preventDefault();
-        }
+        $('body').append("<div class='nav-overlay' style='position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%;'></div>");
+    });
+
+    // Close menu
+    $(document).on('click', '.nav-overlay', function() {
+        $('.top-nav').find('nav ul').hide();
+        $(this).remove();
     });
 
     // Abrir e fechar busca
