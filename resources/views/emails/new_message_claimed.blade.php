@@ -33,7 +33,7 @@
 
                 <tr>
                     <td style="background-color: #fff; padding: 20px 50px 0 50px;">
-                        <span style="display: block; cursor: default; font-size: 25px; color: rgb(49, 49, 49); font-weight: 700">Você ou o seu estabelecimento está cadastrado no infochat e um cliente real entou em contato</span>
+                        <span style="display: block; cursor: default; font-size: 25px; color: rgb(49, 49, 49); font-weight: 700">Você ou o seu estabelecimento está cadastrado no infochat e um cliente real entrou em contato</span>
                     </td>
                 </tr>
 
@@ -81,7 +81,7 @@
 
                 <tr>
                     <td style="background-color: #fff; padding: 20px 50px 0 50px;">
-                        <span style="display: block; cursor: default; font-size: 14.5px; color: rgb(150, 150, 150);">Em resumo, é um whatsapp para encontrar e falar com profissionais e estabelecimentos.</span>
+                        <span style="display: block; cursor: default; font-size: 14.5px; color: rgb(150, 150, 150);">Em resumo, é um whatsapp para encontrar e falar com profissionais e estabelecimentos da sua cidade.</span>
                     </td>
                 </tr>
 
