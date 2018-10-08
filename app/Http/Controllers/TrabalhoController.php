@@ -73,7 +73,6 @@ class TrabalhoController extends Controller
         } else {
             $user_id = Auth::guard('web')->user()->id;
 
-            // Verificar se o trabalho ja existe
             $trabalho = Trabalho::firstOrNew(['user_id' => $user_id]);
 
             // Buscar a cidade no banco
@@ -83,6 +82,8 @@ class TrabalhoController extends Controller
 
             if(!$cidade) {
                 $return['msg'] = 'Não identificamos a sua cidade, confira o nome e tente novamente. Se o problema persistir, entre em contato conosco.';
+            } else if($cidade && $cidade->id == 4913 && !$trabalho->id) {
+                $return['msg'] = 'Para cadastrar seu perfil de trabalho em Pelotas entre em contato pelo e-mail contato@infochat.com.br ou pelo whatsapp 53 99169 1716.';
             } else if($cidade && !in_array($cidade->id, _openCitys())) {
                 $return['msg'] = 'Ainda não estamos operando nesta cidade.' . "<br>" . 'Volte outro dia, estamos trabalhando para levar o infochat para o mundo todo.';
             } else {
