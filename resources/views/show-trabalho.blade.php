@@ -65,30 +65,30 @@
 
     <div class="col-xs-12 informacoes aba-aberta">
         <div class="group endereco">
-            @if($trabalho->logradouro)
-                <p>
-                    {{ $trabalho->logradouro }}, {{ $trabalho->numero }}
+            @if($trabalho->logradouro || $trabalho->bairro || $trabalho->cep)
+                @if($trabalho->logradouro)
+                    <p>
+                        {{ $trabalho->logradouro }}, {{ $trabalho->numero }}
 
-                    @if($trabalho->complemento)
-                        - {{ $trabalho->complemento }}
-                    @endif
-                </p>
-            @endif
-
-            <p>
-                @if($trabalho->bairro)
-                    {{ $trabalho->bairro }} -
+                        @if($trabalho->complemento)
+                            - {{ $trabalho->complemento }}
+                        @endif
+                    </p>
                 @endif
 
-                {{ $trabalho->cidade->title }}/{{ $trabalho->cidade->estado->letter }} - Brasil
-            </p>
+                @if($trabalho->bairro)
+                    <p>{{ $trabalho->bairro }}</p>
+                @endif
 
-            @if($trabalho->cep)
-                <p>{{ $trabalho->cep }}</p>
-            @endif
+                @if($trabalho->cep)
+                    <p>{{ $trabalho->cep }}</p>
+                @endif
 
-            @if($trabalho->logradouro && $trabalho->numero && $trabalho->bairro)
-                <a class="ver-no-mapa" href="//maps.google.com/?q={{ $trabalho->logradouro }}, {{ $trabalho->numero }}, {{ $trabalho->bairro }}, {{ $trabalho->cidade->title }}, {{ $trabalho->cidade->estado->letter }}" target="_blanck">ver no mapa</a>
+                @if($trabalho->logradouro && $trabalho->numero && $trabalho->bairro)
+                    <a class="ver-no-mapa" href="//maps.google.com/?q={{ $trabalho->logradouro }}, {{ $trabalho->numero }}, {{ $trabalho->bairro }}, {{ $trabalho->cidade->title }}, {{ $trabalho->cidade->estado->letter }}" target="_blanck">ver no mapa</a>
+                @endif
+            @else
+                <p>O endereço ainda não foi informado...</p>
             @endif
         </div>
 
