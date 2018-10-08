@@ -34,7 +34,7 @@ class ClaimedController extends Controller
 
         $email = $pr->email;
 
-        $header_title = 'Reivindicar conta | Infochat';
+        $header_title = 'Reivindicar perfil | Infochat';
 
         if(Agent::isMobile()) {
             return view('mobile.claimed-account', compact('email', 'header_title'));
