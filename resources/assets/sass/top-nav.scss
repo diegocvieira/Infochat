@@ -108,6 +108,7 @@
                 color: rgb(255, 255, 255);
                 font-weight: 700;
                 margin-right: 10px;
+                line-height: 2;
             }
 
             .img {
@@ -116,7 +117,7 @@
                 border-radius: 50%;
                 position: relative;
                 float: right;
-                margin-top: 5px;
+                margin-top: 2px;
 
                 img {
                     float: left;
@@ -155,7 +156,7 @@
                     color: rgb(100, 100, 100);
                     width: 100%;
                     float: left;
-                    padding: 10px 0 10px 40px;
+                    padding: 10px 0 10px 40px !important;
                     background-size: 20px;
                     background-repeat: no-repeat;
                     background-position: 7%;
