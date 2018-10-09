@@ -185,6 +185,10 @@
                 display: inline-block;
                 height: 60px;
 
+                &:first-child a {
+                    padding: 10px 5px;
+                }
+
                 &.button {
                     height: 36px;
 
