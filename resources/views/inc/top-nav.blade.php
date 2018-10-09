@@ -59,11 +59,15 @@
                         </ul>
                     </li>
                 @else
-                    <li class="button">
-                        <a href="#" data-toggle="modal" data-target="#modal-como-funciona">Como funciona</a>
+                    <li>
+                        <a href="https://play.google.com/store/apps/details?id=com.infochat" target="_blank">Baixe nosso app</a>
                     </li>
 
                     <li>
+                        <a href="#" data-toggle="modal" data-target="#modal-como-funciona">Como funciona</a>
+                    </li>
+
+                    <li class="button">
                         <a href="{{ route('user-register') }}">Cadastrar</a>
                     </li>
 
