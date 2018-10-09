@@ -723,6 +723,12 @@ $(document).ready(function() {
 
         $('.top-nav, .abas-resultados').addClass('active-manage');
 
+        // Hide search
+        $('#form-search').hide();
+
+        // Show menu
+        $('nav').show();
+
         // Verify if options exists
         top.find('.manage-options').remove();
 
