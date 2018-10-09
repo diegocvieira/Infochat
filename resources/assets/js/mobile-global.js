@@ -1,6 +1,15 @@
 $(document).ready(function() {
     $('body').css('opacity', '1');
 
+    // Detect back button and close modal or back page
+    $(document).on("keydown", function(e) {
+        if(e.which === 8) {
+            e.preventDefault();
+
+            $('.modal').is(':visible') ? $('.modal').modal('hide') : window.history.back();
+        }
+    });
+
     // Open menu
     $(document).on('click', '#open-menu', function(e) {
         e.preventDefault()
