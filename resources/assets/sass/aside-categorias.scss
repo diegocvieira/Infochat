@@ -203,10 +203,25 @@
     .aside-bottom {
         float: left;
         width: 100%;
-        margin: 15px 0;
+        margin: 40px 0 10px 0;
+        padding-left: 15px;
+
+        .support {
+            width: 100%;
+            float: left;
+            margin-bottom: 10px;
+
+            a {
+                color: rgb(200, 200, 200);
+                font-size: 16.6px;
+
+                img {
+                    width: 115px;
+                }
+            }
+        }
 
         .termos {
-            text-align: center;
             margin-top: 2px;
             float: left;
 
@@ -248,8 +263,7 @@
         }
 
         .social-links {
-            float: right;
-            text-align: right;
+            float: left;
 
             a {
                 display: inline-block;
@@ -258,10 +272,11 @@
                 background-repeat: no-repeat;
                 background-position: center;
                 background-size: contain;
-                margin-left: 3px;
+                margin-left: 2px;
 
                 &.social-facebook {
                     background-image: url('../img/icon-facebook.png');
+                    margin-left: 0;
                 }
 
                 &.social-instagram {
