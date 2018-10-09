@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class GlobalController extends Controller
     {
         // Setar poa como cidade default
         if(!Cookie::get('sessao_cidade_slug')) {
-            $this->setCidade(4927);
+            $this->setCidade(4913);
 
             return redirect()->route('inicial');
         }
