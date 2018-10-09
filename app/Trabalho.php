@@ -29,13 +29,7 @@ class Trabalho extends Model
             ->where('trabalho_id', $id)
             ->first();
 
-        $nota = $atendimento->nota;
-
-        if(!$nota) {
-            $nota = 100;
-        }
-
-        return $nota;
+        return $atendimento->nota;
     }
 
     public function calc_avaliacao($id)
@@ -44,13 +38,7 @@ class Trabalho extends Model
             ->where('trabalho_id', $id)
             ->first();
 
-        $nota = $avaliacao->nota;
-
-        if(!$nota) {
-            $nota = 5 . '.0';
-        }
-
-        return $nota;
+        return $avaliacao->nota;
     }
 
     public function user()

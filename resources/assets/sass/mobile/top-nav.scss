@@ -138,8 +138,7 @@
         background-size: contain;
         width: 45px;
         height: 25px;
-        background-image: url('../../img/icon-lupa.png');
-        filter: brightness(0) invert(1);
+        background-image: url('../../img/icon-lupa2.png');
     }
 
     #open-menu {
@@ -194,6 +193,10 @@
                     background-repeat: no-repeat;
                     background-position: 7%;
                     line-height: normal;
+
+                    &.icon-app {
+                        background-image: url('../../img/icon-app.png');
+                    }
 
                     &.icon-conta {
                         background-image: url('../../img/icon-profile.png');

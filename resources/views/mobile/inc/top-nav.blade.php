@@ -27,6 +27,10 @@
                 <a href="#" id="open-aside" class="icon-categorias">Categorias</a>
             </li>
 
+            <li>
+                <a href="https://play.google.com/store/apps/details?id=com.infochat" class="icon-app">Baixe nosso app</a>
+            </li>
+
             @if(Auth::guard('web')->check())
                 <li>
                     <a href="{{ route('get-usuario-config') }}" id="open-usuario-config" class="icon-conta">Perfil de usuário</a>

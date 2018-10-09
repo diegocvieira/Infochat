@@ -1,6 +1,6 @@
 .top-nav {
     background-color: #3f51b5;
-    height: 70px;
+    height: 60px;
     padding: 0;
 
     &.top-nav-simple {
@@ -19,7 +19,7 @@
 
     #logo-infochat {
         width: 150px;
-        margin: 15px 0 0 20px;
+        margin: 10px 0 0 20px;
     }
 
     .col-xs-3, .col-xs-2, .col-xs-7 {
@@ -44,7 +44,7 @@
     #form-search {
         width: 100%;
         float: left;
-        margin-top: 15px;
+        margin-top: 10px;
 
         input[type=text] {
             border-radius: 3px 0 0 3px;
@@ -108,6 +108,7 @@
                 color: rgb(255, 255, 255);
                 font-weight: 700;
                 margin-right: 10px;
+                line-height: 2;
             }
 
             .img {
@@ -116,7 +117,7 @@
                 border-radius: 50%;
                 position: relative;
                 float: right;
-                margin-top: 5px;
+                margin-top: 2px;
 
                 img {
                     float: left;
@@ -155,7 +156,7 @@
                     color: rgb(100, 100, 100);
                     width: 100%;
                     float: left;
-                    padding: 10px 0 10px 40px;
+                    padding: 10px 0 10px 40px !important;
                     background-size: 20px;
                     background-repeat: no-repeat;
                     background-position: 7%;
@@ -183,23 +184,27 @@
         ul {
             li {
                 display: inline-block;
-                height: 70px;
+                height: 60px;
+
+                &:first-child a {
+                    padding: 10px 5px;
+                }
 
                 &.button {
-                    height: 40px;
+                    height: 36px;
 
                     a {
                         border-radius: 25px;
-                        background-color: rgba(255, 255, 255, 0.2);
-                        padding: 10px 20px;
+                        background-color: rgba(255, 255, 255, 0.1);
                         line-height: 1.2;
+                        padding: 10px 15px;
                     }
                 }
 
                 a {
-                    font-size: 16.6px;
-                    color: #fff;
-                    padding: 10px 20px;
+                    font-size: 14.5px;
+                    color: #c8c8c8;
+                    padding: 10px 30px;
                     text-decoration: none;
                     display: block;
                     height: 100%;

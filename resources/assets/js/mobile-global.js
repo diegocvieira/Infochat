@@ -1,18 +1,19 @@
 $(document).ready(function() {
     $('body').css('opacity', '1');
 
-    // Abrir e fechar menu
+    // Open menu
     $(document).on('click', '#open-menu', function(e) {
         e.preventDefault()
 
         $(this).next().show();
-    });
-    $(document).click(function(e) {
-        if($('.top-nav').find('nav ul').is(':visible') && !$(e.target).closest('.top-nav nav').length) {
-            $('.top-nav').find('nav ul').hide();
 
-            e.preventDefault();
-        }
+        $('body').append("<div class='nav-overlay' style='position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%;'></div>");
+    });
+
+    // Close menu
+    $(document).on('click', '.nav-overlay', function() {
+        $('.top-nav').find('nav ul').hide();
+        $(this).remove();
     });
 
     // Abrir e fechar busca
@@ -357,6 +358,8 @@ $(document).ready(function() {
                  $('.aside-categorias').find('.cidade-atual').trigger('click');
              }, 500);
          }
+
+         $('.top-nav').find('nav ul').hide();
      });
      $(document).on('click', '#close-aside', function(e) {
          e.preventDefault();
@@ -397,6 +400,10 @@ $(document).ready(function() {
                      $(data.categorias).each(function(index, element) {
                          $this.parent().next().append("<li><a href='#' class='categoria cat-search' data-search='" + element.titulo + "'>" + element.titulo + "</a></li>");
                      });
+
+                     if(!$this.parent().next().find('li').length) {
+                         $('#close-aside').trigger('click');
+                     }
                  }
              });
 
@@ -416,6 +423,10 @@ $(document).ready(function() {
                          });
 
                          $('.aside-categorias').find('.subs').not($this.parent().next()).hide();
+
+                         if(!$this.parent().next().find('li').length) {
+                             $('#close-aside').trigger('click');
+                         }
                      }
                  });
              } else {
@@ -463,6 +474,8 @@ $(document).ready(function() {
                          }
                      });
                  }
+
+                 $('#close-aside').trigger('click');
              }
 
              $('#form-search-tag').val($(this).data('search'));
@@ -711,6 +724,12 @@ $(document).ready(function() {
         var top = $('.top-nav');
 
         $('.top-nav, .abas-resultados').addClass('active-manage');
+
+        // Hide search
+        $('#form-search').hide();
+
+        // Show menu
+        $('nav').show();
 
         // Verify if options exists
         top.find('.manage-options').remove();
