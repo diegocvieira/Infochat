@@ -358,6 +358,8 @@ $(document).ready(function() {
                  $('.aside-categorias').find('.cidade-atual').trigger('click');
              }, 500);
          }
+
+         $('.top-nav').find('nav ul').hide();
      });
      $(document).on('click', '#close-aside', function(e) {
          e.preventDefault();
