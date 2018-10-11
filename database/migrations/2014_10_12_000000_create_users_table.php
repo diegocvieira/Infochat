@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->boolean('online')->default(1);
             $table->boolean('claimed')->default(1);
+            $table->string('firebase_token', 200);
             $table->rememberToken();
             $table->timestamps();
         });
