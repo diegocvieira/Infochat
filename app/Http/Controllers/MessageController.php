@@ -65,6 +65,38 @@ class MessageController extends Controller
                 if($message->save()) {
                     $return['status'] = 1;
 
+                    // Pega o token da pessoa que recebe a mensagem
+                    $tokenDoDestinatario = $chat->from_id == $user_logged ? $chat->user_to->onesignal_token : $chat->user_from->onesignal_token;
+
+                    if($tokenDoDestinatario != "") {
+                        $cabecalho = array(
+                            'Content-Type: application/json',
+                            'Authorization: Basic NTVkOWMxMmQtNmNhMS00Nzk3LThhMGYtYWNmYThlNjNjMmQ2'
+                        );
+
+                        // app_id é o seu App Id lá do OneSignal
+                        // O 'include_player_ids' são os aparelhos que vão receber a mensagem.
+                        // headings é o título e contents é o corpo da mensagem.
+                        // No data vai qualquer coisa, eu botei o endereço pra carregar, aí você coloca o certo.
+                        $dados = array(
+                            'app_id' => '0305d6ca-af82-4b6a-8c38-253c20043016',
+                            'include_player_ids' => array($tokenDoDestinatario),
+                            'headings' => array('en' => 'Infochat'),
+                            'contents' => array('en' => 'Nova Mensagem'),
+                            'data' => array('endereco' => '/')
+                        );
+
+                        $curl = curl_init();
+
+                        curl_setopt($curl, CURLOPT_URL, 'https://onesignal.com/api/v1/notifications');
+                        curl_setopt($curl, CURLOPT_POST, true);
+                        curl_setopt($curl, CURLOPT_HTTPHEADER, $cabecalho);
+                        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($dados));
+
+                        curl_exec($curl);
+                        curl_close($curl);
+                    }
+
                     if($check) {
                         $email = $check->from_id == $user_logged ? $check->user_to->email : $check->user_from->email;
 

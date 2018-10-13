@@ -150,11 +150,8 @@ Route::group(['prefix' => 'reivindicar-conta'], function() {
     Route::post('claimed-account', 'ClaimedController@claimedAccount');
 });
 
-
-
-
-
-
+// Set OneSignal token
+Route::post('app/onesignal/token', 'UserController@tokenOnesignal');
 
 // Remove after execute all methods
 Route::get('adm/automatic', function() {

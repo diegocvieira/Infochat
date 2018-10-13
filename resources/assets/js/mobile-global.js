@@ -1,15 +1,6 @@
 $(document).ready(function() {
     $('body').css('opacity', '1');
 
-    // Detect back button and close modal or back page
-    $(document).on("keydown", function(e) {
-        if(e.which === 8) {
-            e.preventDefault();
-
-            $('.modal').is(':visible') ? $('.modal').modal('hide') : window.history.back();
-        }
-    });
-
     // Open menu
     $(document).on('click', '#open-menu', function(e) {
         e.preventDefault()
@@ -95,13 +86,19 @@ $(document).ready(function() {
                     trabalho.find('span').text(count);
 
                     $('#alert-new-message')[0].play();
-                    Android.notificaNovaMensagem("https://infochat.com.br/img/sound.mp3");
+
+                    if(app) {
+                        Android.notificaNovaMensagem("https://infochat.com.br/img/sound.mp3");
+                    }
                 }
             } else {
                 trabalho.append("<span>" + count + "</span>");
 
                 $('#alert-new-message')[0].play();
-                Android.notificaNovaMensagem("https://infochat.com.br/img/sound.mp3");
+
+                if(app) {
+                    Android.notificaNovaMensagem("https://infochat.com.br/img/sound.mp3");
+                }
             }
         } else {
             trabalho.find('span').remove();
@@ -118,11 +115,19 @@ $(document).ready(function() {
                     pessoal.find('span').text(count);
 
                     $('#alert-new-message')[0].play();
+
+                    if(app) {
+                        Android.notificaNovaMensagem("https://infochat.com.br/img/sound.mp3");
+                    }
                 }
             } else {
                 pessoal.append("<span>" + count + "</span>");
 
                 $('#alert-new-message')[0].play();
+
+                if(app) {
+                    Android.notificaNovaMensagem("https://infochat.com.br/img/sound.mp3");
+                }
             }
         } else {
             pessoal.find('span').remove();
@@ -168,6 +173,10 @@ $(document).ready(function() {
             data: $(this).serialize(),
             success: function (data) {
                 if(data.status) {
+                    if(app) {
+                        Android.salvaToken(data.id);
+                    }
+
                     window.location = '/';
                 } else {
                     modalAlert(data.msg);
