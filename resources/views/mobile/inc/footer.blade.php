@@ -44,6 +44,9 @@
             @else
                 var logged = false;
             @endif
+
+            var agent = navigator.userAgent.split(' '),
+                app = agent[agent.length - 1] == 'com.infochat' ? true : false;
         </script>
 
         <script src="{{ mix('/js/mobile-global.js') }}"></script>

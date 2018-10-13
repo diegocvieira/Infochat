@@ -45,6 +45,7 @@ class UserController extends Controller
             $user->save();
 
             $return['status'] = true;
+            $return['id'] = $user->id;
         } else {
             $return['status'] = false;
             $return['msg'] = 'Não identificamos o e-mail e/ou a senha que você informou.';
@@ -138,6 +139,13 @@ class UserController extends Controller
         }
 
         return json_encode($return);
+    }
+
+    public function tokenOnesignal(Request $request)
+    {
+        $user = User::findOrFail($request->id);
+        $user->onesignal_token = $request->token;
+        $user->save();
     }
 
     private function userUpdateRules()
