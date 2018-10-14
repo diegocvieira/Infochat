@@ -85,12 +85,16 @@ $(document).ready(function() {
                 if(count != parseInt(trabalho.find('span').text())) {
                     trabalho.find('span').text(count);
 
-                    $('#alert-new-message')[0].play();
+                    if(!app) {
+                        $('#alert-new-message')[0].play();
+                    }
                 }
             } else {
                 trabalho.append("<span>" + count + "</span>");
 
-                $('#alert-new-message')[0].play();
+                if(!app) {
+                    $('#alert-new-message')[0].play();
+                }
             }
         } else {
             trabalho.find('span').remove();
@@ -106,12 +110,16 @@ $(document).ready(function() {
                 if(count != parseInt(pessoal.find('span').text())) {
                     pessoal.find('span').text(count);
 
-                    $('#alert-new-message')[0].play();
+                    if(!app) {
+                        $('#alert-new-message')[0].play();
+                    }
                 }
             } else {
                 pessoal.append("<span>" + count + "</span>");
 
-                $('#alert-new-message')[0].play();
+                if(!app) {
+                    $('#alert-new-message')[0].play();
+                }
             }
         } else {
             pessoal.find('span').remove();
