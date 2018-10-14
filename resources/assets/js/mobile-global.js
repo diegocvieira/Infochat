@@ -86,19 +86,11 @@ $(document).ready(function() {
                     trabalho.find('span').text(count);
 
                     $('#alert-new-message')[0].play();
-
-                    if(app) {
-                        Android.notificaNovaMensagem("https://infochat.com.br/img/sound.mp3");
-                    }
                 }
             } else {
                 trabalho.append("<span>" + count + "</span>");
 
                 $('#alert-new-message')[0].play();
-
-                if(app) {
-                    Android.notificaNovaMensagem("https://infochat.com.br/img/sound.mp3");
-                }
             }
         } else {
             trabalho.find('span').remove();
@@ -115,19 +107,11 @@ $(document).ready(function() {
                     pessoal.find('span').text(count);
 
                     $('#alert-new-message')[0].play();
-
-                    if(app) {
-                        Android.notificaNovaMensagem("https://infochat.com.br/img/sound.mp3");
-                    }
                 }
             } else {
                 pessoal.append("<span>" + count + "</span>");
 
                 $('#alert-new-message')[0].play();
-
-                if(app) {
-                    Android.notificaNovaMensagem("https://infochat.com.br/img/sound.mp3");
-                }
             }
         } else {
             pessoal.find('span').remove();
