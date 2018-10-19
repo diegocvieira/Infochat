@@ -147,6 +147,79 @@ $(document).ready(function() {
         }
     });
 
+    ////////////////////////////// CITY //////////////////////////////
+
+    // Exibir form de busca por cidades
+    $('.top-nav').on('click', '.cidade-atual', function(e) {
+        e.preventDefault();
+
+        $('#form-busca-cidade').show();
+        $('#form-busca-cidade').find('input[type=text]').val('').focus();
+    });
+
+    //Fechar busca por cidade e categorias
+    $(document).click(function(e) {
+        if(!$(e.target).closest('.cidades').length) {
+            $('.cidades').find('#form-busca-cidade').hide();
+            $('.cidades').find('#modal-busca-cidade').remove();
+        }
+    });
+
+    $('#form-busca-cidade').find('input[type=text]').on('keyup', function() {
+        if($(this).val().length >= 2) {
+            $(this).parents('form').submit();
+        } else {
+            $(this).next().next().remove();
+        }
+    });
+
+    // Enviar form de busca por cidades
+    $('#form-busca-cidade').on('submit', function(e) {
+        e.preventDefault();
+
+        if($(this).find('input[type=text]').val()) {
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                dataType:'json',
+                data: $(this).serialize(),
+                success: function (data) {
+                    var modal = $('#modal-busca-cidade');
+
+                    modal.length ? modal.find('li').remove() : $('#form-busca-cidade').append("<div id='modal-busca-cidade'><ul></ul></div>");
+
+                    $(data.cidades).each(function(index, element) {
+                        $('#modal-busca-cidade').find('ul').append("<li><a class='change-city' href='/cidades/set/" + element.id + "'>" + element.title + ' - ' + element.estado.letter + "</a></li>");
+                    });
+                }
+            });
+        }
+
+        return false;
+    });
+
+    $(document).on('click', '.change-city', function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: $(this).attr('href'),
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                if(data.status) {
+                    window.location = '/';
+                } else {
+                    var modal = $('#modal-alert');
+                    modal.find('.modal-body').html('Ainda não estamos disponíveis nesta cidade.' + "<br>" + 'Volte outro dia.');
+                    modal.find('.modal-footer .btn').text('OK');
+                    modal.modal('show');
+                }
+            }
+        });
+
+        return false;
+    });
+
     ////////////////////////////// MATERIAL //////////////////////////////
 
     $(document).on('click', '#open-material', function(e) {
@@ -202,7 +275,7 @@ $(document).ready(function() {
     });
 
     ////////////////////////////// ASIDE (CATEGORIAS E CIDADE) //////////////////////////////
-
+/*
     // Exibir categorias e subcategorias e pesquisar trabalhos ao seleciona-las
     $(document).on('click', '#categorias .cat-search', function(e) {
         e.preventDefault();
@@ -452,6 +525,7 @@ $(document).ready(function() {
 
         return false;
     });
+*/
 
     ////////////////////////////// RESULTADOS DAS BUSCAS //////////////////////////////
 

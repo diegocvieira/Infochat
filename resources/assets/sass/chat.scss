@@ -1,9 +1,9 @@
 .chat {
-    padding: 0;
     height: 100%;
     position: relative;
     background-color: #fff;
-    width: calc(100% - 800px);
+    width: calc(100% - 580px);
+    float: left;
 
     .sem-selecao, .sem-mensagens {
         text-align: center;
