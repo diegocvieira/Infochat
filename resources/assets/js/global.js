@@ -895,14 +895,16 @@ $(document).ready(function() {
         var input = $(this).find('input[type=text]');
 
         if(input.val()) {
-            $('.chat').find('.sem-mensagens').remove();
-
             var div = $('.chat').find('.mensagens'),
                 date = new Date();
 
-            div.append("<div class='row enviada'><div class='msg'><p>" + input.val() + "</p><span>" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + "</span></div></div>");
+            if(!input.hasClass('unlogged')) {
+                $('.chat').find('.sem-mensagens').remove();
 
-            div.scrollTop(div[0].scrollHeight);
+                div.append("<div class='row enviada'><div class='msg'><p>" + input.val() + "</p><span>" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + "</span></div></div>");
+
+                div.scrollTop(div[0].scrollHeight);
+            }
 
             $.ajax({
                 url: $(this).attr('action'),
