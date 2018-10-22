@@ -31,7 +31,7 @@
         @endif
     </div>
 
-    @if(isset($filtro_ordem))
+    @if(isset($filtro_ordem) && isset($trabalhos) && count($trabalhos) > 0)
         {!! Form::select('ordem', $filtro_ordem, null, ['class' => 'selectpicker filtro-ordem', 'title' => 'filtrar por']) !!}
     @endif
 </div>
@@ -39,6 +39,10 @@
 <div id="form-search-results">
     @if(isset($trabalhos) && count($trabalhos) > 0)
         @include('inc.list-resultados')
+    @elseif(!isset($trabalhos))
+        <div class="sem-resultados">
+            <p>Pesquise um profissional ou estabelecimento<br>para pedir informações ou tirar dúvidas</p>
+        </div>
     @else
         <div class="sem-resultados">
             <p>Sua pesquisa não encontrou resultado.<br>Verifique se todas as palavras estão corretas ou tente palavras-chave diferentes.</p>

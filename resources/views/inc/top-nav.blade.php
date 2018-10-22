@@ -15,9 +15,9 @@
 
     <nav class="nav navbar-nav nav-menu">
         <ul>
-            @if(Auth::guard('web')->check())
+            @if(Auth::guard('web')->check() && !_temporaryAccount())
                 <li>
-                    <a href="#" class="open-nav" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <a href="#" class="open-nav-logged" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         <span>{{ firstName(Auth::guard('web')->user()->nome) }}</span>
 
                         <div class="img">
@@ -64,6 +64,26 @@
 
                 <li>
                     <a href="{{ route('user-login') }}">Entrar</a>
+                </li>
+
+                <li>
+                    <a href="#" class="open-nav" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <img src="{{ asset('img/menu.png') }}" alt="Menu" />
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#" id="open-contato">Contato</a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('termos-uso') }}" target="_blank">Termos</a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('termos-privacidade') }}" target="_blank">Privacidade</a>
+                        </li>
+                    </ul>
                 </li>
             @endif
         </ul>

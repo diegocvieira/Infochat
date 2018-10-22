@@ -42,17 +42,18 @@
 </div>
 
 {!! Form::open(['method' => 'post', 'action' => 'MessageController@send', 'id' => 'form-enviar-msg']) !!}
-    @if(!Auth::guard('web')->check())
+    <?php /*@if(!Auth::guard('web')->check())
         <div class="lock">
             <div class="balao">
                 <p>Acesse sua conta ou cadastre-se para liberar o infochat</p>
             </div>
         </div>
-    @endif
+    @endif*/ ?>
 
-    {!! Form::text('message', null, ['placeholder' => 'Digite uma mensagem']) !!}
+    {!! Form::text('message', null, ['class' => !Auth::guard('web')->check() ? 'unlogged' : '', 'placeholder' => Auth::guard('web')->check() ? 'Digite uma mensagem' : 'Escreva seu nome antes de começar']) !!}
 
     {!! Form::hidden('chat_id', isset($chat_id) ? $chat_id : '') !!}
+    {!! Form::hidden('work_user', $tipo == 'trabalho' ? $destinatario->user->id : '') !!}
 
     {!! Form::submit('', ['class' => 'button']) !!}
 {!! Form::close() !!}

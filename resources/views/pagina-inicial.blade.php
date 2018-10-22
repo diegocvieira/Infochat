@@ -16,14 +16,8 @@
             </div>
 
             <div class="chat">
-                <div class="sem-selecao">
+                <div class="sem-mensagens">
                     <img src="{{ asset('img/icon-logo.png') }}" alt="Selecione um profissional ou estabelecimento" />
-
-                    @if(Auth::guard('web')->check())
-                        <p>Selecione um profissional ou estabelecimento<br>para pedir informações ou tirar dúvidas</p>
-                    @else
-                        <p>Acesse sua conta e selecione um profissional<br>ou estabelecimento para ser atendido</p>
-                    @endif
                 </div>
             </div>
         </div>

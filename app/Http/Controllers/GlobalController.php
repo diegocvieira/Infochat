@@ -31,12 +31,12 @@ class GlobalController extends Controller
             'a_z' => 'a - z'
         ];
 
-        $trabalhos = Trabalho::filtroStatus()->filtroCidade()->filtroOrdem('random')->paginate(20);
+        //$trabalhos = Trabalho::filtroStatus()->filtroCidade()->filtroOrdem('random')->paginate(20);
 
         if(Agent::isMobile()) {
             return view('mobile.pagina-inicial', compact('filtro_ordem', 'trabalhos'));
         } else {
-            return view('pagina-inicial', compact('filtro_ordem', 'trabalhos'));
+            return view('pagina-inicial', compact('filtro_ordem'));
         }
     }
 

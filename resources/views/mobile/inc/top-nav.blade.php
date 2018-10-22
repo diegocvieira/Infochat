@@ -20,11 +20,7 @@
 
         <ul>
             <li>
-                <a href="#" id="open-cidades" class="icon-cidades">Trocar cidade</a>
-            </li>
-
-            <li>
-                <a href="#" id="open-aside" class="icon-categorias">Categorias</a>
+                <a href="#" id="open-cidades" class="icon-cidades">{{ Cookie::get('sessao_cidade_title') . '/' . Cookie::get('sessao_estado_letter') }}</a>
             </li>
 
             <li>

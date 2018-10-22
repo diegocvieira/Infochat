@@ -68,10 +68,10 @@ Route::group(['prefix' => 'mensagem'], function() {
     Route::get('list/trabalho', 'ChatController@trabalho')->name('msg-trabalho');
     // Exibir chat
     Route::get('chat/show/{id}/{tipo}/{chat_id?}', 'ChatController@show');
+    // Enviar
+    Route::post('send', 'MessageController@send');
 
     Route::group(['middleware' => 'auth:web'], function() {
-        // Enviar
-        Route::post('send', 'MessageController@send');
         // Listar mensagens do chat
         Route::get('list/{id}/{page}/{new_messages?}', 'MessageController@list');
         // Finalizar chat
