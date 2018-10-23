@@ -78,6 +78,7 @@ class MessageController extends Controller
 
                     if($message->save()) {
                         $return['status'] = 1;
+                        $return['chat_id'] = $chat_id;
 
                         // Pega o token da pessoa que recebe a mensagem
                         $tokenDoDestinatario = $chat->from_id == $user_logged ? $chat->user_to->onesignal_token : $chat->user_from->onesignal_token;
@@ -180,6 +181,7 @@ class MessageController extends Controller
             $create_user = json_decode(app('App\Http\Controllers\UserController')->create($request_user), true);
 
             $return['status'] = $create_user['status'] == true ? 1 : 3;
+            $return['user_id'] = $create_user['id'];
         }
 
         return json_encode($return);

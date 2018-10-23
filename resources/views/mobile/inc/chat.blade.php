@@ -44,9 +44,10 @@
 </div>
 
 {!! Form::open(['method' => 'post', 'action' => 'MessageController@send', 'id' => 'form-enviar-msg']) !!}
-    {!! Form::text('message', null, ['autofocus', 'placeholder' => 'Digite aqui...', 'class' => !Auth::guard('web')->check() ? 'lock' : '']) !!}
+    {!! Form::text('message', null, ['class' => !Auth::guard('web')->check() ? 'unlogged' : '', 'placeholder' => Auth::guard('web')->check() ? 'Digite uma mensagem' : 'Escreva seu nome antes de começar']) !!}
 
     {!! Form::hidden('chat_id', isset($chat_id) ? $chat_id : '') !!}
+    {!! Form::hidden('work_user', $tipo == 'trabalho' ? $destinatario->user->id : '') !!}
 
     {!! Form::submit('', ['class' => 'button']) !!}
 {!! Form::close() !!}

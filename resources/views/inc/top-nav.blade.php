@@ -47,6 +47,14 @@
                         <li>
                             <a href="{{ route('usuario-logout') }}" class="icon-logout">Sair</a>
                         </li>
+
+                        <li>
+                            <a href="#" id="open-contato">Contato</a>
+
+                            <a href="{{ route('termos-uso') }}" target="_blank">Termos</a>
+
+                            <a href="{{ route('termos-privacidade') }}" target="_blank">Privacidade</a>
+                        </li>
                     </ul>
                 </li>
             @else

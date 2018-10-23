@@ -1,16 +1,20 @@
 <div class="abas-resultados">
     <a href="#" data-type="resultado" class="active">PESQUISA</a>
-    <a href="{{ route('msg-pessoal') }}" data-type="pessoal">MENSAGENS
+
+    <a href="{{ route('msg-pessoal') }}" data-type="pessoal">CONVERSAS
         @if($new_messages_pessoal)
             <span>{{ $new_messages_pessoal }}</span>
         @endif
         </a>
     </a>
-    <a href="{{ route('msg-trabalho') }}" data-type="trabalho">CLIENTES
-        @if($new_messages_trabalho)
-            <span>{{ $new_messages_trabalho }}</span>
-        @endif
-    </a>
+
+    @if(Auth::guard('web')->check() && Auth::guard('web')->user()->trabalho)
+        <a href="{{ route('msg-trabalho') }}" data-type="trabalho">CLIENTES
+            @if($new_messages_trabalho)
+                <span>{{ $new_messages_trabalho }}</span>
+            @endif
+        </a>
+    @endif
 </div>
 
 <div id="form-search-results">

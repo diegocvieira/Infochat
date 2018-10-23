@@ -16,9 +16,19 @@ Route::get('/', 'GlobalController@inicial')->name('inicial');
 // Acessar o chat pela url
 Route::get('{slug}', 'ChatController@showChatUrl')->name('show-chat');
 
-// Listar e setar cidade
-Route::post('cidades/get', 'GlobalController@getCidade');
-Route::get('cidades/set/{id}', 'GlobalController@setCidade');
+// Cities
+Route::group(['prefix' => 'cidades'], function() {
+    Route::post('get', 'GlobalController@getCidade');
+    Route::get('set/{id}', 'GlobalController@setCidade');
+
+    Route::get('trocar', function() {
+        if(Agent::isMobile()) {
+            return view('mobile.cities');
+        } else {
+            return redirect()->route('inicial');
+        }
+    })->name('cities');
+});
 
 // Listar categorias admin
 Route::get('subcategorias/get/{categoria}', 'GlobalController@getSubcategorias');
@@ -26,11 +36,11 @@ Route::get('categorias/get/{area}', 'GlobalController@getCategorias');
 Route::get('areas/get/{tipo}', 'GlobalController@getAreas');
 
 // Aside categorias
-Route::get('aside/categorias/{slug}/{type}', 'GlobalController@asideCategorias');
+/*Route::get('aside/categorias/{slug}/{type}', 'GlobalController@asideCategorias');
 Route::get('aside/subcategorias/{slug}', 'GlobalController@asideSubcategorias');
 Route::get('aside/areas/{tipo}', 'GlobalController@asideAreas');
 Route::post('categorias/busca', 'GlobalController@buscaCategorias');
-Route::get('aside/result/{type}/{title}', 'GlobalController@searchResult');
+Route::get('aside/result/{type}/{title}', 'GlobalController@searchResult');*/
 
 // Busca
 Route::get('trabalhos/busca', 'TrabalhoController@formBusca');
@@ -102,7 +112,7 @@ Route::group(['prefix' => 'trabalho'], function() {
         Route::post('avaliar-atendimento', 'AvaliarController@avaliarAtendimento')->name('avaliar-atendimento');
         Route::post('avaliar', 'AvaliarController@avaliar')->name('avaliar-trabalho');
 
-        Route::get('favoritar/{id}', 'TrabalhoController@favoritar');
+        //Route::get('favoritar/{id}', 'TrabalhoController@favoritar');
 
         Route::get('material/preview', 'MaterialController@preview')->name('material-preview');
         Route::get('material/create/{folder}', 'MaterialController@create');

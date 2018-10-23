@@ -20,7 +20,7 @@ class GlobalController extends Controller
     {
         // Setar poa como cidade default
         if(!Cookie::get('sessao_cidade_slug')) {
-            $this->setCidade(4913);
+            $this->setCidade(4927);
 
             return redirect()->route('inicial');
         }
@@ -34,7 +34,7 @@ class GlobalController extends Controller
         //$trabalhos = Trabalho::filtroStatus()->filtroCidade()->filtroOrdem('random')->paginate(20);
 
         if(Agent::isMobile()) {
-            return view('mobile.pagina-inicial', compact('filtro_ordem', 'trabalhos'));
+            return view('mobile.pagina-inicial', compact('filtro_ordem'));
         } else {
             return view('pagina-inicial', compact('filtro_ordem'));
         }
@@ -68,7 +68,7 @@ class GlobalController extends Controller
         return json_encode($return);
     }
 
-    public function buscaCategorias(Request $request)
+    /*public function buscaCategorias(Request $request)
     {
         $subcategorias = Subcategoria::where('titulo', 'LIKE', '%' . $request->nome_categoria . '%')->select('titulo', 'slug', DB::raw("'subcategoria' as type"));
 
@@ -89,7 +89,7 @@ class GlobalController extends Controller
         }
 
         return json_encode(['result' => $result, 'type' => $type]);
-    }
+    }*/
 
     // Usado no modal trabalho config
     public function getAreas($tipo)
@@ -115,7 +115,7 @@ class GlobalController extends Controller
         return json_encode(['subcategorias' => $subcategorias]);
     }
 
-    public function asideCategorias($slug, $type)
+    /*public function asideCategorias($slug, $type)
     {
         $categorias = Categoria::whereHas('area', function($q) use($slug, $type) {
                 $q->where('slug', $slug)
@@ -149,7 +149,7 @@ class GlobalController extends Controller
         $areas = Area::typeFilter($type)->ordered()->get();
 
         return json_encode(['areas' => $areas]);
-    }
+    }*/
 
     public function automaticRegister(Request $request)
     {

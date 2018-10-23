@@ -6,7 +6,7 @@
     <nav>
         <a href="#" id="open-menu">
 
-        @if(Auth::guard('web')->check())
+        @if(Auth::guard('web')->check() && !_temporaryAccount())
             @if(Auth::guard('web')->user()->imagem)
                 <img src="{{ asset('uploads/' . Auth::guard('web')->user()->id . '/' . Auth::guard('web')->user()->imagem) }}" class="logged" />
             @else
@@ -20,14 +20,14 @@
 
         <ul>
             <li>
-                <a href="#" id="open-cidades" class="icon-cidades">{{ Cookie::get('sessao_cidade_title') . '/' . Cookie::get('sessao_estado_letter') }}</a>
+                <a href="{{ route('cities') }}" class="icon-cidades">{{ Cookie::get('sessao_cidade_title') . '/' . Cookie::get('sessao_estado_letter') }}</a>
             </li>
 
             <li>
                 <a href="https://play.google.com/store/apps/details?id=com.infochat" class="icon-app">Baixe nosso app</a>
             </li>
 
-            @if(Auth::guard('web')->check())
+            @if(Auth::guard('web')->check() && !_temporaryAccount())
                 <li>
                     <a href="{{ route('get-usuario-config') }}" id="open-usuario-config" class="icon-conta">Perfil de usuário</a>
                 </li>
@@ -70,6 +70,4 @@
 
         {!! Form::hidden('page', '', ['id' => 'form-search-page']) !!}
     {!! Form::close() !!}
-
-    @include('mobile.inc.aside-categorias')
 </header>

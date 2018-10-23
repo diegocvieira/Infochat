@@ -11,7 +11,7 @@ use Hash;
 use Agent;
 
 class UserController extends Controller
-{    
+{
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), $this->userCreateRules(), $this->customMessages());
@@ -39,7 +39,7 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        if(Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password])) {
+        if(Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password], true)) {
             $user = User::find(Auth::guard('web')->user()->id);
             $user->online = 1;
             $user->save();

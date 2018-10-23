@@ -353,7 +353,7 @@ $(document).ready(function() {
 
      ////////////////////////////// ASIDE (CATEGORIAS E CIDADE) //////////////////////////////
 
-     $(document).on('click', '#open-aside, #open-cidades', function(e) {
+     /*$(document).on('click', '#open-aside, #open-cidades', function(e) {
          e.preventDefault();
 
          $('.aside-categorias').css({
@@ -640,6 +640,63 @@ $(document).ready(function() {
          }
 
          return false;
+     });*/
+
+     ////////////////////////////// CHANGE CITY ////////////////////////////////////////
+
+     $('#form-search-city').find('input[type=text]').on('keyup', function() {
+         if($(this).val().length >= 2) {
+             $(this).parents('form').submit();
+         } else {
+             $(this).next().next().remove();
+         }
+     });
+
+     // Enviar form de busca por cidades
+     $('#form-search-city').on('submit', function(e) {
+         e.preventDefault();
+
+         if($(this).find('input[type=text]').val()) {
+             $.ajax({
+                 url: $(this).attr('action'),
+                 method: 'POST',
+                 dataType: 'json',
+                 data: $(this).serialize(),
+                 success: function (data) {
+                     var div = $('.page-cities').find('#cities-result');
+
+                     div.length ? div.find('a').remove() : $('.page-cities').append("<div id='cities-result'></div>");
+
+                     $(data.cidades).each(function(index, element) {
+                         $('.page-cities').find('#cities-result').append("<a class='change-city' href='/cidades/set/" + element.id + "'>" + element.title + ' - ' + element.estado.letter + "</a>");
+                     });
+                 }
+             });
+         }
+
+         return false;
+     });
+
+     $(document).on('click', '.change-city', function(e) {
+         e.preventDefault();
+
+         $.ajax({
+             url: $(this).attr('href'),
+             method: 'GET',
+             dataType: 'json',
+             success: function (data) {
+                 if(data.status) {
+                     window.location = '/';
+                 } else {
+                     var modal = $('#modal-alert');
+                     modal.find('.modal-body').html('Ainda não estamos disponíveis nesta cidade.' + "<br>" + 'Volte outro dia.');
+                     modal.find('.modal-footer .btn').text('OK');
+                     modal.modal('show');
+                 }
+             }
+         });
+
+         return false;
      });
 
      ////////////////////////////// RESULTADOS DAS BUSCAS //////////////////////////////
@@ -652,28 +709,33 @@ $(document).ready(function() {
      $(document).on('submit', '#form-search', function() {
          $(this).find('#form-search-page').val('');
 
-         $.ajax({
-             url: $(this).attr('action'),
-             method: 'GET',
-             dataType:'json',
-             data: $(this).serialize(),
-             success: function(data) {
-                 window.history.pushState('', '', data.url);
+         if($(this).find('input[type=text]').val().length) {
+             $.ajax({
+                 url: $(this).attr('action'),
+                 method: 'GET',
+                 dataType: 'json',
+                 data: $(this).serialize(),
+                 success: function(data) {
+                     window.history.pushState('', '', data.url);
 
-                 $('.abas-resultados').find('a').removeClass('active');
-                 $('.abas-resultados').find('a[data-type=resultado]').addClass('active');
+                     $('.abas-resultados').find('a').removeClass('active');
+                     $('.abas-resultados').find('a[data-type=resultado]').addClass('active');
 
-                 if(data.trabalhos.length > 0) {
-                     $('div.filtro-ordem').show();
+                     if(data.trabalhos.length > 0) {
+                         $('div.filtro-ordem').show();
 
-                     $('#form-search-results').html(data.trabalhos);
-                 } else {
-                     $('div.filtro-ordem').hide();
+                         $('#form-search-results').html(data.trabalhos);
+                     } else {
+                         $('div.filtro-ordem').hide();
 
-                     $('#form-search-results').html("<div class='sem-resultados'><p>Sua pesquisa não encontrou resultado.<br>Verifique se todas as palavras estão corretas ou tente palavras-chave diferentes.</p></div>");
+                         $('#form-search-results').html("<div class='sem-resultados'><p>Sua pesquisa não encontrou resultado.<br>Verifique se todas as palavras estão corretas ou tente palavras-chave diferentes.</p></div>");
+                     }
                  }
-             }
-         });
+             });
+         } else {
+             $('#form-search-results').html('');
+             $('#form-search-results').append("<div class='sem-resultados'><p>Pesquise um profissional ou estabelecimento<br>para pedir informações ou tirar dúvidas</p></div>");
+         }
 
          return false;
      });
@@ -823,7 +885,7 @@ $(document).ready(function() {
     ////////////////////////////// DETALHES DO TRABALHO //////////////////////////////
 
     // Favoritar (Add e remover)
-    $(document).on('click', '.favoritar', function(e) {
+    /*$(document).on('click', '.favoritar', function(e) {
         e.preventDefault();
 
         if(logged) {
@@ -838,7 +900,7 @@ $(document).ready(function() {
         } else {
             modalAlert('É necessário estar logado para poder favoritar', 'OK');
         }
-    });
+    });*/
 
     // Alternar entre abas
     $(document).on('click', '.show-trabalho .abas a', function(e) {
@@ -1512,17 +1574,17 @@ $(document).ready(function() {
             }
         });
 
-        if(logged == true) {
-            if(typeof interval === 'undefined') {
-                interval = null;
-            }
+        if(typeof interval === 'undefined') {
+            interval = null;
+        }
 
-            // Limpar setinterval anterior
-            clearInterval(interval);
+        // Limpar setinterval anterior
+        clearInterval(interval);
 
-            // Atualizar chat em tempo real
-            interval = setInterval(function() {
-                if($('.chat').is(':visible')) {
+        // Atualizar chat em tempo real
+        interval = setInterval(function() {
+            if($('.chat').is(':visible')) {
+                if($('.chat').find('input[name=chat_id]').val()) {
                     $.ajax({
                         url: 'mensagem/list/' + $('.chat').find('input[name=chat_id]').val() + '/0/true',
                         method: 'GET',
@@ -1536,11 +1598,11 @@ $(document).ready(function() {
                             }
                         }
                     });
-                } else {
-                    clearInterval(interval);
                 }
-            }, 10000);
-        }
+            } else {
+                clearInterval(interval);
+            }
+        }, 10000);
     });
 
     // Avaliar atendimento
@@ -1570,14 +1632,16 @@ $(document).ready(function() {
         var input = $(this).find('input[type=text]');
 
         if(input.val()) {
-            $('.chat').find('.sem-mensagens').remove();
-
             var div = $('.chat').find('.mensagens'),
                 date = new Date();
 
-            div.append("<div class='row enviada'><div class='msg'><p>" + input.val() + "</p><span>" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + "</span></div></div>");
+            if(!input.hasClass('unlogged')) {
+                $('.chat').find('.sem-mensagens').remove();
 
-            div.scrollTop(div[0].scrollHeight);
+                div.append("<div class='row enviada'><div class='msg'><p>" + input.val() + "</p><span>" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + "</span></div></div>");
+
+                div.scrollTop(div[0].scrollHeight);
+            }
 
             $.ajax({
                 url: $(this).attr('action'),
@@ -1588,6 +1652,10 @@ $(document).ready(function() {
                     if(input.hasClass('unlogged')) {
                         if(data.status) {
                             input.attr('placeholder', 'Digite uma mensagem').removeClass('unlogged');
+
+                            if(app) {
+                                Android.salvaToken(data.user_id);
+                            }
                         } else {
                             modalAlert('Ocorreu um erro inesperado. Tente novamente.', 'OK');
                         }
@@ -1599,6 +1667,8 @@ $(document).ready(function() {
 
                             modalAlert('Ocorreu um erro inesperado. Tente novamente.', 'OK');
                         }
+                    } else if(data.status == 1) {
+                        $('.chat').find('#form-enviar-msg').find('input[name=chat_id]').val(data.chat_id);
                     }
                 }
             });
