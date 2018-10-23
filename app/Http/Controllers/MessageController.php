@@ -124,15 +124,15 @@ class MessageController extends Controller
                                 $claimed_url = url('/') . '/reivindicar-conta/check/' . app('App\Http\Controllers\ClaimedController')->createToken($email);
                                 $work_url = route('show-chat', $chat->user_to->trabalho->slug);
 
-                                /*Mail::send('emails.new_message_claimed', ['client' => $client, 'work_url' => $work_url, 'claimed_url' => $claimed_url], function($q) use($email) {
+                                Mail::send('emails.new_message_claimed', ['client' => $client, 'work_url' => $work_url, 'claimed_url' => $claimed_url], function($q) use($email) {
                                     $q->from('no-reply@infochat.com.br', 'Infochat');
                                     $q->to($email)->subject('Nova mensagem');
-                                });*/
+                                });
                             } else {
-                                /*Mail::send('emails.new_message', ['client' => $client], function($q) use($email) {
+                                Mail::send('emails.new_message', ['client' => $client], function($q) use($email) {
                                     $q->from('no-reply@infochat.com.br', 'Infochat');
                                     $q->to($email)->subject('Nova mensagem');
-                                });*/
+                                });
                             }
 
                             if($chat->from_id == $user_logged) {
@@ -153,10 +153,10 @@ class MessageController extends Controller
                                         $work->status = 0;
                                         $work->save();
 
-                                        /*Mail::send('emails.disabled_profile', [], function($q) use($chat) {
+                                        Mail::send('emails.disabled_profile', [], function($q) use($chat) {
                                             $q->from('no-reply@infochat.com.br', 'Infochat');
                                             $q->to($chat->user_to->email)->subject('Perfil desativado');
-                                        });*/
+                                        });
                                     } else {
                                         User::find($chat->to_id)->delete();
                                     }
