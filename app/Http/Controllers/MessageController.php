@@ -250,6 +250,7 @@ class MessageController extends Controller
         $return['trabalho'] = Message::whereHas('chat', function($q) use($user_id) {
                 $q->where('to_id', $user_id);
             })
+            ->whereHas('chat.user_to.trabalho')
             ->where(function($q) use($user_id) {
                 $q->where('deleted', '!=', $user_id)
                     ->orWhereNull('deleted');

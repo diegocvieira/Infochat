@@ -31,9 +31,9 @@ Route::group(['prefix' => 'cidades'], function() {
 });
 
 // Listar categorias admin
-Route::get('subcategorias/get/{categoria}', 'GlobalController@getSubcategorias');
+/*Route::get('subcategorias/get/{categoria}', 'GlobalController@getSubcategorias');
 Route::get('categorias/get/{area}', 'GlobalController@getCategorias');
-Route::get('areas/get/{tipo}', 'GlobalController@getAreas');
+Route::get('areas/get/{tipo}', 'GlobalController@getAreas');*/
 
 // Aside categorias
 /*Route::get('aside/categorias/{slug}/{type}', 'GlobalController@asideCategorias');

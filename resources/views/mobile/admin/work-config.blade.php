@@ -31,7 +31,7 @@
 
         {!! Form::text('nome', null, ['placeholder' => 'Nome *', 'class' => 'nome', 'required']) !!}
 
-        {!! Form::select('area_id', isset($trabalho) ? $areas : [], null, ['class' => 'selectpicker area', 'title' => 'Área *', 'required']) !!}
+        <?php /*{!! Form::select('area_id', isset($trabalho) ? $areas : [], null, ['class' => 'selectpicker area', 'title' => 'Área *', 'required']) !!}
 
         <select name="categoria" title="Categoria" class="selectpicker categoria">
             @if(isset($trabalho))
@@ -41,7 +41,7 @@
             @endif
         </select>
 
-        {!! Form::select('subcategoria', [], null, ['class' => 'selectpicker subcategoria', 'title' => 'Subcategoria']) !!}
+        {!! Form::select('subcategoria', [], null, ['class' => 'selectpicker subcategoria', 'title' => 'Subcategoria']) !!}*/ ?>
 
         <div class="tags">
             <div class="top-tags">

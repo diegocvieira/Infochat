@@ -47,19 +47,19 @@ class TrabalhoController extends Controller
             '5' => 'Sábado'
         ];
 
-        if(isset($trabalho)) {
+        /*if(isset($trabalho)) {
             $areas = Area::where('tipo', $trabalho->tipo)->pluck('titulo', 'id');
 
             $categorias = Categoria::where('area_id', $trabalho->area_id)->get();
-        }
+        }*/
 
         if(Agent::isMobile()) {
             return response()->json([
-                'body' => view('mobile.admin.work-config', compact('categorias', 'areas', 'trabalho', 'tipos', 'horarios', 'dias_semana'))->render()
+                'body' => view('mobile.admin.work-config', compact('trabalho', 'tipos', 'horarios', 'dias_semana'))->render()
             ]);
         } else {
             return response()->json([
-                'body' => view('admin.trabalho-config', compact('categorias', 'areas', 'trabalho', 'tipos', 'horarios', 'dias_semana'))->render()
+                'body' => view('admin.trabalho-config', compact('trabalho', 'tipos', 'horarios', 'dias_semana'))->render()
             ]);
         }
     }
@@ -82,8 +82,6 @@ class TrabalhoController extends Controller
 
             if(!$cidade) {
                 $return['msg'] = 'Não identificamos a sua cidade, confira o nome e tente novamente. Se o problema persistir, entre em contato conosco.';
-            } else if($cidade && $cidade->id == 4913 && !$trabalho->id) {
-                $return['msg'] = 'Para cadastrar seu perfil de trabalho em Pelotas entre em contato pelo e-mail contato@infochat.com.br ou pelo whatsapp 53 99169 1716.';
             } else if($cidade && !in_array($cidade->id, _openCitys())) {
                 $return['msg'] = 'Ainda não estamos operando nesta cidade.' . "<br>" . 'Volte outro dia, estamos trabalhando para levar o infochat para o mundo todo.';
             } else {
@@ -97,7 +95,7 @@ class TrabalhoController extends Controller
                 $trabalho->numero = $request->numero;
                 $trabalho->bairro = $request->bairro;
                 $trabalho->complemento = $request->complemento;
-                $trabalho->area_id = $request->area_id;
+                //$trabalho->area_id = $request->area_id;
                 $trabalho->cep = $request->cep;
                 $trabalho->email = $request->email;
                 $trabalho->status = isset($request->status) ? 1 : 0;
@@ -332,7 +330,7 @@ class TrabalhoController extends Controller
         return [
             'slug' => 'required|max:100|unique:trabalhos,slug,' . $trabalho,
             'nome' => 'required|max:100',
-            'area_id' => 'required',
+            //'area_id' => 'required',
             'tipo' => 'required',
             'cep' => 'max:10',
             'logradouro' => 'max:100',
@@ -354,7 +352,7 @@ class TrabalhoController extends Controller
             'slug.unique' => 'Esta url já está sendo utilizada por outro usuário',
             'img.image' => 'Imagem inválida',
             'img.max' => 'A imagem tem que ter no máximo 5mb.',
-            'area_id.required' => 'Selecione uma área.',
+            //'area_id.required' => 'Selecione uma área.',
             'tipo.required' => 'Selecione um tipo.',
             //'cep.required' => 'Informe o CEP.',
             'cep.max' => 'O CEP deve ter menos de 10 caracteres.',

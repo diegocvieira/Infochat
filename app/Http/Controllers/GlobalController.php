@@ -89,7 +89,7 @@ class GlobalController extends Controller
         }
 
         return json_encode(['result' => $result, 'type' => $type]);
-    }*/
+    }
 
     // Usado no modal trabalho config
     public function getAreas($tipo)
@@ -115,7 +115,7 @@ class GlobalController extends Controller
         return json_encode(['subcategorias' => $subcategorias]);
     }
 
-    /*public function asideCategorias($slug, $type)
+    public function asideCategorias($slug, $type)
     {
         $categorias = Categoria::whereHas('area', function($q) use($slug, $type) {
                 $q->where('slug', $slug)

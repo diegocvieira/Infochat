@@ -20,7 +20,7 @@
                 {!! Form::text('nome', null, ['placeholder' => 'Nome *', 'class' => 'nome', 'required']) !!}
             </div>
 
-            <div class="categorias">
+            <?php /*<div class="categorias">
                 {!! Form::select('area_id', isset($trabalho) ? $areas : [], null, ['class' => 'selectpicker area', 'title' => 'Área *', 'required']) !!}
 
                 <select name="categoria" title="Categoria" class="selectpicker categoria">
@@ -32,7 +32,7 @@
                 </select>
 
                 {!! Form::select('subcategoria', [], null, ['class' => 'selectpicker subcategoria', 'title' => 'Subcategoria']) !!}
-            </div>
+            </div>*/ ?>
 
             <div class="tags">
                 <div class="top-tags">

@@ -122,13 +122,7 @@ class UserController extends Controller
     public function excluirConta(Request $request)
     {
         if(Hash::check($request->password, Auth::guard('web')->user()->password)) {
-            $usuario = User::find(Auth::guard('web')->user()->id);
-
-            if($usuario->imagem) {
-                unlink('uploads/perfil/' . $usuario->imagem);
-            }
-
-            $usuario->delete();
+            $usuario = User::find(Auth::guard('web')->user()->id)->delete();
 
             Session::flush();
             Auth::logout();

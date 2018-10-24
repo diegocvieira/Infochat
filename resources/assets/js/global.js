@@ -21,6 +21,7 @@ $(document).ready(function() {
                 method: 'POST',
                 dataType: 'json',
                 success: function(data) {
+                    console.log(data);
                     newMessagesPessoal(data.pessoal);
                     newMessagesTrabalho(data.trabalho);
                 }
@@ -1254,7 +1255,7 @@ $(document).ready(function() {
     });
 
     // Inserir tag com a categoria e buscar subcategorias
-    $(document).on('change', 'select.categoria, select.subcategoria', function() {
+    /*$(document).on('change', 'select.categoria, select.subcategoria', function() {
         $('.tags').find('.placeholder').hide();
 
         // Preencher select das subcategorias
@@ -1278,7 +1279,7 @@ $(document).ready(function() {
         }
 
         insertTag($(this).find(':selected').data('title'));
-    });
+    });*/
 
     // Mostrar placeholder novamente
     $(document).on('focusout', '.tags label', function() {
@@ -1437,7 +1438,7 @@ $(document).ready(function() {
     });
 
     // Busca por areas
-    $(document).on('change', 'select.tipo', function() {
+    /*$(document).on('change', 'select.tipo', function() {
         var select = $('#form-trabalho-config').find('select.area');
 
         select.find('option').remove();
@@ -1474,7 +1475,7 @@ $(document).ready(function() {
                 select.selectpicker('refresh');
             }
         });
-    });
+    });*/
 
     // Modal alterar o status do trabalho
     $(document).on('click', '.switch', function(e) {
