@@ -59,11 +59,7 @@
 @else
     @if($section == 'pessoal')
         <div class="sem-resultados">
-            @if(Auth::guard('web')->check())
-                <p>Você ainda não enviou nenhuma mensagem.</p>
-            @else
-                <p>É necessário estar logado para<br>poder visualizar suas mensagens.</p>
-            @endif
+            <p>Dê início a um chat para<br>visualizar suas conversas aqui.</p>
         </div>
     @endif
 @endif
