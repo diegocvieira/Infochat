@@ -52,6 +52,14 @@
                     <a href="{{ route('user-login') }}" class="icon-login">Entrar</a>
                 </li>
             @endif
+
+            <li>
+                <a href="#" id="open-contato">Contato</a>
+
+                <a href="{{ route('termos-uso') }}" target="_blank">Termos</a>
+
+                <a href="{{ route('termos-privacidade') }}" target="_blank">Privacidade</a>
+            </li>
         </ul>
     </nav>
 
