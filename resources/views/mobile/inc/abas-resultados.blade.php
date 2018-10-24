@@ -20,6 +20,10 @@
 <div id="form-search-results">
     @if(isset($trabalhos) && count($trabalhos) > 0)
         @include('mobile.inc.list-resultados')
+    @elseif(!isset($trabalhos))
+        <div class="sem-resultados">
+            <p>Pesquise um profissional ou estabelecimento<br>para pedir informações ou tirar dúvidas</p>
+        </div>
     @else
         <div class="sem-resultados">
             <p>Sua pesquisa não encontrou resultado.<br>Verifique se todas as palavras estão corretas ou tente palavras-chave diferentes.</p>

@@ -36,7 +36,6 @@
     @else
         <div class="sem-mensagens">
             <img src="{{ asset('img/icon-logo.png') }}" />
-            <p>Escreva uma mensagem e pressione<br>enter para iniciar o atendimento</p>
         </div>
     @endif
 </div>
@@ -50,7 +49,7 @@
         </div>
     @endif*/ ?>
 
-    {!! Form::text('message', null, ['class' => !Auth::guard('web')->check() ? 'unlogged' : '', 'placeholder' => Auth::guard('web')->check() ? 'Digite uma mensagem' : 'Escreva seu nome antes de começar']) !!}
+    {!! Form::text('message', null, ['class' => !Auth::guard('web')->check() ? 'unlogged' : '', 'placeholder' => Auth::guard('web')->check() ? 'Envie uma mensagem para começar' : 'Escreva seu nome antes de começar']) !!}
 
     {!! Form::hidden('chat_id', isset($chat_id) ? $chat_id : '') !!}
     {!! Form::hidden('work_user', $tipo == 'trabalho' ? $destinatario->user->id : '') !!}

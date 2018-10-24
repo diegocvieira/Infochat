@@ -38,13 +38,12 @@
     @else
         <div class="sem-mensagens">
             <img src="{{ asset('img/icon-logo.png') }}" alt="Escreva uma mensagem" />
-            <p>Escreva uma mensagem<br>para iniciar o atendimento</p>
         </div>
     @endif
 </div>
 
 {!! Form::open(['method' => 'post', 'action' => 'MessageController@send', 'id' => 'form-enviar-msg']) !!}
-    {!! Form::text('message', null, ['class' => !Auth::guard('web')->check() ? 'unlogged' : '', 'placeholder' => Auth::guard('web')->check() ? 'Digite uma mensagem' : 'Escreva seu nome antes de começar']) !!}
+    {!! Form::text('message', null, ['class' => !Auth::guard('web')->check() ? 'unlogged' : '', 'placeholder' => Auth::guard('web')->check() ? 'Envie uma mensagem para começar' : 'Escreva seu nome antes de começar']) !!}
 
     {!! Form::hidden('chat_id', isset($chat_id) ? $chat_id : '') !!}
     {!! Form::hidden('work_user', $tipo == 'trabalho' ? $destinatario->user->id : '') !!}

@@ -919,7 +919,7 @@ $(document).ready(function() {
                 success: function(data) {
                     if(input.hasClass('unlogged')) {
                         if(data.status) {
-                            input.attr('placeholder', 'Digite uma mensagem').removeClass('unlogged');
+                            input.attr('placeholder', 'Envie uma mensagem para começar').removeClass('unlogged');
                         } else {
                             modalAlert('Ocorreu um erro inesperado. Tente novamente.', 'OK');
                         }
