@@ -32,7 +32,7 @@
 
                         <div class="status-geral">
                             @if($chat->close)
-                                <span class="status-chat status-close"></span>
+                                <span class="status-chat status-close" title="Chat finalizado"></span>
                             @endif
 
                             <ul class="options">

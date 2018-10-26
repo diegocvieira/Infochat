@@ -23,11 +23,11 @@
                 <div class="bottom">
                     <div class="status-geral">
                         @if($chat->close)
-                            <span class="status-chat status-close"></span>
+                            <span class="status-chat status-close" title="Chat finalizado"></span>
                         @endif
 
                         @if($chat->user_from->blocked)
-                            <span class="status-chat status-block"></span>
+                            <span class="status-chat status-block" title="Usuário bloqueado"></span>
                         @endif
 
                         <ul class="options">

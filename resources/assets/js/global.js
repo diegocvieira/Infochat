@@ -767,7 +767,7 @@ $(document).ready(function() {
                     if(type == 'close') {
                         parent.find('a').remove();
                         parent.append("<a href='" + data.route + "' class='option-chat' data-type='open'>Retomar chat</a>");
-                        parent.parents('.result').find('.options').before("<span class='status-chat status-close'></span>");
+                        parent.parents('.result').find('.options').before("<span class='status-chat status-close' title='Chat finalizado'></span>");
                     } else if(type == 'open') {
                         parent.find('a').remove();
                         parent.append("<a href='" + data.route + "' class='option-chat' data-type='close'>Finalizar chat</a>");
@@ -785,7 +785,7 @@ $(document).ready(function() {
                     } else if(type == 'block') {
                         parent.find('a').remove();
                         parent.append("<a href='" + data.route + "' class='option-chat' data-type='unblock'>Desbloquear usuário</a>");
-                        parent.parents('.result').find('.options').before("<span class='status-chat status-block'></span>");
+                        parent.parents('.result').find('.options').before("<span class='status-chat status-block' title='Usuário bloqueado'></span>");
                     } else if(type == 'unblock') {
                         parent.find('a').remove();
                         parent.append("<a href='" + data.route + "' class='option-chat' data-type='block'>Bloquear usuário</a>");
