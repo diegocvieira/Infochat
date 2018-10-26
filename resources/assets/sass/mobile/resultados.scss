@@ -1,12 +1,14 @@
 .resultados {
     height: 100%;
     overflow: auto;
+    position: relative;
 
     .sem-resultados {
-        width: 100%;
-        float: left;
         text-align: center;
-        padding-top: 20px;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
 
         p {
             font-size: 14.5px;
