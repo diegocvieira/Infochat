@@ -73,7 +73,7 @@ class TrabalhoController extends Controller
         if($validator->fails()) {
             $return['msg'] = $validator->errors()->first();
         } else if(!isset($request->tag)) {
-            $return['msg'] = 'Informe pelo menos uma tag.';
+            $return['msg'] = 'Informe pelo menos uma palavra-chave.';
         } else {
             $user_id = Auth::guard('web')->user()->id;
 
