@@ -91,16 +91,16 @@ class Trabalho extends Model
         return $this->belongsTo('App\Cidade');
     }
 
-    public function scopeFiltroArea($query, $area)
+    /*public function scopeFiltroArea($query, $area)
     {
         if($area) {
             return $query->whereHas('area', function($q) use($area) {
                 $q->where('slug', $area);
             });
         }
-    }
+    }*/
 
-    public function scopeFiltroTag($query, $tag)
+    /*public function scopeFiltroTag($query, $tag)
     {
         if($tag) {
             return $query->where(function($w) use($tag) {
@@ -109,12 +109,7 @@ class Trabalho extends Model
                 });
             });
         }
-    }
-
-    public function scopeFiltroRandom($query)
-    {
-        return $query->inRandomOrder();
-    }
+    }*/
 
     public function scopeFiltroOrdem($query, $ordem)
     {
@@ -132,7 +127,7 @@ class Trabalho extends Model
         }
     }
 
-    public function scopeFiltroTipo($query, $tipo)
+    /*public function scopeFiltroTipo($query, $tipo)
     {
         if($tipo == 'profissionais') {
             return $query->where('tipo', 1);
@@ -145,7 +140,7 @@ class Trabalho extends Model
         } else {
             return $query->where('tipo', 1)->orWhere('tipo', 2);
         }
-    }
+    }*/
 
     public function scopeFiltroCidade($query)
     {

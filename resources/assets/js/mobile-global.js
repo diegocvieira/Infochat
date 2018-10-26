@@ -793,27 +793,29 @@ $(document).ready(function() {
     $(document).on('press', '.result', function(e) {
         e.preventDefault();
 
-        var top = $('.top-nav');
+        if(!$(this).hasClass('result-tab')) {
+            var top = $('.top-nav');
 
-        $('.top-nav, .abas-resultados').addClass('active-manage');
+            $('.top-nav, .abas-resultados').addClass('active-manage');
 
-        // Hide search
-        $('#form-search').hide();
+            // Hide search
+            $('#form-search').hide();
 
-        // Show menu
-        $('nav').show();
+            // Show menu
+            $('nav').show();
 
-        // Verify if options exists
-        top.find('.manage-options').remove();
+            // Verify if options exists
+            top.find('.manage-options').remove();
 
-        // Hide top
-        $('#logo-infochat, #open-search').hide();
+            // Hide top
+            $('#logo-infochat, #open-search').hide();
 
-        // Move options to top
-        top.append("<div class='manage-options'><a href='#' class='close-content' id='close-manage-options'></a>" + $(this).find('.manage-options').html() + "</div>");
+            // Move options to top
+            top.append("<div class='manage-options'><a href='#' class='close-content' id='close-manage-options'></a>" + $(this).find('.manage-options').html() + "</div>");
 
-        // Add id to identify result after click
-        top.find('.options a').attr('data-chatid', $(this).data('chatid'));
+            // Add id to identify result after click
+            top.find('.options a').attr('data-chatid', $(this).data('chatid'));
+        }
     });
 
     $(document).on('click', '#close-manage-options', function(e) {
@@ -903,7 +905,7 @@ $(document).ready(function() {
     });*/
 
     // Alternar entre abas
-    $(document).on('click', '.show-trabalho .abas a', function(e) {
+    /*$(document).on('click', '.show-trabalho .abas a', function(e) {
         e.preventDefault();
 
         $('.aba-aberta').hide();
@@ -911,10 +913,10 @@ $(document).ready(function() {
 
         $('.' + $(this).data('type')).show();
         $(this).addClass('active');
-    });
+    });*/
 
     // Avaliar
-    $(document).on('click', '#form-avaliar-trabalho .nota label', function() {
+    /*$(document).on('click', '#form-avaliar-trabalho .nota label', function() {
         var nota = $(this).prev().val();
 
         $(this).parents('.nota').find('label').each(function() {
@@ -954,10 +956,10 @@ $(document).ready(function() {
         }
 
         return false;
-    });
+    });*/
 
     // Listar Comentarios
-    $(document).on('click', '.load-more-avaliacoes', function() {
+    /*$(document).on('click', '.load-more-avaliacoes', function() {
         var btn = $(this);
 
         btn.html('Carregando...');
@@ -972,7 +974,7 @@ $(document).ready(function() {
                 $('.comentarios').append(data.avaliacoes);
             }
         });
-    });
+    });*/
 
     ////////////////////////////// MODAL USER CONFIG //////////////////////////////
 
@@ -1121,7 +1123,7 @@ $(document).ready(function() {
 
     ////////////////////////////// MODAL WORK CONFIG //////////////////////////////
 
-    function insertTag(value) {
+    /*function insertTag(value) {
         var count = parseInt($('.tags').find('.count-tag').text());
 
         if(count > 0) {
@@ -1132,17 +1134,56 @@ $(document).ready(function() {
 
             $('.tags').find('.count-tag').text(count - 1);
         }
-    }
+    }*/
 
     // Inserir uma nova tag
     $(document).on('keydown', '#insert-tag', function(e) {
         $('.tags').find('.placeholder').hide();
 
+        var val = $(this).val(),
+            count = parseInt($('.tags').find('.count-tag').text());
+
         // Inserir tag ao apertar enter
-        if(e.which == 13 && $(this).val()) {
-            insertTag($(this).val());
+        if(e.which == 13 && val && count > 0) {
+            $('#insert-tag').before("<div class='new-tag'><span>" + val + "</span><input style='display: none; width:" + ((val.length + 1) * 10) + "px;' type='text' name='tag[]' value='" + val + "' /><a href='#'></a></div>");
+
+            $('#insert-tag').val('');
+            $('select.categoria, select.subcategoria').val('').selectpicker('refresh');
+
+            $('.tags').find('.count-tag').text(count - 1);
 
             return false;
+        }
+    });
+
+    $(document).on('change', '#form-trabalho-config select.state', function() {
+        $.ajax({
+            url: '/cidades/list/' + $(this).val(),
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                var select = $('select.city');
+
+                select.find('option').remove();
+
+                $(data.cities).each(function(index, element) {
+                    select.append("<option value='" + element.id + "'>" + element.title + "</option>");
+                });
+
+                select.selectpicker('refresh');
+            }
+        });
+    });
+
+    $(document).on('click', '#form-trabalho-config #open-infos', function(e) {
+        e.preventDefault();
+
+        $('#form-trabalho-config').find('.tags .infos').show();
+    });
+
+    $(document).click(function(e) {
+        if(!$(e.target).closest('#open-infos').length) {
+            $('#form-trabalho-config').find('.tags .infos').hide();
         }
     });
 
@@ -1220,7 +1261,7 @@ $(document).ready(function() {
     });
 
     // Alternar entre abas
-    $(document).on('click', '#form-trabalho-config .abas a', function(e) {
+    /*$(document).on('click', '#form-trabalho-config .abas a', function(e) {
         e.preventDefault();
 
         $('.aba-aberta').hide();
@@ -1268,7 +1309,7 @@ $(document).ready(function() {
         if(this.value.length == 9){
             $('#cep').trigger('blur');
         }
-    });
+    });*/
 
     // Validar slug
     $(document).on('keyup', '#slug', function() {
@@ -1292,7 +1333,7 @@ $(document).ready(function() {
     }
 
     // Adicionar mais um telefone
-    $(document).on('click', '.add-fone', function(e) {
+    /*$(document).on('click', '.add-fone', function(e) {
         e.preventDefault();
 
         $(this).parent().before("<div class='fone'><input type='text' placeholder='Telefone' class='fone-mask' name='fone[]' /><a href='#' class='remove-item'></a></div>");
@@ -1327,7 +1368,7 @@ $(document).ready(function() {
         e.preventDefault();
 
         $(this).parent().remove();
-    });
+    });*/
 
     // Busca por areas
     /*$(document).on('change', 'select.tipo', function() {
@@ -1464,24 +1505,18 @@ $(document).ready(function() {
                             minlength: 1,
                             maxlength: 100
                         },
-                        tipo: {
-                            required: true,
-                            minlength: 1
-                        },
-                        area_id : {
-                            required: true,
-                            minlength: 1
-                        },
                         slug: {
                             required: true,
                             minlength: 1,
                             maxlength: 100
                         },
                         cidade: {
-                            required: true
+                            required: true,
+                            minlength: 1
                         },
                         estado: {
-                            required: true
+                            required: true,
+                            minlength: 1
                         }
                     },
                     highlight: function (element, errorClass, validClass) {

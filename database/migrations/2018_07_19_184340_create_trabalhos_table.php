@@ -19,7 +19,7 @@ class CreateTrabalhosTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedInteger('area_id')->nullable();
             $table->foreign('area_id')->references('id')->on('areas')->onDelete('cascade');
-            $table->integer('tipo')->comments('1-profissional, 2-estabelecimento');
+            $table->integer('tipo')->nullable()->comments('1-profissional, 2-estabelecimento');
             $table->string('nome', 100);
             $table->string('email', 62)->nullable();
             $table->string('slug', 100)->unique();

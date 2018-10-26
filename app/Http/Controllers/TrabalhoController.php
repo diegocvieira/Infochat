@@ -25,7 +25,9 @@ class TrabalhoController extends Controller
     {
         $trabalho = Trabalho::where('user_id', Auth::guard('web')->user()->id)->first();
 
-        $tipos = [
+        $states = Estado::pluck('title', 'id');
+
+        /*$tipos = [
             '1' => 'Profissional',
             '2' => 'Estabelecimento'
         ];
@@ -45,7 +47,7 @@ class TrabalhoController extends Controller
             '3' => 'Quinta',
             '4' => 'Sexta',
             '5' => 'Sábado'
-        ];
+        ];*/
 
         /*if(isset($trabalho)) {
             $areas = Area::where('tipo', $trabalho->tipo)->pluck('titulo', 'id');
@@ -55,11 +57,11 @@ class TrabalhoController extends Controller
 
         if(Agent::isMobile()) {
             return response()->json([
-                'body' => view('mobile.admin.work-config', compact('trabalho', 'tipos', 'horarios', 'dias_semana'))->render()
+                'body' => view('mobile.admin.work-config', compact('trabalho', 'states'))->render()
             ]);
         } else {
             return response()->json([
-                'body' => view('admin.trabalho-config', compact('trabalho', 'tipos', 'horarios', 'dias_semana'))->render()
+                'body' => view('admin.trabalho-config', compact('trabalho', 'states'))->render()
             ]);
         }
     }
@@ -70,34 +72,36 @@ class TrabalhoController extends Controller
 
         if($validator->fails()) {
             $return['msg'] = $validator->errors()->first();
+        } else if(!isset($request->tag)) {
+            $return['msg'] = 'Informe pelo menos uma tag.';
         } else {
             $user_id = Auth::guard('web')->user()->id;
 
             $trabalho = Trabalho::firstOrNew(['user_id' => $user_id]);
 
             // Buscar a cidade no banco
-            $cidade = Cidade::whereHas('estado', function($q) use($request) {
-                $q->where('letter', $request->estado);
-            })->where('title', 'LIKE', '%' . $request->cidade . '%')->select('id')->first();
+            //$cidade = Cidade::whereHas('estado', function($q) use($request) {
+                //$q->where('letter', $request->estado);
+            //})->where('title', 'LIKE', '%' . $request->cidade . '%')->select('id')->first();
 
-            if(!$cidade) {
-                $return['msg'] = 'Não identificamos a sua cidade, confira o nome e tente novamente. Se o problema persistir, entre em contato conosco.';
-            } else if($cidade && !in_array($cidade->id, _openCitys())) {
-                $return['msg'] = 'Ainda não estamos operando nesta cidade.' . "<br>" . 'Volte outro dia, estamos trabalhando para levar o infochat para o mundo todo.';
-            } else {
-                $trabalho->cidade_id = $cidade->id;
+            //if(!$cidade) {
+                //$return['msg'] = 'Não identificamos a sua cidade, confira o nome e tente novamente. Se o problema persistir, entre em contato conosco.';
+            //} else if($cidade && !in_array($cidade->id, _openCitys())) {
+                //$return['msg'] = 'Ainda não estamos operando nesta cidade.' . "<br>" . 'Volte outro dia, estamos trabalhando para levar o infochat para o mundo todo.';
+            //} else {
+                $trabalho->cidade_id = $request->cidade;
                 $trabalho->user_id = $user_id;
                 $trabalho->slug = str_slug($request->slug, '-');
-                $trabalho->tipo = $request->tipo;
+                //$trabalho->tipo = $request->tipo;
                 $trabalho->nome = $request->nome;
-                $trabalho->descricao = $request->descricao;
-                $trabalho->logradouro = $request->logradouro;
-                $trabalho->numero = $request->numero;
-                $trabalho->bairro = $request->bairro;
-                $trabalho->complemento = $request->complemento;
+                //$trabalho->descricao = $request->descricao;
+                //$trabalho->logradouro = $request->logradouro;
+                //$trabalho->numero = $request->numero;
+                //$trabalho->bairro = $request->bairro;
+                //$trabalho->complemento = $request->complemento;
                 //$trabalho->area_id = $request->area_id;
-                $trabalho->cep = $request->cep;
-                $trabalho->email = $request->email;
+                //$trabalho->cep = $request->cep;
+                //$trabalho->email = $request->email;
                 $trabalho->status = isset($request->status) ? 1 : 0;
 
                 if(!empty($request->img)) {
@@ -106,7 +110,7 @@ class TrabalhoController extends Controller
 
                 if($trabalho->save()) {
                     // Telefones
-                    $trabalho->telefones()->delete();
+                    /*$trabalho->telefones()->delete();
                     if(isset($request->fone)) {
                         foreach($request->fone as $fone) {
                             if(!empty($fone)) {
@@ -123,7 +127,7 @@ class TrabalhoController extends Controller
                                 $trabalho->redes()->create(['url' => $social]);
                             }
                         }
-                    }
+                    }*/
 
                     // Tags
                     $trabalho->tags()->delete();
@@ -134,7 +138,7 @@ class TrabalhoController extends Controller
                     }
 
                     // Horarios de atendimento
-                    $trabalho->horarios()->delete();
+                    /*$trabalho->horarios()->delete();
                     $horarios = array_map(function($d, $dm, $at, $dt, $an) {
                         return array('dia' => $d, 'de_manha' => $dm, 'ate_tarde' => $at, 'de_tarde' => $dt, 'ate_noite' => $an);
                     }, $request->dia, $request->de_manha, $request->ate_tarde, $request->de_tarde, $request->ate_noite);
@@ -142,13 +146,13 @@ class TrabalhoController extends Controller
                         if(is_numeric($horario['dia']) && ($horario['de_manha'] && $horario['ate_tarde'] || $horario['de_tarde'] && $horario['ate_noite'])) {
                             $trabalho->horarios()->create($horario);
                         }
-                    }
+                    }*/
 
                     $return['msg'] = 'Informações salvas com sucesso!';
                 } else {
                     $return['msg'] = 'Ocorreu um erro inesperado. Tente novamente.';
                 }
-            }
+            //}
         }
 
         return json_encode($return);
@@ -173,10 +177,10 @@ class TrabalhoController extends Controller
         $city = Cookie::get('sessao_cidade_slug');
         $state = Cookie::get('sessao_estado_letter_lc');
 
-        return $this->busca($city, $state, $request->tipo, $palavra_chave, $request->area, $request->tag, $request->ordem);
+        return $this->busca($city, $state, $palavra_chave, $request->ordem);
     }
 
-    public function busca($city_slug, $state_letter_lc, $tipo = null, $palavra_chave = null, $area = null, $tag = null, $ordem = null)
+    public function busca($city_slug, $state_letter_lc, $palavra_chave = null, $ordem = null)
     {
         // Verifica e seta a requisicao se for uma cidade diferente
         if($city_slug != Cookie::get('sessao_cidade_slug') || $state_letter_lc != Cookie::get('sessao_estado_letter_lc')) {
@@ -188,7 +192,7 @@ class TrabalhoController extends Controller
             if(count($city) > 0) {
                 _setCidade($city, $force = true);
 
-                return redirect(action('TrabalhoController@busca', [$city_slug, $state_letter_lc, $tipo, $palavra_chave, $area, $tag]));
+                return redirect(action('TrabalhoController@busca', [$city_slug, $state_letter_lc, $palavra_chave]));
             } else {
                 return view('errors.404');
             }
@@ -196,16 +200,12 @@ class TrabalhoController extends Controller
 
         // Desformatar para pesquisar
         $palavra_chave = urldecode($palavra_chave);
-        $tag = urldecode($tag);
 
         $trabalhos = Trabalho::filtroStatus()
             ->filtroCidade()
-            ->filtroArea($area)
-            ->filtroTag($tag)
-            ->filtroTipo($tipo)
             ->filtroOrdem($ordem);
 
-        if($palavra_chave && $palavra_chave != 'area') {
+        if($palavra_chave) {
             // SEO
             $header_title = $palavra_chave .' em ' . Cookie::get('sessao_cidade_title') . ' - ' . Cookie::get('sessao_estado_letter') . ' | Infochat';
             $header_desc = 'Clique para ver ' . $palavra_chave . ' em ' . Cookie::get('sessao_cidade_title') . ' - ' . Cookie::get('sessao_estado_letter') . ' no site infochat.com.br';
@@ -232,15 +232,9 @@ class TrabalhoController extends Controller
         $trabalhos = $trabalhos->paginate(20);
 
         // Gera a URL
-        if(!$palavra_chave && $area) {
-            $palavra_chave = 'area';
-        }
-        $url = '/busca/' . $city_slug . '/' . $state_letter_lc . '/' . $tipo;
-        if($area || $palavra_chave) {
+        $url = '/busca/' . $city_slug . '/' . $state_letter_lc;
+        if($palavra_chave) {
             $url =  $url . '/' . urlencode($palavra_chave);
-        }
-        if($area) {
-            $url = $url . '/' . $area . '/' . urlencode($tag);
         }
 
         if(count($trabalhos) > 0) {
@@ -254,9 +248,9 @@ class TrabalhoController extends Controller
         // Detecta se foi acessado por url ou ajax
         if(!\Request::ajax()) {
             if(Agent::isMobile()) {
-                return view('mobile.pagina-inicial', compact('trabalhos', 'palavra_chave', 'tipo', 'area', 'tag', 'filtro_ordem', 'header_title', 'header_desc'));
+                return view('mobile.pagina-inicial', compact('trabalhos', 'palavra_chave', 'filtro_ordem', 'header_title', 'header_desc'));
             } else {
-                return view('pagina-inicial', compact('trabalhos', 'palavra_chave', 'tipo', 'area', 'tag', 'filtro_ordem', 'header_title', 'header_desc'));
+                return view('pagina-inicial', compact('trabalhos', 'palavra_chave', 'filtro_ordem', 'header_title', 'header_desc'));
             }
         } else {
             if(Agent::isMobile()) {
@@ -273,7 +267,7 @@ class TrabalhoController extends Controller
         }
     }
 
-    public function show($id)
+    /*public function show($id)
     {
         $trabalho = Trabalho::find($id);
 
@@ -299,9 +293,9 @@ class TrabalhoController extends Controller
                 'status' => true
             ]);
         }
-    }
+    }*/
 
-    public function favoritar($id)
+    /*public function favoritar($id)
     {
         $user_id = Auth::guard('web')->user()->id;
 
@@ -321,7 +315,7 @@ class TrabalhoController extends Controller
         }
 
         return json_encode(true);
-    }
+    }*/
 
     private function trabalhoRules()
     {
@@ -331,13 +325,13 @@ class TrabalhoController extends Controller
             'slug' => 'required|max:100|unique:trabalhos,slug,' . $trabalho,
             'nome' => 'required|max:100',
             //'area_id' => 'required',
-            'tipo' => 'required',
-            'cep' => 'max:10',
-            'logradouro' => 'max:100',
-            'bairro' => 'max:50',
-            'numero' => 'max:10',
+            //'tipo' => 'required',
+            //'cep' => 'max:10',
+            //'logradouro' => 'max:100',
+            //'bairro' => 'max:50',
+            //'numero' => 'max:10',
             'cidade' => 'required',
-            'estado' => 'required',
+            //'estado' => 'required',
             'img' => 'image|max:5000'
         ];
     }
@@ -353,123 +347,17 @@ class TrabalhoController extends Controller
             'img.image' => 'Imagem inválida',
             'img.max' => 'A imagem tem que ter no máximo 5mb.',
             //'area_id.required' => 'Selecione uma área.',
-            'tipo.required' => 'Selecione um tipo.',
+            //'tipo.required' => 'Selecione um tipo.',
             //'cep.required' => 'Informe o CEP.',
-            'cep.max' => 'O CEP deve ter menos de 10 caracteres.',
+            //'cep.max' => 'O CEP deve ter menos de 10 caracteres.',
             //'logradouro.required' => 'Informe o logradouro.',
-            'logradouro.max' => 'O logradouro deve ter menos de 100 caracteres.',
+            //'logradouro.max' => 'O logradouro deve ter menos de 100 caracteres.',
             //'bairro.required' => 'Informe o bairro.',
-            'bairro.max' => 'O bairro deve ter menos de 50 caracteres.',
+            //'bairro.max' => 'O bairro deve ter menos de 50 caracteres.',
             //'numero.required' => 'Informe o número.',
-            'numero.max' => 'O número deve ter menos de 10 caracteres.',
+            //'numero.max' => 'O número deve ter menos de 10 caracteres.',
             'cidade.required' => 'Informe a cidade.',
-            'estado.required' => 'Informe o estado.'
+            //'estado.required' => 'Informe o estado.'
         ];
-    }
-
-
-
-
-
-
-
-
-
-    public function teste()
-    {
-        /*$mensagem = Mensagem::selectRaw("CONCAT(FLOOR(sum(diferenca)/60),'h',MOD(sum(diferenca),60),'m') as tempo")
-    ->whereIn('id', function($query) {
-     $query->selectRaw('TIMESTAMPDIFF(MINUTE, m1.created_at, min(m2.created_at)) as diferenca')
-        ->from('mensagens as m1')
-        ->join('mensagens as m2', 'm1.remetente_id', '=', 'm2.destinatario_id')
-        ->where('m2.created_at', '>', 'm1.created_at')
-        ->groupBy('m1.id');
-     })
-     ->where(function($query) {
-           $query->selectRaw('min(id)')
-                ->from('mensagens')
-                ->where('destinatario_id', 2);
-     })->toSql();
-      //->get();
-*/
-      /*$mensagem = DB::table(DB::raw('(
-          SELECT
-    	TIMESTAMPDIFF(MINUTE, m1.created_at, min(m2.created_at)) as diferenca
-    FROM
-        mensagens m1
-    JOIN
-        mensagens m2 ON m1.remetente_id = m2.destinatario_id AND m2.remetente_id = m1.destinatario_id AND m2.created_at > m1.created_at
-    GROUP BY
-        m1.remetente_id,
-        m1.destinatario_id,
-        m1.created_at,
-        m1.id
-    ) temp'))
-    ->selectRaw("CONCAT(FLOOR(sum(diferenca)/60),'h',MOD(sum(diferenca),60),'m') as tempo")
-    /*->where(function($query) {
-          $query->selectRaw('min(id)')
-               ->from('mensagens')
-               ->where('destinatario_id', 2);
-    })->toSql();
-
-      return $mensagem;*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            /*SELECT
-	CONCAT(FLOOR(sum(diferenca)/60),'h',MOD(sum(diferenca),60),'m') as tempo
-FROM
-(SELECT
-	TIMESTAMPDIFF(MINUTE, m1.created_at, min(m2.created_at)) as diferenca
-FROM
-    mensagens m1
-JOIN
-    mensagens m2 ON m1.remetente_id = m2.destinatario_id AND m2.remetente_id = m1.destinatario_id AND m2.created_at > m1.created_at
-GROUP BY
-    m1.remetente_id,
-    m1.destinatario_id,
-    m1.created_at,
-    m1.id) AS table1
-WHERE
-	(SELECT
-		MIN(id)
-	FROM
-		mensagens
-	WHERE
-		destinatario_id = 2)*/
-
-        /*$mensagem = Mensagem::
-            whereIn('id', function($query) {
-                $query->selectRaw('TIMESTAMPDIFF(MINUTE, m1.created_at, min(m2.created_at)) as diferenca')
-                    ->from('mensagens as m1')
-                    ->join('mensagens as m2', 'm1.remetente_id', '=', 'm2.destinatario_id')
-                    ->where('m2.created_at', '>', 'm1.created_at')
-                    ->groupBy('m1.remetente_id', 'm1.destinatario_id', 'm1.created_at', 'm1.id');
-                })
-            ->where(function($query) {
-                $query->selectRaw('min(id)')
-                    ->from('mensagens')
-                    ->where('destinatario_id', 2);
-                })
-            ->select("CONCAT(FLOOR(sum(diferenca)/60),'h',MOD(sum(diferenca),60),'m') as tempo")
-            ->get();
-
-        return $mensagem;*/
-
-
-        //dd(User::find(1)->trabalho()->toSql());
     }
 }

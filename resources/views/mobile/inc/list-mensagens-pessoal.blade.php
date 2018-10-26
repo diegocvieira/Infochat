@@ -36,7 +36,7 @@
 
                 <div class="manage-options">
                     <div class="options">
-                        <a href="{{ route('show-trabalho', $chat->user_to->trabalho->id) }}" id="work-details"></a>
+                        <?php /*<a href="{{ route('show-trabalho', $chat->user_to->trabalho->id) }}" id="work-details"></a>*/ ?>
 
                         @if(!$chat->close || $chat->close && $chat->close == Auth::guard('web')->user()->id)
                             @if($chat->close)

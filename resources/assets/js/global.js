@@ -21,7 +21,6 @@ $(document).ready(function() {
                 method: 'POST',
                 dataType: 'json',
                 success: function(data) {
-                    console.log(data);
                     newMessagesPessoal(data.pessoal);
                     newMessagesTrabalho(data.trabalho);
                 }
@@ -627,7 +626,7 @@ $(document).ready(function() {
     });
 
     // Abrir modal do perfil do trabalho
-    $(document).on('click', '.ver-perfil', function(e) {
+    /*$(document).on('click', '.ver-perfil', function(e) {
         e.preventDefault();
 
         $.ajax({
@@ -642,7 +641,7 @@ $(document).ready(function() {
                 modal.modal('show');
             }
         });
-    });
+    });*/
 
     // Favoritar (Add e remover)
     /*$(document).on('click', '.favoritar', function(e) {
@@ -663,7 +662,7 @@ $(document).ready(function() {
     });*/
 
     // Alternar entre abas
-    $(document).on('click', '.modal-trabalho-perfil .abas a', function(e) {
+    /*$(document).on('click', '.modal-trabalho-perfil .abas a', function(e) {
         e.preventDefault();
 
         $('.aba-aberta').hide();
@@ -671,10 +670,10 @@ $(document).ready(function() {
 
         $('.' + $(this).data('type')).show();
         $(this).addClass('active');
-    });
+    });*/
 
     // Avaliar
-    $(document).on('mouseover click', '#form-avaliar-trabalho .nota label', function() {
+    /*$(document).on('mouseover click', '#form-avaliar-trabalho .nota label', function() {
         var nota = $(this).prev().val();
 
         $(this).parents('.nota').find('label').each(function() {
@@ -730,10 +729,10 @@ $(document).ready(function() {
         }
 
         return false;
-    });
+    });*/
 
     // Listar Comentarios
-    $(document).on('click', '.load-more-avaliacoes', function() {
+    /*$(document).on('click', '.load-more-avaliacoes', function() {
         var btn = $(this);
 
         btn.html('Carregando...');
@@ -748,7 +747,7 @@ $(document).ready(function() {
                 $('.comentarios').append(data.avaliacoes);
             }
         });
-    });
+    });*/
 
     ////////////////////////////// CHAT //////////////////////////////
 
@@ -768,7 +767,7 @@ $(document).ready(function() {
                     if(type == 'close') {
                         parent.find('a').remove();
                         parent.append("<a href='" + data.route + "' class='option-chat' data-type='open'>Retomar chat</a>");
-                        parent.parents('.result').find('.options').before("<span class='status-chat status-close'>CHAT FINALIZADO</span>");
+                        parent.parents('.result').find('.options').before("<span class='status-chat status-close'></span>");
                     } else if(type == 'open') {
                         parent.find('a').remove();
                         parent.append("<a href='" + data.route + "' class='option-chat' data-type='close'>Finalizar chat</a>");
@@ -781,15 +780,15 @@ $(document).ready(function() {
                                 window.location.reload(true);
                             }, 100);
                         } else {
-                            $('.chat').html("<div class='sem-selecao'><img src='/img/icon-logo.png' /><p>Selecione um profissional ou estabelecimento<br>para pedir informações ou tirar dúvidas</p></div>");
+                            $('.chat').html("<div class='sem-mensagens'><img src='/img/icon-logo.png' /></div>");
                         }
                     } else if(type == 'block') {
                         parent.find('a').remove();
                         parent.append("<a href='" + data.route + "' class='option-chat' data-type='unblock'>Desbloquear usuário</a>");
-                        parent.parents('.result').find('.options').before("<span class='status-chat status-block'>USUÁRIO BLOQUEADO</span>");
+                        parent.parents('.result').find('.options').before("<span class='status-chat status-block'></span>");
                     } else if(type == 'unblock') {
                         parent.find('a').remove();
-                        parent.append("<a href='" + data.route + "' class='option-chat' data-type='unblock'>Bloquear usuário</a>");
+                        parent.append("<a href='" + data.route + "' class='option-chat' data-type='block'>Bloquear usuário</a>");
                         parent.parents('.result').find('.status-block').remove();
                     }
                 } else {
@@ -1229,7 +1228,7 @@ $(document).ready(function() {
 
     ////////////////////////////// MODAL DAS CONFIGURACOES DO TRABALHO //////////////////////////////
 
-    function insertTag(value) {
+    /*function insertTag(value) {
         var count = parseInt($('.tags').find('.count-tag').text());
 
         if(count > 0) {
@@ -1240,18 +1239,45 @@ $(document).ready(function() {
 
             $('.tags').find('.count-tag').text(count - 1);
         }
-    }
+    }*/
 
     // Inserir uma nova tag
     $(document).on('keydown', '#insert-tag', function(e) {
         $('.tags').find('.placeholder').hide();
 
+        var val = $(this).val(),
+            count = parseInt($('.tags').find('.count-tag').text());
+
         // Inserir tag ao apertar enter
-        if(e.which == 13 && $(this).val()) {
-            insertTag($(this).val());
+        if(e.which == 13 && val && count > 0) {
+            $('#insert-tag').before("<div class='new-tag'><span>" + val + "</span><input style='display: none; width:" + ((val.length + 1) * 10) + "px;' type='text' name='tag[]' value='" + val + "' /><a href='#'></a></div>");
+
+            $('#insert-tag').val('');
+            $('select.categoria, select.subcategoria').val('').selectpicker('refresh');
+
+            $('.tags').find('.count-tag').text(count - 1);
 
             return false;
         }
+    });
+
+    $(document).on('change', '#form-trabalho-config select.state', function() {
+        $.ajax({
+            url: '/cidades/list/' + $(this).val(),
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                var select = $('select.city');
+
+                select.find('option').remove();
+
+                $(data.cities).each(function(index, element) {
+                    select.append("<option value='" + element.id + "'>" + element.title + "</option>");
+                });
+
+                select.selectpicker('refresh');
+            }
+        });
     });
 
     // Inserir tag com a categoria e buscar subcategorias
@@ -1328,7 +1354,7 @@ $(document).ready(function() {
     });
 
     // Alternar entre abas
-    $(document).on('click', '#form-trabalho-config .abas a', function(e) {
+    /*$(document).on('click', '#form-trabalho-config .abas a', function(e) {
         e.preventDefault();
 
         $('.aba-aberta').hide();
@@ -1376,7 +1402,7 @@ $(document).ready(function() {
         if(this.value.length == 9){
             $('#cep').trigger('blur');
         }
-    });
+    });*/
 
     // Validar slug
     $(document).on('keyup', '#slug', function() {
@@ -1400,7 +1426,7 @@ $(document).ready(function() {
     }
 
     // Adicionar mais um telefone
-    $(document).on('click', '.add-fone', function(e) {
+    /*$(document).on('click', '.add-fone', function(e) {
         e.preventDefault();
 
         $(this).parent().before("<div class='row fone'><input type='text' placeholder='Telefone' class='fone-mask' name='fone[]' /><a href='#' class='remove-item'></a></div>");
@@ -1435,7 +1461,7 @@ $(document).ready(function() {
         e.preventDefault();
 
         $(this).parent().remove();
-    });
+    });*/
 
     // Busca por areas
     /*$(document).on('change', 'select.tipo', function() {
@@ -1536,10 +1562,7 @@ $(document).ready(function() {
             modalAlert('A imagem tem que ter no máximo 5mb.', 'OK');
         } else {
             reader.onload = function(e) {
-                preview.removeClass('sem-imagem').css({
-                    'background-image' : 'url(' + e.target.result + ')',
-                    'background-size' : 'cover'
-                });
+                preview.removeClass('sem-imagem').attr('src', e.target.result);
             }
 
             preview.show();
@@ -1574,24 +1597,18 @@ $(document).ready(function() {
                             minlength: 1,
                             maxlength: 100
                         },
-                        tipo: {
-                            required: true,
-                            minlength: 1
-                        },
-                        area_id : {
-                            required: true,
-                            minlength: 1
-                        },
                         slug: {
                             required: true,
                             minlength: 1,
                             maxlength: 100
                         },
                         cidade: {
-                            required: true
+                            required: true,
+                            minlength: 1
                         },
                         estado: {
-                            required: true
+                            required: true,
+                            minlength: 1
                         }
                     },
                     highlight: function (element, errorClass, validClass) {

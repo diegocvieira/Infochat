@@ -31,8 +31,6 @@ class GlobalController extends Controller
             'a_z' => 'a - z'
         ];
 
-        //$trabalhos = Trabalho::filtroStatus()->filtroCidade()->filtroOrdem('random')->paginate(20);
-
         if(Agent::isMobile()) {
             return view('mobile.pagina-inicial', compact('filtro_ordem'));
         } else {
@@ -45,6 +43,13 @@ class GlobalController extends Controller
         $cidades = Cidade::with('estado')->where('title', 'like', '%' . $request->nome_cidade . '%')->orderBy('title', 'asc')->get();
 
         return json_encode(['cidades' => $cidades]);
+    }
+
+    public function listCities($state)
+    {
+        $cities = Cidade::where('estado_id', $state)->orderBy('title', 'asc')->get();
+
+        return json_encode(['cities' => $cities]);
     }
 
     public function setCidade($id)

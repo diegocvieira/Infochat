@@ -31,7 +31,7 @@
 
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="{{ route('get-usuario-config') }}" id="open-usuario-config" class="icon-conta">Perfil de usuário</a>
+                            <a href="{{ route('get-usuario-config') }}" id="open-usuario-config" class="icon-conta">Minha conta</a>
                         </li>
 
                         <li>

@@ -20,6 +20,7 @@ Route::get('{slug}', 'ChatController@showChatUrl')->name('show-chat');
 Route::group(['prefix' => 'cidades'], function() {
     Route::post('get', 'GlobalController@getCidade');
     Route::get('set/{id}', 'GlobalController@setCidade');
+    Route::get('list/{state}', 'GlobalController@listCities');
 
     Route::get('trocar', function() {
         if(Agent::isMobile()) {
@@ -44,7 +45,7 @@ Route::get('aside/result/{type}/{title}', 'GlobalController@searchResult');*/
 
 // Busca
 Route::get('trabalhos/busca', 'TrabalhoController@formBusca');
-Route::any('busca/{city}/{state}/{tipo?}/{palavra_chave?}/{area?}/{tag?}', 'TrabalhoController@busca');
+Route::any('busca/{city}/{state}/{palavra_chave?}', 'TrabalhoController@busca');
 
 Route::get('termos/uso', function() {
     if(Agent::isMobile()) {
@@ -100,9 +101,9 @@ Route::group(['prefix' => 'mensagem'], function() {
 });
 
 Route::group(['prefix' => 'trabalho'], function() {
-    Route::get('show/{id}', 'TrabalhoController@show')->name('show-trabalho');
+    //Route::get('show/{id}', 'TrabalhoController@show')->name('show-trabalho');
 
-    Route::get('avaliar/list/{id}/{page}', 'AvaliarController@list')->name('listar-avaliacoes');
+    //Route::get('avaliar/list/{id}/{page}', 'AvaliarController@list')->name('listar-avaliacoes');
 
     Route::group(['middleware' => 'auth:web'], function() {
         Route::get('config', 'TrabalhoController@getConfig');
@@ -110,7 +111,7 @@ Route::group(['prefix' => 'trabalho'], function() {
         Route::post('config/status', 'TrabalhoController@setStatus');
 
         Route::post('avaliar-atendimento', 'AvaliarController@avaliarAtendimento')->name('avaliar-atendimento');
-        Route::post('avaliar', 'AvaliarController@avaliar')->name('avaliar-trabalho');
+        //Route::post('avaliar', 'AvaliarController@avaliar')->name('avaliar-trabalho');
 
         //Route::get('favoritar/{id}', 'TrabalhoController@favoritar');
 

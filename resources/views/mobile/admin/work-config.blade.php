@@ -27,9 +27,9 @@
     </div>
 
     <div class="infos">
-        {!! Form::select('tipo', $tipos, null, ['class' => 'selectpicker tipo', 'title' => 'Tipo *', 'required']) !!}
+        <?php /*{!! Form::select('tipo', $tipos, null, ['class' => 'selectpicker tipo', 'title' => 'Tipo *', 'required']) !!}*/ ?>
 
-        {!! Form::text('nome', null, ['placeholder' => 'Nome *', 'class' => 'nome', 'required']) !!}
+        {!! Form::text('nome', null, ['placeholder' => 'Nome', 'class' => 'nome', 'required']) !!}
 
         <?php /*{!! Form::select('area_id', isset($trabalho) ? $areas : [], null, ['class' => 'selectpicker area', 'title' => 'Área *', 'required']) !!}
 
@@ -47,17 +47,13 @@
             <div class="top-tags">
                 <span class="label">Palavras-chave</span>
 
-                <div class="info-tag">
-                    <a href="#"></a>
+                <a href="#" id="open-infos"></a>
 
-                    <div class="infos">
-                        <p>
-                            <span>1. São palavras que os usuários podem usar na busca por seus serviços, produtos ou empresa</span>
-                            <span>2. As primeiras palavras-chave irão aparecer embaixo do seu nome de usuário</span>
-                            <span>3. Selecione as palavras-chave nos campos acima ou escreva e pressione enter para inserir cada uma</span>
-                            <span>4. Priorize as caixas de seleção para aparecer melhor nos resultados</span>
-                        </p>
-                    </div>
+                <div class="infos">
+                    <p>
+                        <span>1. São palavras que os usuários podem usar na busca por seus serviços, produtos ou empresa</span>
+                        <span>2. Escreva e pressione enter para inserir cada palavra-chave</span>
+                    </p>
                 </div>
 
                 <span class="count-tag">{{ (isset($trabalho) && count($trabalho->tags) > 0) ? 10 - count($trabalho->tags) : 10 }}</span>
@@ -79,9 +75,17 @@
                 {!! Form::text('insert_tag', '', ['id' => 'insert-tag']) !!}
             </label>
         </div>
+
+        {!! Form::select('state', isset($trabalho) ? $states : [], isset($trabalho) ? $trabalho->cidade->estado->id : null, ['class' => 'selectpicker state', 'title' => 'Estado', 'required']) !!}
+
+        {!! Form::select('cidade', isset($trabalho) ? [$trabalho->cidade_id => $trabalho->cidade->title] : null, isset($trabalho) ? $trabalho->cidade_id : null, ['class' => 'selectpicker city', 'title' => 'Cidade', 'required']) !!}
+
+        <div class="slug">
+            {!! Form::text('slug', null, ['id' => 'slug', 'required']) !!}
+        </div>
     </div>
 
-    <div class="abas">
+    <?php /* <div class="abas">
         <a href="#" class="active" data-type="sobre">Sobre</a>
         <a href="#" data-type="informacoes">Mais informações</a>
     </div>
@@ -197,6 +201,6 @@
             <div class="add">
                 <a href="#" class="add-atendimento">+ adicionar</a>
             </div>
-        </div>
+        </div>*/ ?>
     </div>
 {!! Form::close() !!}

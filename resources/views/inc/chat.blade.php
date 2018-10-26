@@ -9,10 +9,10 @@
         @endif
     </div>
 
-    @if($tipo == 'trabalho')
-        <a href="#" class="ver-perfil" data-id="{{ $destinatario->id }}">{{ $destinatario->nome }}</a>
-    @else
-        <a href="#">{{ $destinatario->nome }}</a>
+    <h3>{{ $destinatario->nome }}</h3>
+
+    @if($tipo == 'trabalho' && $destinatario->calc_atendimento($destinatario->id))
+        <p class="rate">{{ $destinatario->calc_atendimento($destinatario->id) }}%</p>
     @endif
 
     @if(Auth::guard('web')->check() && $tipo == 'trabalho')

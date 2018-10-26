@@ -10,52 +10,56 @@
             </div>
 
             <div class="infos">
-                @if($chat->count_new_messages() > 0)
-                    <div class="new-messages">
-                        <span>{{ $chat->count_new_messages() }}</span>
-                    </div>
-                @endif
+                <div class="top">
+                    <h3 class="usuario">{{ $chat->user_from->nome }}</h3>
 
-                <h3 class="usuario">{{ $chat->user_from->nome }}</h3>
-
-                <div class="result-bottom">
-                    @if($chat->close)
-                        <span class="status-chat status-close">CHAT FINALIZADO</span>
+                    @if($chat->count_new_messages() > 0)
+                        <div class="new-messages">
+                            <span>{{ $chat->count_new_messages() }}</span>
+                        </div>
                     @endif
+                </div>
 
-                    @if($chat->user_from->blocked)
-                        <span class="status-chat status-block">USUÁRIO BLOQUEADO</span>
-                    @endif
+                <div class="bottom">
+                    <div class="status-geral">
+                        @if($chat->close)
+                            <span class="status-chat status-close"></span>
+                        @endif
 
-                    <ul class="options">
-                        <li>
-                            <a href="#" class="open-options" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"></a>
+                        @if($chat->user_from->blocked)
+                            <span class="status-chat status-block"></span>
+                        @endif
 
-                            <ul class="dropdown-menu">
-                                @if(!$chat->close || $chat->close && $chat->close == Auth::guard('web')->user()->id)
+                        <ul class="options">
+                            <li>
+                                <a href="#" class="open-options" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"></a>
+
+                                <ul class="dropdown-menu">
+                                    @if(!$chat->close || $chat->close && $chat->close == Auth::guard('web')->user()->id)
+                                        <li>
+                                            @if($chat->close)
+                                                <a href="{{ route('open-chat', $chat->id) }}" class="option-chat" data-type="open">Retomar chat</a>
+                                            @else
+                                                <a href="{{ route('close-chat', $chat->id) }}" class="option-chat" data-type="close">Finalizar chat</a>
+                                            @endif
+                                        </li>
+                                    @endif
+
                                     <li>
-                                        @if($chat->close)
-                                            <a href="{{ route('open-chat', $chat->id) }}" class="option-chat" data-type="open">Retomar chat</a>
+                                        @if($chat->user_from->blocked)
+                                            <a href="{{ route('unblock-user', $chat->from_id) }}" class="option-chat" data-type="unblock">Desbloquear usuário</a>
                                         @else
-                                            <a href="{{ route('close-chat', $chat->id) }}" class="option-chat" data-type="close">Finalizar chat</a>
+                                            <a href="{{ route('block-user', $chat->from_id) }}" class="option-chat" data-type="block">Bloquear usuário</a>
                                         @endif
                                     </li>
-                                @endif
 
-                                <li>
-                                    @if($chat->user_from->blocked)
-                                        <a href="{{ route('unblock-user', $chat->from_id) }}" class="option-chat" data-type="unblock">Desbloquear usuário</a>
-                                    @else
-                                        <a href="{{ route('block-user', $chat->from_id) }}" class="option-chat" data-type="block">Bloquear usuário</a>
-                                    @endif
-                                </li>
-
-                                <li>
-                                    <a href="{{ route('delete-chat', $chat->id) }}" class="option-chat" data-type="delete">Apagar chat</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+                                    <li>
+                                        <a href="{{ route('delete-chat', $chat->id) }}" class="option-chat" data-type="delete">Apagar chat</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

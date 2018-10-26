@@ -46,7 +46,7 @@ class AvaliarController extends Controller
         return json_encode($return);
     }
 
-    public function avaliar(Request $request)
+    /*public function avaliar(Request $request)
     {
         $user_id = Auth::guard('web')->user()->id;
         $trabalho = Trabalho::findOrFail($request->trabalho_id);
@@ -77,9 +77,9 @@ class AvaliarController extends Controller
         }
 
         return json_encode($return);
-    }
+    }*/
 
-    public function list($id, $page)
+    /*public function list($id, $page)
     {
         Paginator::currentPageResolver(function() use ($page) {
             return $page;
@@ -103,5 +103,5 @@ class AvaliarController extends Controller
                 ]);
             }
         }
-    }
+    }*/
 }
