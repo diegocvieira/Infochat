@@ -9,19 +9,23 @@
         </div>
 
         <div class="infos">
-            <h3>
-                <a href="{{ route('show-chat', $trabalho->slug) }}">{{ $trabalho->nome }}</a>
-            </h3>
-
-            <div class="tags">
-                @foreach($trabalho->tags as $t)
-                    <p><span>-</span> {{ $t->tag }}</p>
-                @endforeach
+            <div class="top">
+                <h3>
+                    <a href="{{ route('show-chat', $trabalho->slug) }}">{{ $trabalho->nome }}</a>
+                </h3>
             </div>
 
-            <div class="result-bottom">
+            <div class="bottom">
+                <div class="tags">
+                    @foreach($trabalho->tags as $t)
+                        <p><span>-</span> {{ $t->tag }}</p>
+                    @endforeach
+                </div>
+            </div>
+
+            <?php /*<div class="result-bottom">
                 <a href="#" class="ver-perfil" data-id="{{ $trabalho->id }}">ver perfil</a>
-            </div>
+            </div>*/ ?>
         </div>
     </div>
 @endforeach

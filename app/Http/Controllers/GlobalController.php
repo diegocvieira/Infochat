@@ -20,7 +20,7 @@ class GlobalController extends Controller
     {
         // Setar poa como cidade default
         if(!Cookie::get('sessao_cidade_slug')) {
-            $this->setCidade(4913);
+            $this->setCidade(4927);
 
             return redirect()->route('inicial');
         }
@@ -31,12 +31,10 @@ class GlobalController extends Controller
             'a_z' => 'a - z'
         ];
 
-        $trabalhos = Trabalho::filtroStatus()->filtroCidade()->filtroOrdem('random')->paginate(20);
-
         if(Agent::isMobile()) {
-            return view('mobile.pagina-inicial', compact('filtro_ordem', 'trabalhos'));
+            return view('mobile.pagina-inicial', compact('filtro_ordem'));
         } else {
-            return view('pagina-inicial', compact('filtro_ordem', 'trabalhos'));
+            return view('pagina-inicial', compact('filtro_ordem'));
         }
     }
 
@@ -45,6 +43,13 @@ class GlobalController extends Controller
         $cidades = Cidade::with('estado')->where('title', 'like', '%' . $request->nome_cidade . '%')->orderBy('title', 'asc')->get();
 
         return json_encode(['cidades' => $cidades]);
+    }
+
+    public function listCities($state)
+    {
+        $cities = Cidade::where('estado_id', $state)->orderBy('title', 'asc')->get();
+
+        return json_encode(['cities' => $cities]);
     }
 
     public function setCidade($id)
@@ -68,7 +73,7 @@ class GlobalController extends Controller
         return json_encode($return);
     }
 
-    public function buscaCategorias(Request $request)
+    /*public function buscaCategorias(Request $request)
     {
         $subcategorias = Subcategoria::where('titulo', 'LIKE', '%' . $request->nome_categoria . '%')->select('titulo', 'slug', DB::raw("'subcategoria' as type"));
 
@@ -149,7 +154,7 @@ class GlobalController extends Controller
         $areas = Area::typeFilter($type)->ordered()->get();
 
         return json_encode(['areas' => $areas]);
-    }
+    }*/
 
     public function automaticRegister(Request $request)
     {

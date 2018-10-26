@@ -353,7 +353,7 @@ $(document).ready(function() {
 
      ////////////////////////////// ASIDE (CATEGORIAS E CIDADE) //////////////////////////////
 
-     $(document).on('click', '#open-aside, #open-cidades', function(e) {
+     /*$(document).on('click', '#open-aside, #open-cidades', function(e) {
          e.preventDefault();
 
          $('.aside-categorias').css({
@@ -640,6 +640,63 @@ $(document).ready(function() {
          }
 
          return false;
+     });*/
+
+     ////////////////////////////// CHANGE CITY ////////////////////////////////////////
+
+     $('#form-search-city').find('input[type=text]').on('keyup', function() {
+         if($(this).val().length >= 2) {
+             $(this).parents('form').submit();
+         } else {
+             $(this).next().next().remove();
+         }
+     });
+
+     // Enviar form de busca por cidades
+     $('#form-search-city').on('submit', function(e) {
+         e.preventDefault();
+
+         if($(this).find('input[type=text]').val()) {
+             $.ajax({
+                 url: $(this).attr('action'),
+                 method: 'POST',
+                 dataType: 'json',
+                 data: $(this).serialize(),
+                 success: function (data) {
+                     var div = $('.page-cities').find('#cities-result');
+
+                     div.length ? div.find('a').remove() : $('.page-cities').append("<div id='cities-result'></div>");
+
+                     $(data.cidades).each(function(index, element) {
+                         $('.page-cities').find('#cities-result').append("<a class='change-city' href='/cidades/set/" + element.id + "'>" + element.title + ' - ' + element.estado.letter + "</a>");
+                     });
+                 }
+             });
+         }
+
+         return false;
+     });
+
+     $(document).on('click', '.change-city', function(e) {
+         e.preventDefault();
+
+         $.ajax({
+             url: $(this).attr('href'),
+             method: 'GET',
+             dataType: 'json',
+             success: function (data) {
+                 if(data.status) {
+                     window.location = '/';
+                 } else {
+                     var modal = $('#modal-alert');
+                     modal.find('.modal-body').html('Ainda não estamos disponíveis nesta cidade.' + "<br>" + 'Volte outro dia.');
+                     modal.find('.modal-footer .btn').text('OK');
+                     modal.modal('show');
+                 }
+             }
+         });
+
+         return false;
      });
 
      ////////////////////////////// RESULTADOS DAS BUSCAS //////////////////////////////
@@ -652,28 +709,33 @@ $(document).ready(function() {
      $(document).on('submit', '#form-search', function() {
          $(this).find('#form-search-page').val('');
 
-         $.ajax({
-             url: $(this).attr('action'),
-             method: 'GET',
-             dataType:'json',
-             data: $(this).serialize(),
-             success: function(data) {
-                 window.history.pushState('', '', data.url);
+         if($(this).find('input[type=text]').val().length) {
+             $.ajax({
+                 url: $(this).attr('action'),
+                 method: 'GET',
+                 dataType: 'json',
+                 data: $(this).serialize(),
+                 success: function(data) {
+                     window.history.pushState('', '', data.url);
 
-                 $('.abas-resultados').find('a').removeClass('active');
-                 $('.abas-resultados').find('a[data-type=resultado]').addClass('active');
+                     $('.abas-resultados').find('a').removeClass('active');
+                     $('.abas-resultados').find('a[data-type=resultado]').addClass('active');
 
-                 if(data.trabalhos.length > 0) {
-                     $('div.filtro-ordem').show();
+                     if(data.trabalhos.length > 0) {
+                         $('div.filtro-ordem').show();
 
-                     $('#form-search-results').html(data.trabalhos);
-                 } else {
-                     $('div.filtro-ordem').hide();
+                         $('#form-search-results').html(data.trabalhos);
+                     } else {
+                         $('div.filtro-ordem').hide();
 
-                     $('#form-search-results').html("<div class='sem-resultados'><p>Sua pesquisa não encontrou resultado.<br>Verifique se todas as palavras estão corretas ou tente palavras-chave diferentes.</p></div>");
+                         $('#form-search-results').html("<div class='sem-resultados'><p>Sua pesquisa não encontrou resultado.<br>Verifique se todas as palavras estão corretas ou tente palavras-chave diferentes.</p></div>");
+                     }
                  }
-             }
-         });
+             });
+         } else {
+             $('#form-search-results').html('');
+             $('#form-search-results').append("<div class='sem-resultados'><p>Pesquise um profissional ou estabelecimento<br>para pedir informações ou tirar dúvidas</p></div>");
+         }
 
          return false;
      });
@@ -731,27 +793,29 @@ $(document).ready(function() {
     $(document).on('press', '.result', function(e) {
         e.preventDefault();
 
-        var top = $('.top-nav');
+        if(!$(this).hasClass('result-tab')) {
+            var top = $('.top-nav');
 
-        $('.top-nav, .abas-resultados').addClass('active-manage');
+            $('.top-nav, .abas-resultados').addClass('active-manage');
 
-        // Hide search
-        $('#form-search').hide();
+            // Hide search
+            $('#form-search').hide();
 
-        // Show menu
-        $('nav').show();
+            // Show menu
+            $('nav').show();
 
-        // Verify if options exists
-        top.find('.manage-options').remove();
+            // Verify if options exists
+            top.find('.manage-options').remove();
 
-        // Hide top
-        $('#logo-infochat, #open-search').hide();
+            // Hide top
+            $('#logo-infochat, #open-search').hide();
 
-        // Move options to top
-        top.append("<div class='manage-options'><a href='#' class='close-content' id='close-manage-options'></a>" + $(this).find('.manage-options').html() + "</div>");
+            // Move options to top
+            top.append("<div class='manage-options'><a href='#' class='close-content' id='close-manage-options'></a>" + $(this).find('.manage-options').html() + "</div>");
 
-        // Add id to identify result after click
-        top.find('.options a').attr('data-chatid', $(this).data('chatid'));
+            // Add id to identify result after click
+            top.find('.options a').attr('data-chatid', $(this).data('chatid'));
+        }
     });
 
     $(document).on('click', '#close-manage-options', function(e) {
@@ -823,7 +887,7 @@ $(document).ready(function() {
     ////////////////////////////// DETALHES DO TRABALHO //////////////////////////////
 
     // Favoritar (Add e remover)
-    $(document).on('click', '.favoritar', function(e) {
+    /*$(document).on('click', '.favoritar', function(e) {
         e.preventDefault();
 
         if(logged) {
@@ -838,10 +902,10 @@ $(document).ready(function() {
         } else {
             modalAlert('É necessário estar logado para poder favoritar', 'OK');
         }
-    });
+    });*/
 
     // Alternar entre abas
-    $(document).on('click', '.show-trabalho .abas a', function(e) {
+    /*$(document).on('click', '.show-trabalho .abas a', function(e) {
         e.preventDefault();
 
         $('.aba-aberta').hide();
@@ -849,10 +913,10 @@ $(document).ready(function() {
 
         $('.' + $(this).data('type')).show();
         $(this).addClass('active');
-    });
+    });*/
 
     // Avaliar
-    $(document).on('click', '#form-avaliar-trabalho .nota label', function() {
+    /*$(document).on('click', '#form-avaliar-trabalho .nota label', function() {
         var nota = $(this).prev().val();
 
         $(this).parents('.nota').find('label').each(function() {
@@ -892,10 +956,10 @@ $(document).ready(function() {
         }
 
         return false;
-    });
+    });*/
 
     // Listar Comentarios
-    $(document).on('click', '.load-more-avaliacoes', function() {
+    /*$(document).on('click', '.load-more-avaliacoes', function() {
         var btn = $(this);
 
         btn.html('Carregando...');
@@ -910,7 +974,7 @@ $(document).ready(function() {
                 $('.comentarios').append(data.avaliacoes);
             }
         });
-    });
+    });*/
 
     ////////////////////////////// MODAL USER CONFIG //////////////////////////////
 
@@ -1059,7 +1123,7 @@ $(document).ready(function() {
 
     ////////////////////////////// MODAL WORK CONFIG //////////////////////////////
 
-    function insertTag(value) {
+    /*function insertTag(value) {
         var count = parseInt($('.tags').find('.count-tag').text());
 
         if(count > 0) {
@@ -1070,22 +1134,61 @@ $(document).ready(function() {
 
             $('.tags').find('.count-tag').text(count - 1);
         }
-    }
+    }*/
 
     // Inserir uma nova tag
     $(document).on('keydown', '#insert-tag', function(e) {
         $('.tags').find('.placeholder').hide();
 
+        var val = $(this).val(),
+            count = parseInt($('.tags').find('.count-tag').text());
+
         // Inserir tag ao apertar enter
-        if(e.which == 13 && $(this).val()) {
-            insertTag($(this).val());
+        if(e.which == 13 && val && count > 0) {
+            $('#insert-tag').before("<div class='new-tag'><span>" + val + "</span><input style='display: none; width:" + ((val.length + 1) * 10) + "px;' type='text' name='tag[]' value='" + val + "' /><a href='#'></a></div>");
+
+            $('#insert-tag').val('');
+            $('select.categoria, select.subcategoria').val('').selectpicker('refresh');
+
+            $('.tags').find('.count-tag').text(count - 1);
 
             return false;
         }
     });
 
+    $(document).on('change', '#form-trabalho-config select.state', function() {
+        $.ajax({
+            url: '/cidades/list/' + $(this).val(),
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                var select = $('select.city');
+
+                select.find('option').remove();
+
+                $(data.cities).each(function(index, element) {
+                    select.append("<option value='" + element.id + "'>" + element.title + "</option>");
+                });
+
+                select.selectpicker('refresh');
+            }
+        });
+    });
+
+    $(document).on('click', '#form-trabalho-config #open-infos', function(e) {
+        e.preventDefault();
+
+        $('#form-trabalho-config').find('.tags .infos').show();
+    });
+
+    $(document).click(function(e) {
+        if(!$(e.target).closest('#open-infos').length) {
+            $('#form-trabalho-config').find('.tags .infos').hide();
+        }
+    });
+
     // Inserir tag com a categoria e buscar subcategorias
-    $(document).on('change', 'select.categoria, select.subcategoria', function() {
+    /*$(document).on('change', 'select.categoria, select.subcategoria', function() {
         $('.tags').find('.placeholder').hide();
 
         // Preencher select das subcategorias
@@ -1109,7 +1212,7 @@ $(document).ready(function() {
         }
 
         insertTag($(this).find(':selected').data('title'));
-    });
+    });*/
 
     // Mostrar placeholder novamente
     $(document).on('focusout', '.tags label', function() {
@@ -1158,7 +1261,7 @@ $(document).ready(function() {
     });
 
     // Alternar entre abas
-    $(document).on('click', '#form-trabalho-config .abas a', function(e) {
+    /*$(document).on('click', '#form-trabalho-config .abas a', function(e) {
         e.preventDefault();
 
         $('.aba-aberta').hide();
@@ -1206,7 +1309,7 @@ $(document).ready(function() {
         if(this.value.length == 9){
             $('#cep').trigger('blur');
         }
-    });
+    });*/
 
     // Validar slug
     $(document).on('keyup', '#slug', function() {
@@ -1230,7 +1333,7 @@ $(document).ready(function() {
     }
 
     // Adicionar mais um telefone
-    $(document).on('click', '.add-fone', function(e) {
+    /*$(document).on('click', '.add-fone', function(e) {
         e.preventDefault();
 
         $(this).parent().before("<div class='fone'><input type='text' placeholder='Telefone' class='fone-mask' name='fone[]' /><a href='#' class='remove-item'></a></div>");
@@ -1265,10 +1368,10 @@ $(document).ready(function() {
         e.preventDefault();
 
         $(this).parent().remove();
-    });
+    });*/
 
     // Busca por areas
-    $(document).on('change', 'select.tipo', function() {
+    /*$(document).on('change', 'select.tipo', function() {
         var select = $('#form-trabalho-config').find('select.area');
 
         select.find('option').remove();
@@ -1305,7 +1408,7 @@ $(document).ready(function() {
                 select.selectpicker('refresh');
             }
         });
-    });
+    });*/
 
     // Modal alterar o status do trabalho
     $(document).on('click', '.switch', function(e) {
@@ -1402,24 +1505,18 @@ $(document).ready(function() {
                             minlength: 1,
                             maxlength: 100
                         },
-                        tipo: {
-                            required: true,
-                            minlength: 1
-                        },
-                        area_id : {
-                            required: true,
-                            minlength: 1
-                        },
                         slug: {
                             required: true,
                             minlength: 1,
                             maxlength: 100
                         },
                         cidade: {
-                            required: true
+                            required: true,
+                            minlength: 1
                         },
                         estado: {
-                            required: true
+                            required: true,
+                            minlength: 1
                         }
                     },
                     highlight: function (element, errorClass, validClass) {
@@ -1512,17 +1609,17 @@ $(document).ready(function() {
             }
         });
 
-        if(logged == true) {
-            if(typeof interval === 'undefined') {
-                interval = null;
-            }
+        if(typeof interval === 'undefined') {
+            interval = null;
+        }
 
-            // Limpar setinterval anterior
-            clearInterval(interval);
+        // Limpar setinterval anterior
+        clearInterval(interval);
 
-            // Atualizar chat em tempo real
-            interval = setInterval(function() {
-                if($('.chat').is(':visible')) {
+        // Atualizar chat em tempo real
+        interval = setInterval(function() {
+            if($('.chat').is(':visible')) {
+                if($('.chat').find('input[name=chat_id]').val()) {
                     $.ajax({
                         url: 'mensagem/list/' + $('.chat').find('input[name=chat_id]').val() + '/0/true',
                         method: 'GET',
@@ -1536,11 +1633,11 @@ $(document).ready(function() {
                             }
                         }
                     });
-                } else {
-                    clearInterval(interval);
                 }
-            }, 10000);
-        }
+            } else {
+                clearInterval(interval);
+            }
+        }, 10000);
     });
 
     // Avaliar atendimento
@@ -1569,42 +1666,49 @@ $(document).ready(function() {
     $(document).on('submit', '#form-enviar-msg', function() {
         var input = $(this).find('input[type=text]');
 
-        if(logged) {
-            if(input.val()) {
-                $('.chat').find('.sem-mensagens').remove();
+        if(input.val()) {
+            var div = $('.chat').find('.mensagens'),
+                date = new Date();
 
-                var div = $('.chat').find('.mensagens'),
-                    date = new Date();
+            if(!input.hasClass('unlogged')) {
+                $('.chat').find('.sem-mensagens').remove();
 
                 div.append("<div class='row enviada'><div class='msg'><p>" + input.val() + "</p><span>" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + "</span></div></div>");
 
-                // Scroll to bottom
-                setTimeout(function() {
-                    div.scrollTop(div[0].scrollHeight);
-                }, 500);
-
-                $.ajax({
-                    url: $(this).attr('action'),
-                    method: 'POST',
-                    dataType: 'json',
-                    data: $(this).serialize(),
-                    success: function(data) {
-                        if(data.status != 1) {
-                            div.find('.enviada:last').append("<span class='error-msg'>Erro</span>");
-
-                            if(data.status == 3) {
-                                clearInterval(interval);
-
-                                modalAlert(data.msg, 'OK');
-                            }
-                        }
-                    }
-                });
-
-                input.val('');
+                div.scrollTop(div[0].scrollHeight);
             }
-        } else {
-            modalAlert('Acesse sua conta ou cadastre-se para liberar o infochat', 'OK');
+
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                dataType: 'json',
+                data: $(this).serialize(),
+                success: function(data) {
+                    if(input.hasClass('unlogged')) {
+                        if(data.status) {
+                            input.attr('placeholder', 'Envie uma mensagem para começar').removeClass('unlogged');
+
+                            if(app) {
+                                Android.salvaToken(data.user_id);
+                            }
+                        } else {
+                            modalAlert('Ocorreu um erro inesperado. Tente novamente.', 'OK');
+                        }
+                    } else if(data.status != 1) {
+                        div.find('.enviada:last').append("<span class='error-msg'>Erro</span>");
+
+                        if(data.status == 3) {
+                            clearInterval(interval);
+
+                            modalAlert('Ocorreu um erro inesperado. Tente novamente.', 'OK');
+                        }
+                    } else if(data.status == 1) {
+                        $('.chat').find('#form-enviar-msg').find('input[name=chat_id]').val(data.chat_id);
+                    }
+                }
+            });
+
+            input.val('');
         }
 
         return false;

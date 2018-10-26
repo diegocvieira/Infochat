@@ -6,7 +6,7 @@
     <nav>
         <a href="#" id="open-menu">
 
-        @if(Auth::guard('web')->check())
+        @if(Auth::guard('web')->check() && !_temporaryAccount())
             @if(Auth::guard('web')->user()->imagem)
                 <img src="{{ asset('uploads/' . Auth::guard('web')->user()->id . '/' . Auth::guard('web')->user()->imagem) }}" class="logged" />
             @else
@@ -20,20 +20,16 @@
 
         <ul>
             <li>
-                <a href="#" id="open-cidades" class="icon-cidades">Trocar cidade</a>
-            </li>
-
-            <li>
-                <a href="#" id="open-aside" class="icon-categorias">Categorias</a>
+                <a href="{{ route('cities') }}" class="icon-cidades">{{ Cookie::get('sessao_cidade_title') . '/' . Cookie::get('sessao_estado_letter') }}</a>
             </li>
 
             <li>
                 <a href="https://play.google.com/store/apps/details?id=com.infochat" class="icon-app">Baixe nosso app</a>
             </li>
 
-            @if(Auth::guard('web')->check())
+            @if(Auth::guard('web')->check() && !_temporaryAccount())
                 <li>
-                    <a href="{{ route('get-usuario-config') }}" id="open-usuario-config" class="icon-conta">Perfil de usuário</a>
+                    <a href="{{ route('get-usuario-config') }}" id="open-usuario-config" class="icon-conta">Minha conta</a>
                 </li>
 
                 <li>
@@ -56,6 +52,14 @@
                     <a href="{{ route('user-login') }}" class="icon-login">Entrar</a>
                 </li>
             @endif
+
+            <li>
+                <a href="#" id="open-contato">Contato</a>
+
+                <a href="{{ route('termos-uso') }}" target="_blank">Termos</a>
+
+                <a href="{{ route('termos-privacidade') }}" target="_blank">Privacidade</a>
+            </li>
         </ul>
     </nav>
 
@@ -64,16 +68,14 @@
     {!! Form::open(['method' => 'post', 'id' => 'form-search', 'action' => 'TrabalhoController@formBusca']) !!}
         <a href="#" class="close-form-search"></a>
 
-        {!! Form::text('palavra_chave', (isset($palavra_chave) && $palavra_chave != 'area') ? $palavra_chave : '', ['class' => 'form-control', 'id' => 'form-search-palavra-chave', 'placeholder' => 'Pesquisar...']) !!}
+        {!! Form::text('palavra_chave', isset($palavra_chave) ? $palavra_chave : '', ['class' => 'form-control', 'id' => 'form-search-palavra-chave', 'placeholder' => 'Pesquisar...']) !!}
 
-        {!! Form::hidden('area', isset($area) ? $area : '', ['id' => 'form-search-area']) !!}
+        <?php /*{!! Form::hidden('area', isset($area) ? $area : '', ['id' => 'form-search-area']) !!}
         {!! Form::hidden('tag', isset($tag) ? $tag : '', ['id' => 'form-search-tag']) !!}
-        {!! Form::hidden('tipo', isset($tipo) ? $tipo : 'todos', ['id' => 'form-search-tipo']) !!}
+        {!! Form::hidden('tipo', isset($tipo) ? $tipo : 'todos', ['id' => 'form-search-tipo']) !!}*/ ?>
 
         {!! Form::hidden('ordem', isset($ordem) ? $ordem : '', ['id' => 'form-search-ordem']) !!}
 
         {!! Form::hidden('page', '', ['id' => 'form-search-page']) !!}
     {!! Form::close() !!}
-
-    @include('mobile.inc.aside-categorias')
 </header>

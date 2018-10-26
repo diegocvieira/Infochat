@@ -2,6 +2,8 @@
     background-color: #3f51b5;
     height: 60px;
     padding: 0;
+    width: 100%;
+    float: left;
 
     &.top-nav-simple {
         position: fixed;
@@ -18,44 +20,69 @@
     }
 
     #logo-infochat {
-        width: 150px;
-        margin: 10px 0 0 20px;
-    }
-
-    .col-xs-3, .col-xs-2, .col-xs-7 {
-        padding: 0;
-    }
-
-    // Logo
-    .col-xs-2 {
-        width: 320px;
-    }
-
-    // Search
-    .col-xs-3 {
-        width: 480px;
-    }
-
-    // Menu
-    .col-xs-7 {
-        width: calc(100% - 800px);
-    }
-
-    #form-search {
-        width: 100%;
         float: left;
-        margin-top: 10px;
+        margin: 10px 0 0 20px;
+
+        img {
+            width: 150px;
+        }
+    }
+
+    #modal-busca-cidade {
+        position: absolute;
+        left: 0;
+        top: 40px;
+        border-radius: 15px;
+        background-color: #fff;
+        width: 100%;
+        height: 300px;
+        min-height: 300px;
+        max-height: 300px;
+        overflow: hidden;
+        z-index: 10;
+        box-shadow: 2.5px 4.33px 16px 4px rgba(100, 100, 100, 0.118);
+
+        ul {
+            float: left;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+
+            li {
+                width: 100%;
+                float: left;
+
+                &:hover {
+                    background-color: rgba(255, 255, 255, .2);
+                }
+
+                a {
+                    font-size: 14.5px;
+                    color: rgba(100, 100, 100, 0.8);
+                    padding: 10px 0 10px 30px;
+                    display: block;
+                    border-radius: 0 !important;
+                }
+            }
+        }
+    }
+
+    #form-busca-cidade {
+        float: left;
+        width: 270px;
+        display: none;
+        margin: 15px 0 0 20px;
+        position: relative;
 
         input[type=text] {
-            border-radius: 3px 0 0 3px;
+            border-radius: 15px 0 0 15px;
             background-color: rgba(255, 255, 255, 0.1);
             width: 90%;
-            height: 40px;
-            font-size: 13.7px;
-            color: #fff;
+            height: 30px;
             border: none;
             float: left;
-            box-shadow: none;
+            padding-left: 15px;
+            color: #fff;
 
             &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
                 color: rgba(255, 255, 255, 0.8);
@@ -72,22 +99,59 @@
         }
 
         input[type=submit] {
-            border-radius: 0 3px 3px 0;
+            border-radius: 0 15px 15px 0;
             background-color: rgba(255, 255, 255, 0.1);
             width: 10%;
-            height: 40px;
+            height: 30px;
             border: none;
             float: left;
-            background-size: 30px;
-            background-position: center;
+            background-size: 20px;
+            background-position: left;
             background-repeat: no-repeat;
             background-image: url('../img/icon-lupa.png');
         }
     }
 
+    .cidades {
+        float: left;
+        margin-left: 30px;
+
+        .cidade-atual {
+            float: left;
+            padding-left: 15px;
+            font-size: 16.6px;
+            color: rgba(255, 255, 255, 0.8);
+            position: relative;
+            cursor: pointer;
+            margin-top: 18px;
+
+            &:before {
+                content: "";
+                position: absolute;
+                width: 30px;
+                height: 30px;
+                top: -2px;
+                left: -10px;
+                background: url('../img/arrow.png');
+                background-repeat: no-repeat;
+                background-position: left;
+                background-size: contain;
+                -webkit-transform: rotate(270deg);
+                -moz-transform: rotate(270deg);
+                -ms-transform: rotate(270deg);
+                -o-transform: rotate(270deg);
+                transform: rotate(270deg);
+            }
+
+            span {
+                font-weight: 700;
+            }
+        }
+    }
+
     .nav-menu {
         text-align: right;
-        float: none;
+        float: right;
         height: 100%;
         margin-right: 20px;
 
@@ -100,7 +164,7 @@
             outline: none;
         }
 
-        .open-nav {
+        .open-nav-logged {
             padding: 10px 0;
 
             span {
@@ -129,6 +193,59 @@
                     &.sem-imagem {
                         border-radius: 0;
                         padding-top: 3px;
+                    }
+                }
+            }
+        }
+
+        .open-nav {
+            padding: 10px 5px;
+
+            img {
+                width: 30px;
+                filter: brightness(90%);
+            }
+
+            & + ul {
+                width: 150px;
+
+                li a {
+                    padding: 10px 0 10px 20px !important;
+                }
+            }
+        }
+
+        .open-nav-logged + ul li:last-child {
+            border-top: 1px solid rgb(240, 240, 240);
+            margin-top: 5px;
+            padding-top: 8px;
+
+            a {
+                font-size: 10.8px;
+                width: auto;
+                padding: 8px 5px !important;
+                display: inline-block;
+                float: none;
+                position: relative;
+
+                &:hover {
+                    background-color: transparent;
+                }
+
+                &:first-child {
+                    margin-left: 5px;
+                }
+
+                &:last-child, &:nth-child(2) {
+                    padding-left: 10px !important;
+
+                    &:after {
+                        content: '-';
+                        position: absolute;
+                        left: 0;
+                        top: 6px;
+                        font-size: 10.8px;
+                        color: rgb(200, 200, 200);
                     }
                 }
             }
@@ -203,7 +320,7 @@
 
                 a {
                     font-size: 14.5px;
-                    color: #c8c8c8;
+                    color: #f0f0f0;
                     padding: 10px 30px;
                     text-decoration: none;
                     display: block;

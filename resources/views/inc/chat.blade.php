@@ -9,10 +9,10 @@
         @endif
     </div>
 
-    @if($tipo == 'trabalho')
-        <a href="#" class="ver-perfil" data-id="{{ $destinatario->id }}">{{ $destinatario->nome }}</a>
-    @else
-        <a href="#">{{ $destinatario->nome }}</a>
+    <h3>{{ $destinatario->nome }}</h3>
+
+    @if($tipo == 'trabalho' && $destinatario->calc_atendimento($destinatario->id))
+        <p class="rate">{{ $destinatario->calc_atendimento($destinatario->id) }}%</p>
     @endif
 
     @if(Auth::guard('web')->check() && $tipo == 'trabalho')
@@ -36,23 +36,23 @@
     @else
         <div class="sem-mensagens">
             <img src="{{ asset('img/icon-logo.png') }}" />
-            <p>Escreva uma mensagem e pressione<br>enter para iniciar o atendimento</p>
         </div>
     @endif
 </div>
 
 {!! Form::open(['method' => 'post', 'action' => 'MessageController@send', 'id' => 'form-enviar-msg']) !!}
-    @if(!Auth::guard('web')->check())
+    <?php /*@if(!Auth::guard('web')->check())
         <div class="lock">
             <div class="balao">
                 <p>Acesse sua conta ou cadastre-se para liberar o infochat</p>
             </div>
         </div>
-    @endif
+    @endif*/ ?>
 
-    {!! Form::text('message', null, ['placeholder' => 'Digite uma mensagem']) !!}
+    {!! Form::text('message', null, ['class' => !Auth::guard('web')->check() ? 'unlogged' : '', 'placeholder' => Auth::guard('web')->check() ? 'Envie uma mensagem para começar' : 'Escreva seu nome antes de começar']) !!}
 
     {!! Form::hidden('chat_id', isset($chat_id) ? $chat_id : '') !!}
+    {!! Form::hidden('work_user', $tipo == 'trabalho' ? $destinatario->user->id : '') !!}
 
     {!! Form::submit('', ['class' => 'button']) !!}
 {!! Form::close() !!}

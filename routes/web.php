@@ -16,25 +16,36 @@ Route::get('/', 'GlobalController@inicial')->name('inicial');
 // Acessar o chat pela url
 Route::get('{slug}', 'ChatController@showChatUrl')->name('show-chat');
 
-// Listar e setar cidade
-Route::post('cidades/get', 'GlobalController@getCidade');
-Route::get('cidades/set/{id}', 'GlobalController@setCidade');
+// Cities
+Route::group(['prefix' => 'cidades'], function() {
+    Route::post('get', 'GlobalController@getCidade');
+    Route::get('set/{id}', 'GlobalController@setCidade');
+    Route::get('list/{state}', 'GlobalController@listCities');
+
+    Route::get('trocar', function() {
+        if(Agent::isMobile()) {
+            return view('mobile.cities');
+        } else {
+            return redirect()->route('inicial');
+        }
+    })->name('cities');
+});
 
 // Listar categorias admin
-Route::get('subcategorias/get/{categoria}', 'GlobalController@getSubcategorias');
+/*Route::get('subcategorias/get/{categoria}', 'GlobalController@getSubcategorias');
 Route::get('categorias/get/{area}', 'GlobalController@getCategorias');
-Route::get('areas/get/{tipo}', 'GlobalController@getAreas');
+Route::get('areas/get/{tipo}', 'GlobalController@getAreas');*/
 
 // Aside categorias
-Route::get('aside/categorias/{slug}/{type}', 'GlobalController@asideCategorias');
+/*Route::get('aside/categorias/{slug}/{type}', 'GlobalController@asideCategorias');
 Route::get('aside/subcategorias/{slug}', 'GlobalController@asideSubcategorias');
 Route::get('aside/areas/{tipo}', 'GlobalController@asideAreas');
 Route::post('categorias/busca', 'GlobalController@buscaCategorias');
-Route::get('aside/result/{type}/{title}', 'GlobalController@searchResult');
+Route::get('aside/result/{type}/{title}', 'GlobalController@searchResult');*/
 
 // Busca
 Route::get('trabalhos/busca', 'TrabalhoController@formBusca');
-Route::any('busca/{city}/{state}/{tipo?}/{palavra_chave?}/{area?}/{tag?}', 'TrabalhoController@busca');
+Route::any('busca/{city}/{state}/{palavra_chave?}', 'TrabalhoController@busca');
 
 Route::get('termos/uso', function() {
     if(Agent::isMobile()) {
@@ -68,10 +79,10 @@ Route::group(['prefix' => 'mensagem'], function() {
     Route::get('list/trabalho', 'ChatController@trabalho')->name('msg-trabalho');
     // Exibir chat
     Route::get('chat/show/{id}/{tipo}/{chat_id?}', 'ChatController@show');
+    // Enviar
+    Route::post('send', 'MessageController@send');
 
     Route::group(['middleware' => 'auth:web'], function() {
-        // Enviar
-        Route::post('send', 'MessageController@send');
         // Listar mensagens do chat
         Route::get('list/{id}/{page}/{new_messages?}', 'MessageController@list');
         // Finalizar chat
@@ -90,9 +101,9 @@ Route::group(['prefix' => 'mensagem'], function() {
 });
 
 Route::group(['prefix' => 'trabalho'], function() {
-    Route::get('show/{id}', 'TrabalhoController@show')->name('show-trabalho');
+    //Route::get('show/{id}', 'TrabalhoController@show')->name('show-trabalho');
 
-    Route::get('avaliar/list/{id}/{page}', 'AvaliarController@list')->name('listar-avaliacoes');
+    //Route::get('avaliar/list/{id}/{page}', 'AvaliarController@list')->name('listar-avaliacoes');
 
     Route::group(['middleware' => 'auth:web'], function() {
         Route::get('config', 'TrabalhoController@getConfig');
@@ -100,9 +111,9 @@ Route::group(['prefix' => 'trabalho'], function() {
         Route::post('config/status', 'TrabalhoController@setStatus');
 
         Route::post('avaliar-atendimento', 'AvaliarController@avaliarAtendimento')->name('avaliar-atendimento');
-        Route::post('avaliar', 'AvaliarController@avaliar')->name('avaliar-trabalho');
+        //Route::post('avaliar', 'AvaliarController@avaliar')->name('avaliar-trabalho');
 
-        Route::get('favoritar/{id}', 'TrabalhoController@favoritar');
+        //Route::get('favoritar/{id}', 'TrabalhoController@favoritar');
 
         Route::get('material/preview', 'MaterialController@preview')->name('material-preview');
         Route::get('material/create/{folder}', 'MaterialController@create');

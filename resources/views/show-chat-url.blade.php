@@ -7,15 +7,15 @@
 @section('content')
     <div class="container-fluid pagina-inicial full-height">
         <div class="row" style="height: 100%;">
-            <div class="col-xs-2 aside-categorias">
+            <?php /*<div class="col-xs-2 aside-categorias">
                 @include('inc.aside-categorias')
-            </div>
+            </div>*/ ?>
 
-            <div class="col-xs-3 resultados">
+            <div class="resultados">
                 @include('inc.abas-resultados')
             </div>
 
-            <div class="col-xs-7 chat">
+            <div class="chat">
                 @include('inc.chat')
             </div>
         </div>

@@ -39,7 +39,7 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        if(Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password])) {
+        if(Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password], true)) {
             $user = User::find(Auth::guard('web')->user()->id);
             $user->online = 1;
             $user->save();
@@ -122,13 +122,7 @@ class UserController extends Controller
     public function excluirConta(Request $request)
     {
         if(Hash::check($request->password, Auth::guard('web')->user()->password)) {
-            $usuario = User::find(Auth::guard('web')->user()->id);
-
-            if($usuario->imagem) {
-                unlink('uploads/perfil/' . $usuario->imagem);
-            }
-
-            $usuario->delete();
+            $usuario = User::find(Auth::guard('web')->user()->id)->delete();
 
             Session::flush();
             Auth::logout();

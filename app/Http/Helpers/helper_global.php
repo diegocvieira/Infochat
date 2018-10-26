@@ -190,3 +190,13 @@ function _uploadImage($file, $old_file)
 
     return $filename_thumb;
 }
+
+// Check temporary account
+function _temporaryAccount()
+{
+    if(strpos(Auth::guard('web')->user()->email, '@unlogged') !== false) {
+        return true;
+    } else {
+        return false;
+    }
+}

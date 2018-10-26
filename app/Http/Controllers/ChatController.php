@@ -33,31 +33,12 @@ class ChatController extends Controller
         }
 
         if(Auth::guard('web')->check()) {
-            $logged_user = Auth::guard('web')->user()->id;
+            if($chat_id) {
+                $messages = app('App\Http\Controllers\MessageController')->list($chat_id, 1);
 
-            if(!$chat_id) {
-                $count = Chat::where('from_id', $logged_user)
-                    ->where('to_id', $destinatario_id)
-                    ->whereNull('close')
-                    ->first();
-
-                if(!$count) {
-                    $c = new Chat;
-                    $c->from_id = $logged_user;
-                    $c->to_id = $destinatario_id;
-                    $c->created_at = date('Y-m-d H:i:s');
-                    $c->save();
-
-                    $chat_id = $c->id;
-                } else {
-                    $chat_id = $count->id;
-                }
+                // Visualizar as mensagens
+                app('App\Http\Controllers\MessageController')->read($chat_id);
             }
-
-            $messages = app('App\Http\Controllers\MessageController')->list($chat_id, 1);
-
-            // Visualizar as mensagens
-            app('App\Http\Controllers\MessageController')->read($chat_id);
 
             // Count mensagens aba trabalho/pessoal
             $new_messages = app('App\Http\Controllers\MessageController')->newMessages();

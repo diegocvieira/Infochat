@@ -1,4 +1,75 @@
 {!! Form::model($trabalho, ['method' => 'post', 'action' => 'TrabalhoController@setConfig', 'id' => 'form-trabalho-config', 'files' => 'true']) !!}
+    <div class="imagem">
+        @if(isset($trabalho) && $trabalho->imagem)
+            <img src="{{ asset('uploads/' . $trabalho->user_id . '/' . _getOriginalImage($trabalho->imagem)) }}" />
+        @else
+            <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" />
+        @endif
+
+        {!! Form::file('img', ['id' => 'imagem', 'accept' => 'image/*']) !!}
+
+        {!! Form::label('imagem', 'trocar imagem', ['class' => 'trocar-imagem']) !!}
+    </div>
+
+    {!! Form::text('nome', null, ['placeholder' => 'Nome', 'class' => 'name', 'required']) !!}
+
+    <div class="tags">
+        <div class="top-tags">
+            <span class="label">Palavras-chave</span>
+
+            <div class="info-tag">
+                <a href="#"></a>
+
+                <div class="infos">
+                    <p>
+                        <span>1. São palavras que os usuários podem usar na busca por seus serviços, produtos ou empresa</span>
+                        <span>2. Escreva e pressione enter para inserir cada palavra-chave</span>
+                    </p>
+                </div>
+            </div>
+
+            <span class="count-tag">{{ (isset($trabalho) && count($trabalho->tags) > 0) ? 10 - count($trabalho->tags) : 10 }}</span>
+        </div>
+
+        <label for="insert-tag">
+            @if(isset($trabalho) && count($trabalho->tags) > 0)
+                @foreach($trabalho->tags as $tag)
+                    <div class="new-tag">
+                        <span>{{ $tag->tag }}</span>
+                        <input style="display: none;" type="text" name="tag[]" value="{{ $tag->tag }}" />
+                        <a href="#"></a>
+                    </div>
+                @endforeach
+            @else
+                <span class="placeholder">ex.: fotógrafo, advogado, restaurante, academia, museu, concerto celular...</span>
+            @endif
+
+            {!! Form::text('insert_tag', '', ['id' => 'insert-tag']) !!}
+        </label>
+    </div>
+
+    {!! Form::select('state', $states, isset($trabalho) ? $trabalho->cidade->estado->id : null, ['class' => 'selectpicker state', 'title' => 'Estado', 'required']) !!}
+
+    {!! Form::select('cidade', isset($trabalho) ? [$trabalho->cidade_id => $trabalho->cidade->title] : [], isset($trabalho) ? $trabalho->cidade_id : null, ['class' => 'selectpicker city', 'title' => 'Cidade', 'required']) !!}
+
+    <div class="slug">
+        {!! Form::text('slug', null, ['id' => 'slug', 'required']) !!}
+    </div>
+
+    {!! Form::submit('Salvar') !!}
+
+    <div class="status">
+        <label class="switch">
+            {!! Form::checkbox('status') !!}
+            <span class="slider"></span>
+        </label>
+
+        <div class="title-status">{{ (isset($trabalho) && $trabalho->status) ? 'Desativar perfil' : 'Ativar perfil' }}</div>
+    </div>
+
+
+
+    <?php /*
     <div class="row">
         <div class="col-xs-4 imagem">
             @if(isset($trabalho) && $trabalho->imagem)
@@ -20,7 +91,7 @@
                 {!! Form::text('nome', null, ['placeholder' => 'Nome *', 'class' => 'nome', 'required']) !!}
             </div>
 
-            <div class="categorias">
+            <?php /*<div class="categorias">
                 {!! Form::select('area_id', isset($trabalho) ? $areas : [], null, ['class' => 'selectpicker area', 'title' => 'Área *', 'required']) !!}
 
                 <select name="categoria" title="Categoria" class="selectpicker categoria">
@@ -77,7 +148,7 @@
         <div class="abas col-xs-9">
             <a href="#" class="active" data-type="sobre">Sobre</a>
             <a href="#" data-type="informacoes">Mais informações</a>
-            <?php /*<a href="#" data-type="dados">Dados</a>*/ ?>
+            <?php /*<a href="#" data-type="dados">Dados</a>
         </div>
 
         <div class="btn-ativar col-xs-3">
@@ -271,6 +342,6 @@
                     <p>Número de usuários do infochat que<br>entraram em contato com você</p>
                 </div>
             </div>
-        </div>*/ ?>
-    </div>
+        </div>
+    </div>*/ ?>
 {!! Form::close() !!}
