@@ -911,28 +911,46 @@ $(document).ready(function() {
                 div.scrollTop(div[0].scrollHeight);
             }
 
+            input.attr('placeholder', 'Enviando...').attr('readonly', true);
+
             $.ajax({
                 url: $(this).attr('action'),
                 method: 'POST',
                 dataType: 'json',
                 data: $(this).serialize(),
                 success: function(data) {
+                    input.attr('readonly', false);
+
                     if(input.hasClass('unlogged')) {
                         if(data.status) {
                             input.attr('placeholder', 'Envie uma mensagem para começar').removeClass('unlogged');
+
+                            var li = $('.top-nav').find('nav li[data-type=login]');
+                            li.before("<li><a href='/usuario/logout'>Sair</a></li>");
+                            li.remove();
                         } else {
-                            modalAlert('Ocorreu um erro inesperado. Tente novamente.', 'OK');
-                        }
-                    } else if(data.status != 1) {
-                        div.find('.enviada:last').append("<span class='error-msg'>Erro</span>");
-
-                        if(data.status == 3) {
-                            clearInterval(interval);
+                            input.attr('placeholder', 'Escreva seu nome antes de começar');
 
                             modalAlert('Ocorreu um erro inesperado. Tente novamente.', 'OK');
                         }
-                    } else if(data.status == 1) {
-                        $('.chat').find('#form-enviar-msg').find('input[name=chat_id]').val(data.chat_id);
+                    } else {
+                        input.attr('placeholder', 'Envie uma mensagem...');
+
+                        if(data.status != 1) {
+                            div.find('.enviada:last').append("<span class='error-msg'>Erro</span>");
+
+                            if(data.status == 3) {
+                                clearInterval(interval);
+
+                                modalAlert('Ocorreu um erro inesperado. Tente novamente.', 'OK');
+                            }
+                        } else if(data.status == 1) {
+                            var chat = $('.chat').find('#form-enviar-msg').find('input[name=chat_id]');
+
+                            if(!chat.val()) {
+                                chat.val(data.chat_id);
+                            }
+                        }
                     }
                 }
             });

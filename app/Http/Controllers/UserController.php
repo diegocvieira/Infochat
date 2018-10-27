@@ -39,6 +39,10 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
+        if(Auth::guard('web')->check()) {
+            $this->logout();
+        }
+
         if(Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password], true)) {
             $user = User::find(Auth::guard('web')->user()->id);
             $user->online = 1;

@@ -27,6 +27,12 @@ class TrabalhoController extends Controller
 
         $states = Estado::pluck('title', 'id');
 
+        if(isset($trabalho)) {
+            $cities = Cidade::where('estado_id', $trabalho->cidade->estado->id)->pluck('title', 'id');
+        } else {
+            $cities = [];
+        }
+
         /*$tipos = [
             '1' => 'Profissional',
             '2' => 'Estabelecimento'
@@ -57,11 +63,11 @@ class TrabalhoController extends Controller
 
         if(Agent::isMobile()) {
             return response()->json([
-                'body' => view('mobile.admin.work-config', compact('trabalho', 'states'))->render()
+                'body' => view('mobile.admin.work-config', compact('trabalho', 'states', 'cities'))->render()
             ]);
         } else {
             return response()->json([
-                'body' => view('admin.trabalho-config', compact('trabalho', 'states'))->render()
+                'body' => view('admin.trabalho-config', compact('trabalho', 'states', 'cities'))->render()
             ]);
         }
     }

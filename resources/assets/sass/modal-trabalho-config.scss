@@ -102,7 +102,6 @@
         .dropdown-menu {
             background-color: rgb(230, 230, 230);
             border-radius: 0 0 5px 5px;
-            top: 38px;
             border: none;
             box-shadow: none;
 
@@ -312,21 +311,22 @@
 
 	.status {
 		float: right;
+		position: relative;
 
 		.title-status {
 			border: 1px solid rgb(230, 230, 230);
 			border-radius: 3px;
 			background-color: rgb(255, 255, 255);
 			box-shadow: 2.5px 4.33px 19px 1px rgba(100, 100, 100, 0.078);
-			width: 98px;
+			width: 100px;
 			height: 28px;
 			text-align: center;
 			font-size: 13.3px;
 			color: rgb(150, 150, 150);
 			line-height: 1.7;
 			position: absolute;
-			left: -65px;
-			top: -20px;
+			left: -105px;
+			top: 5px;
 			display: none;
 		}
 

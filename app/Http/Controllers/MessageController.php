@@ -153,6 +153,8 @@ class MessageController extends Controller
                                         $work->status = 0;
                                         $work->save();
 
+                                        NoResponse::where('work_id', $chat->to_id)->delete();
+
                                         Mail::send('emails.disabled_profile', [], function($q) use($chat) {
                                             $q->from('no-reply@infochat.com.br', 'Infochat');
                                             $q->to($chat->user_to->email)->subject('Perfil desativado');
