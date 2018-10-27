@@ -166,14 +166,7 @@ Route::post('app/onesignal/token', 'UserController@tokenOnesignal');
 
 // Remove after execute all methods
 Route::get('adm/automatic', function() {
-    $areas = App\Area::orderBy('tipo', 'asc')->orderBy('titulo', 'asc')->pluck('titulo', 'id');
-    $categories = App\Categoria::orderBy('titulo', 'asc')->pluck('titulo', 'titulo');
-    $types = [
-        '1' => 'Profissional',
-        '2' => 'Estabelecimento'
-    ];
-
-    return view('automatic', compact('areas', 'categories', 'types'));
+    return view('automatic');
 });
 Route::post('adm/automatic-register', 'GlobalController@automaticRegister')->name('automatic-register');
 Route::post('adm/automatic-emails', 'GlobalController@automaticEmails')->name('automatic-emails');

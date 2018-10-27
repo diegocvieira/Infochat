@@ -172,15 +172,13 @@ class GlobalController extends Controller
 
                 $work = new Trabalho;
                 $work->user_id = $user->id;
-                $work->tipo = $request->type;
                 $work->nome = $data[0];
                 $work->cidade_id = 4927;
                 $work->status = 1;
-                $work->area_id = $request->area;
                 $work->slug = str_slug($data[0], '-');
                 $work->save();
 
-                $work->tags()->create(['tag' => $request->categorie]);
+                $work->tags()->create(['tag' => $request->tag]);
             }
 
             fclose($handle);
@@ -193,13 +191,13 @@ class GlobalController extends Controller
 
     public function automaticEmails(Request $request)
     {
-        $tag = $request->categorie;
+        $tag = $request->tag;
         $logged_user = Auth::guard('web')->user()->id;
 
         $works = Trabalho::whereHas('tags', function($q) use($tag) {
                 $q->where('tag', $tag);
             })
-            ->whereHas('user', function($q) use($tag) {
+            ->whereHas('user', function($q) {
                 $q->where('claimed', 0);
             })
             ->get();
