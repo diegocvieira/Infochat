@@ -70,9 +70,15 @@
                     <a href="{{ route('user-register') }}">Cadastrar</a>
                 </li>
 
-                <li>
-                    <a href="{{ route('user-login') }}">Entrar</a>
-                </li>
+                @if(Auth::guard('web')->check() && _temporaryAccount())
+                    <li>
+                        <a href="{{ route('usuario-logout') }}" class="icon-logout">Sair</a>
+                    </li>
+                @else
+                    <li data-type="login">
+                        <a href="{{ route('user-login') }}">Entrar</a>
+                    </li>
+                @endif
 
                 <li>
                     <a href="#" class="open-nav" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">

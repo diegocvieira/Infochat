@@ -35,10 +35,6 @@
                 <li>
                     <a href="{{ action('TrabalhoController@getConfig') }}" class="icon-perfil-trabalho" id="open-trabalho-config">Perfil de trabalho</a>
                 </li>
-
-                <li>
-                    <a href="{{ route('usuario-logout') }}" class="icon-logout">Sair</a>
-                </li>
             @else
                 <li>
                     <a href="{{ route('como-funciona') }}" class="icon-como-funciona">Como funciona</a>
@@ -48,8 +44,16 @@
                     <a href="{{ route('user-register') }}" class="icon-cadastro">Cadastrar</a>
                 </li>
 
+                @if(!Auth::guard('web')->check())
+                    <li data-type="login">
+                        <a href="{{ route('user-login') }}" class="icon-login">Entrar</a>
+                    </li>
+                @endif
+            @endif
+
+            @if(Auth::guard('web')->check())
                 <li>
-                    <a href="{{ route('user-login') }}" class="icon-login">Entrar</a>
+                    <a href="{{ route('usuario-logout') }}" class="icon-logout">Sair</a>
                 </li>
             @endif
 
