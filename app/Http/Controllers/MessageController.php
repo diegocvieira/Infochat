@@ -135,7 +135,7 @@ class MessageController extends Controller
                                 });
                             }
 
-                            if($chat->from_id == $user_logged) {
+                            /*if($chat->from_id == $user_logged) {
                                 $count_message = Message::where('chat_id', $chat->id)->where('user_id', $chat->to_id)->count();
 
                                 if($count_message == 0) {
@@ -165,7 +165,7 @@ class MessageController extends Controller
                                 }
                             } else {
                                 NoResponse::where('user_id', $chat->from_id)->where('work_id', $user_logged)->delete();
-                            }
+                            }*/
                         }
                     } else {
                         $return['status'] = 2;
