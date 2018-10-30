@@ -35,9 +35,12 @@
     }
 
     #logo-infochat {
-        width: 100px;
         float: left;
         margin-left: 15px;
+
+        img {
+            width: 17px;
+        }
     }
 
     .close-content {
@@ -93,32 +96,34 @@
     }
 
     #form-search {
-        width: 100%;
-        display: none;
+        width: calc(100% - 92px);
         float: left;
-        padding: 0 10px;
+        margin-left: 15px;
 
         input[type=text] {
             border: none;
             outline: none;
             box-shadow: none;
-            background-color: transparent;
+            width: 100%;
+            font-size: 12.5px;
             color: #fff;
-            width: calc(100% - 25px);
+            border-radius: 14px;
+            background-color: rgba(255, 255, 255, 0.149);
+            height: 28px;
 
             &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-                color: #fff;
+                color: rgba(255, 255, 255, 0.502);
                 opacity: 1; /* Firefox */
             }
             &:-ms-input-placeholder { /* Internet Explorer 10-11 */
-                color: #fff;
+                color: rgba(255, 255, 255, 0.502);
             }
             &::-ms-input-placeholder { /* Microsoft Edge */
-                color: #fff;
+                color: rgba(255, 255, 255, 0.502);
             }
         }
 
-        .close-form-search {
+        /*.close-form-search {
             width: 25px;
             height: 25px;
             background-position: center;
@@ -128,10 +133,10 @@
             filter: brightness(0) invert(1);
             float: left;
             margin-top: 5px;
-        }
+        }*/
     }
 
-    #open-search {
+    /*#open-search {
         float: right;
         background-position: center;
         background-repeat: no-repeat;
@@ -139,7 +144,7 @@
         width: 45px;
         height: 25px;
         background-image: url('../../img/icon-lupa2.png');
-    }
+    }*/
 
     #open-menu {
         float: right;

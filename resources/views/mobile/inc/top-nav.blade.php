@@ -1,6 +1,6 @@
 <header class="top-nav">
-    <a href="{{ url('/') }}">
-        <img src="{{ asset('img/logo-infochat.png') }}" id="logo-infochat" alt="Logo infochat" />
+    <a href="{{ url('/') }}" id="logo-infochat">
+        <img src="{{ asset('img/icon-logo.png') }}" alt="Logo infochat" />
     </a>
 
     <nav>
@@ -67,12 +67,12 @@
         </ul>
     </nav>
 
-    <a href="#" id="open-search"></a>
+    <?php /*<a href="#" id="open-search"></a>*/ ?>
 
     {!! Form::open(['method' => 'post', 'id' => 'form-search', 'action' => 'TrabalhoController@formBusca']) !!}
-        <a href="#" class="close-form-search"></a>
+        <?php /*<a href="#" class="close-form-search"></a>*/ ?>
 
-        {!! Form::text('palavra_chave', isset($palavra_chave) ? $palavra_chave : '', ['class' => 'form-control', 'id' => 'form-search-palavra-chave', 'placeholder' => 'Pesquisar...']) !!}
+        {!! Form::text('palavra_chave', isset($palavra_chave) ? $palavra_chave : '', ['class' => 'form-control', 'id' => 'form-search-palavra-chave', 'placeholder' => 'Pesquise aqui']) !!}
 
         <?php /*{!! Form::hidden('area', isset($area) ? $area : '', ['id' => 'form-search-area']) !!}
         {!! Form::hidden('tag', isset($tag) ? $tag : '', ['id' => 'form-search-tag']) !!}

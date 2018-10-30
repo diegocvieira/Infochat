@@ -17,7 +17,7 @@ $(document).ready(function() {
     });
 
     // Abrir e fechar busca
-    $(document).on('click', '#open-search', function(e) {
+    /*$(document).on('click', '#open-search', function(e) {
         e.preventDefault();
 
         $('.top-nav').find('nav, #open-search, #logo-infochat').hide();
@@ -32,7 +32,7 @@ $(document).ready(function() {
         $('.top-nav').find('nav, #open-search, #logo-infochat').show();
 
         $('#form-search').hide();
-    });
+    });*/
 
     // Validate hidden fields
     $.validator.setDefaults({ ignore: "" });
@@ -793,6 +793,8 @@ $(document).ready(function() {
     $(document).on('press', '.result', function(e) {
         e.preventDefault();
 
+        console.log('ok');
+
         if(!$(this).hasClass('result-tab')) {
             var top = $('.top-nav');
 
@@ -808,7 +810,7 @@ $(document).ready(function() {
             top.find('.manage-options').remove();
 
             // Hide top
-            $('#logo-infochat, #open-search').hide();
+            $('#logo-infochat').hide();
 
             // Move options to top
             top.append("<div class='manage-options'><a href='#' class='close-content' id='close-manage-options'></a>" + $(this).find('.manage-options').html() + "</div>");
@@ -823,7 +825,7 @@ $(document).ready(function() {
 
         $('.top-nav, .abas-resultados').removeClass('active-manage');
 
-        $('#logo-infochat, #open-search').show();
+        $('#logo-infochat, #form-search').show();
         $('.top-nav').find('.manage-options').remove();
     });
 
@@ -834,7 +836,7 @@ $(document).ready(function() {
             chat_id = $(this).data('chatid');
 
         $('.top-nav').find('.manage-options').remove();
-        $('#logo-infochat, #open-search').show();
+        $('#logo-infochat, #form-search').show();
 
         $.ajax({
             url: $(this).attr('href'),
