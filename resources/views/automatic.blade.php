@@ -1,5 +1,9 @@
 {!! Form::open(['method' => 'post', 'route' => 'automatic-register', 'files' => true]) !!}
-    {!! Form::text('tag', null, ['placeholder' => 'Tag']) !!}
+    {!! Form::text('tag[]', null, ['placeholder' => 'Tag']) !!}
+    {!! Form::text('tag[]', null, ['placeholder' => 'Tag']) !!}
+    {!! Form::text('tag[]', null, ['placeholder' => 'Tag']) !!}
+    {!! Form::text('tag[]', null, ['placeholder' => 'Tag']) !!}
+    {!! Form::text('tag[]', null, ['placeholder' => 'Tag']) !!}
     {!! Form::file('file') !!}
 
     {!! Form::submit('ENVIAR') !!}

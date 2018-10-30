@@ -178,7 +178,11 @@ class GlobalController extends Controller
                 $work->slug = str_slug($data[0], '-');
                 $work->save();
 
-                $work->tags()->create(['tag' => $request->tag]);
+                foreach($request->tag as $tag) {
+                    if($tag) {
+                        $work->tags()->create(['tag' => $tag]);
+                    }
+                }
             }
 
             fclose($handle);
