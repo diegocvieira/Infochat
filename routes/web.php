@@ -171,3 +171,5 @@ Route::get('adm/automatic', function() {
 Route::post('adm/automatic-register', 'GlobalController@automaticRegister')->name('automatic-register');
 Route::post('adm/automatic-emails', 'GlobalController@automaticEmails')->name('automatic-emails');
 Route::post('adm/automatic-images', 'GlobalController@automaticImages')->name('automatic-images');
+
+Route::get('teste/email', 'GlobalController@testEmail');

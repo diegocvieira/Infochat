@@ -16,6 +16,17 @@ use Agent;
 
 class GlobalController extends Controller
 {
+    public function testEmail()
+    {
+        $error['message'] = 'test1';
+        $error['file'] = 'test2';
+        $error['line'] = 'test3';
+
+        \Mail::send('emails.phperror', ['error' => $error], function($message) {
+            $message->to('dvdiegovieiradv@gmail.com')->subject('Test');
+        });
+    }
+
     public function inicial()
     {
         // Setar poa como cidade default
