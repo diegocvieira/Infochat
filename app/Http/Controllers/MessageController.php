@@ -70,7 +70,7 @@ class MessageController extends Controller
                         })
                         ->where('id', $chat->id)
                         ->orWhereHas('messages', function($q) {
-                            $q->whereRaw('created_at = (SELECT MAX(created_at) FROM messages) AND TIMESTAMPDIFF(MINUTE, created_at, NOW()) >= 10');
+                            $q->whereRaw('created_at = (SELECT MAX(created_at) FROM messages) AND TIMESTAMPDIFF(MINUTE, created_at, NOW()) >= 5');
                         })
                         ->where('id', $chat->id)
                         ->select('to_id', 'from_id')
@@ -80,40 +80,40 @@ class MessageController extends Controller
                         $return['status'] = 1;
                         $return['chat_id'] = $chat_id;
 
-                        // Pega o token da pessoa que recebe a mensagem
-                        $tokenDoDestinatario = $chat->from_id == $user_logged ? $chat->user_to->onesignal_token : $chat->user_from->onesignal_token;
-
-                        if($tokenDoDestinatario != "") {
-                            $cabecalho = array(
-                                'Content-Type: application/json',
-                                'Authorization: Basic NTVkOWMxMmQtNmNhMS00Nzk3LThhMGYtYWNmYThlNjNjMmQ2'
-                            );
-
-                            // app_id é o seu App Id lá do OneSignal
-                            // O 'include_player_ids' são os aparelhos que vão receber a mensagem.
-                            // headings é o título e contents é o corpo da mensagem.
-                            // No data vai qualquer coisa, eu botei o endereço pra carregar, aí você coloca o certo.
-                            $dados = array(
-                                'app_id' => '0305d6ca-af82-4b6a-8c38-253c20043016',
-                                'include_player_ids' => array($tokenDoDestinatario),
-                                'headings' => array('en' => 'Infochat'),
-                                'contents' => array('en' => 'Nova Mensagem'),
-                                'data' => array('endereco' => '/')
-                            );
-
-                            $curl = curl_init();
-
-                            curl_setopt($curl, CURLOPT_URL, 'https://onesignal.com/api/v1/notifications');
-                            curl_setopt($curl, CURLOPT_POST, true);
-                            curl_setopt($curl, CURLOPT_HTTPHEADER, $cabecalho);
-                            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($dados));
-                            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-
-                            curl_exec($curl);
-                            curl_close($curl);
-                        }
-
                         if($check) {
+                            // Pega o token da pessoa que recebe a mensagem
+                            $tokenDoDestinatario = $chat->from_id == $user_logged ? $chat->user_to->onesignal_token : $chat->user_from->onesignal_token;
+
+                            if($tokenDoDestinatario != "") {
+                                $cabecalho = array(
+                                    'Content-Type: application/json',
+                                    'Authorization: Basic NTVkOWMxMmQtNmNhMS00Nzk3LThhMGYtYWNmYThlNjNjMmQ2'
+                                );
+
+                                // app_id é o seu App Id lá do OneSignal
+                                // O 'include_player_ids' são os aparelhos que vão receber a mensagem.
+                                // headings é o título e contents é o corpo da mensagem.
+                                // No data vai qualquer coisa, eu botei o endereço pra carregar, aí você coloca o certo.
+                                $dados = array(
+                                    'app_id' => '0305d6ca-af82-4b6a-8c38-253c20043016',
+                                    'include_player_ids' => array($tokenDoDestinatario),
+                                    'headings' => array('en' => 'Infochat'),
+                                    'contents' => array('en' => 'Nova Mensagem'),
+                                    'data' => array('endereco' => '/')
+                                );
+
+                                $curl = curl_init();
+
+                                curl_setopt($curl, CURLOPT_URL, 'https://onesignal.com/api/v1/notifications');
+                                curl_setopt($curl, CURLOPT_POST, true);
+                                curl_setopt($curl, CURLOPT_HTTPHEADER, $cabecalho);
+                                curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($dados));
+                                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
+                                curl_exec($curl);
+                                curl_close($curl);
+                            }
+
                             $email = $check->from_id == $user_logged ? $check->user_to->email : $check->user_from->email;
 
                             $client['name'] = Auth::guard('web')->user()->nome;
@@ -125,15 +125,15 @@ class MessageController extends Controller
                                 $claimed_url = url('/') . '/reivindicar-conta/check/' . app('App\Http\Controllers\ClaimedController')->createToken($email);
                                 $work_url = route('show-chat', $chat->user_to->trabalho->slug);
 
-                                /*Mail::send('emails.new_message_claimed', ['client' => $client, 'work_url' => $work_url, 'claimed_url' => $claimed_url], function($q) use($email) {
+                                Mail::send('emails.new_message_claimed', ['client' => $client, 'work_url' => $work_url, 'claimed_url' => $claimed_url], function($q) use($email) {
                                     $q->from('no-reply@infochat.com.br', 'Infochat');
                                     $q->to($email)->subject('Nova mensagem');
-                                });*/
+                                });
                             } else {
-                                /*Mail::send('emails.new_message', ['client' => $client], function($q) use($email) {
+                                Mail::send('emails.new_message', ['client' => $client], function($q) use($email) {
                                     $q->from('no-reply@infochat.com.br', 'Infochat');
                                     $q->to($email)->subject('Nova mensagem');
-                                });*/
+                                });
                             }
 
                             /*if($chat->from_id == $user_logged) {
