@@ -899,7 +899,7 @@ $(document).ready(function() {
     $(document).on('submit', '#form-enviar-msg', function() {
         var input = $(this).find('input[type=text]');
 
-        if(input.val()) {
+        if(input.val() && !input.hasClass('sending')) {
             var div = $('.chat').find('.mensagens'),
                 date = new Date();
 
@@ -911,7 +911,7 @@ $(document).ready(function() {
                 div.scrollTop(div[0].scrollHeight);
             }
 
-            input.attr('placeholder', 'Enviando...').attr('readonly', true);
+            input.attr('placeholder', 'Enviando...').addClass('sending');
 
             $.ajax({
                 url: $(this).attr('action'),
@@ -919,7 +919,7 @@ $(document).ready(function() {
                 dataType: 'json',
                 data: $(this).serialize(),
                 success: function(data) {
-                    input.attr('readonly', false);
+                    input.removeClass('sending');
 
                     if(input.hasClass('unlogged')) {
                         if(data.status) {

@@ -107,6 +107,7 @@ class MessageController extends Controller
                             curl_setopt($curl, CURLOPT_POST, true);
                             curl_setopt($curl, CURLOPT_HTTPHEADER, $cabecalho);
                             curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($dados));
+                            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 
                             curl_exec($curl);
                             curl_close($curl);
@@ -124,15 +125,15 @@ class MessageController extends Controller
                                 $claimed_url = url('/') . '/reivindicar-conta/check/' . app('App\Http\Controllers\ClaimedController')->createToken($email);
                                 $work_url = route('show-chat', $chat->user_to->trabalho->slug);
 
-                                Mail::send('emails.new_message_claimed', ['client' => $client, 'work_url' => $work_url, 'claimed_url' => $claimed_url], function($q) use($email) {
+                                /*Mail::send('emails.new_message_claimed', ['client' => $client, 'work_url' => $work_url, 'claimed_url' => $claimed_url], function($q) use($email) {
                                     $q->from('no-reply@infochat.com.br', 'Infochat');
                                     $q->to($email)->subject('Nova mensagem');
-                                });
+                                });*/
                             } else {
-                                Mail::send('emails.new_message', ['client' => $client], function($q) use($email) {
+                                /*Mail::send('emails.new_message', ['client' => $client], function($q) use($email) {
                                     $q->from('no-reply@infochat.com.br', 'Infochat');
                                     $q->to($email)->subject('Nova mensagem');
-                                });
+                                });*/
                             }
 
                             /*if($chat->from_id == $user_logged) {
@@ -183,7 +184,10 @@ class MessageController extends Controller
             $create_user = json_decode(app('App\Http\Controllers\UserController')->create($request_user), true);
 
             $return['status'] = $create_user['status'] == true ? 1 : 3;
-            $return['user_id'] = $create_user['id'];
+
+            if($create_user['status']) {
+                $return['user_id'] = $create_user['id'];
+            }
         }
 
         return json_encode($return);
