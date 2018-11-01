@@ -48,7 +48,11 @@ class RecuperarSenhaController extends Controller
 
     public function check($token)
     {
-        $pr = PasswordReset::where('token', $token)->firstOrFail();
+        $pr = PasswordReset::where('token', $token)->first();
+
+        if(!$pr) {
+            return redirect()->route('inicial');
+        }
 
         $email = $pr->email;
 
