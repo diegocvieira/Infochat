@@ -11,6 +11,7 @@ use App\Message;
 use App\BlockedUser;
 use Cookie;
 use Agent;
+use DB;
 
 class ChatController extends Controller
 {
@@ -134,11 +135,14 @@ class ChatController extends Controller
             $user_id = Auth::guard('web')->user()->id;
 
             $chats = Chat::where('from_id', $user_id)
-                ->whereHas('messages', function($q) use($user_id) {
-                    $q->where('deleted', '!=', $user_id)
+                ->whereHas('messages', function($query) use($user_id) {
+                    $query->where('deleted', '!=', $user_id)
                         ->orWhereNull('deleted');
                 })
-                ->orderBy('created_at', 'desc')
+                ->withCount(['messages as latest_message' => function($query) {
+                    $query->select(DB::raw('max(created_at)'));
+                }])
+                ->orderByDesc('latest_message')
                 ->get();
         }
 
@@ -162,11 +166,14 @@ class ChatController extends Controller
             $user_id = Auth::guard('web')->user()->id;
 
             $chats = Chat::where('to_id', $user_id)
-                ->whereHas('messages', function($q) use($user_id) {
-                    $q->where('deleted', '!=', $user_id)
+                ->whereHas('messages', function($query) use($user_id) {
+                    $query->where('deleted', '!=', $user_id)
                         ->orWhereNull('deleted');
                 })
-                ->orderBy('created_at', 'desc')
+                ->withCount(['messages as latest_message' => function($query) {
+                    $query->select(DB::raw('max(created_at)'));
+                }])
+                ->orderByDesc('latest_message')
                 ->get();
         }
 
