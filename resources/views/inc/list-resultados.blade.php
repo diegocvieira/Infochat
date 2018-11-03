@@ -10,9 +10,7 @@
 
         <div class="infos">
             <div class="top">
-                <h3>
-                    <a href="{{ route('show-chat', $trabalho->slug) }}">{{ $trabalho->nome }}</a>
-                </h3>
+                <h3>{{ $trabalho->nome }}</h3>
             </div>
 
             <div class="bottom">

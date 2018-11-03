@@ -37,13 +37,6 @@ $(document).ready(function() {
     // Validate hidden fields
     $.validator.setDefaults({ ignore: "" });
 
-    // Scroll custom para funcionar em conteudo carregado dinamicamente
-    function listenForScrollEvent(e) {
-        e.on('scroll', function() {
-            e.trigger('custom-scroll');
-        });
-    }
-
     // Desable default press touch
     window.oncontextmenu = function(event) {
         event.preventDefault();
@@ -793,31 +786,27 @@ $(document).ready(function() {
     $(document).on('press', '.result', function(e) {
         e.preventDefault();
 
-        console.log('ok');
+        var top = $('.top-nav');
 
-        if(!$(this).hasClass('result-tab')) {
-            var top = $('.top-nav');
+        $('.top-nav, .abas-resultados').addClass('active-manage');
 
-            $('.top-nav, .abas-resultados').addClass('active-manage');
+        // Hide search
+        $('#form-search').hide();
 
-            // Hide search
-            $('#form-search').hide();
+        // Show menu
+        $('nav').show();
 
-            // Show menu
-            $('nav').show();
+        // Verify if options exists
+        top.find('.manage-options').remove();
 
-            // Verify if options exists
-            top.find('.manage-options').remove();
+        // Hide top
+        $('#logo-infochat').hide();
 
-            // Hide top
-            $('#logo-infochat').hide();
+        // Move options to top
+        top.append("<div class='manage-options'><a href='#' class='close-content' id='close-manage-options'></a>" + $(this).find('.manage-options').html() + "</div>");
 
-            // Move options to top
-            top.append("<div class='manage-options'><a href='#' class='close-content' id='close-manage-options'></a>" + $(this).find('.manage-options').html() + "</div>");
-
-            // Add id to identify result after click
-            top.find('.options a').attr('data-chatid', $(this).data('chatid'));
-        }
+        // Add id to identify result after click
+        top.find('.options a').attr('data-chatid', $(this).data('chatid'));
     });
 
     $(document).on('click', '#close-manage-options', function(e) {
@@ -829,7 +818,7 @@ $(document).ready(function() {
         $('.top-nav').find('.manage-options').remove();
     });
 
-    $(document).on('click', '.top-nav .options a', function(e) {
+    $(document).on('click', ".top-nav .options a[id!='work-details']", function(e) {
         e.preventDefault();
 
         var id = $(this).attr('id'),
@@ -844,40 +833,32 @@ $(document).ready(function() {
             dataType: 'json',
             success: function (data) {
                 if(data.status) {
-                    if(id == 'work-details') {
-                        var modal = $('#modal-default');
-                        modal.removeAttr('class');
-                        modal.addClass('modal fade show-trabalho');
-                        modal.find('.modal-body').html(data.trabalho);
-                        modal.modal('show');
-                    } else {
-                        var result = $('.result[data-chatid=' + chat_id + ']');
+                    var result = $('.result[data-chatid=' + chat_id + ']');
 
-                        if(id == 'close-chat') {
-                            result.find('#close-chat').remove();
-                            result.find('.options').prepend("<a href='" + data.route + "' id='open-chat'></a>");
-                            result.find('.date').after("<span class='status-close'></span>");
-                        } else if(id == 'open-chat') {
-                            result.find('#open-chat').remove();
-                            result.find('.options').prepend("<a href='" + data.route + "' id='close-chat'></a>");
-                            result.find('.status-close').remove();
-                        } else if(id == 'delete-chat') {
-                            result.remove();
+                    if(id == 'close-chat') {
+                        result.find('#close-chat').remove();
+                        result.find('.options').prepend("<a href='" + data.route + "' id='open-chat'></a>");
+                        result.find('.date').after("<span class='status-close'></span>");
+                    } else if(id == 'open-chat') {
+                        result.find('#open-chat').remove();
+                        result.find('.options').prepend("<a href='" + data.route + "' id='close-chat'></a>");
+                        result.find('.status-close').remove();
+                    } else if(id == 'delete-chat') {
+                        result.remove();
 
-                            if($('.result').length == 0) {
-                                setTimeout(function() {
-                                    window.location.reload(true);
-                                }, 100);
-                            }
-                        } else if(id == 'block-user') {
-                            result.find('#block-user').remove();
-                            result.find('.options a:first').after("<a href='" + data.route + "' id='unblock-user'></a>");
-                            result.find('.date').after("<span class='status-block'></span>");
-                        } else if(id == 'unblock-user') {
-                            result.find('#unblock-user').remove();
-                            result.find('.options a:first').after("<a href='" + data.route + "' id='block-user'></a>");
-                            result.find('.status-block').remove();
+                        if($('.result').length == 0) {
+                            setTimeout(function() {
+                                window.location.reload(true);
+                            }, 100);
                         }
+                    } else if(id == 'block-user') {
+                        result.find('#block-user').remove();
+                        result.find('.options a:first').after("<a href='" + data.route + "' id='unblock-user'></a>");
+                        result.find('.date').after("<span class='status-block'></span>");
+                    } else if(id == 'unblock-user') {
+                        result.find('#unblock-user').remove();
+                        result.find('.options a:first').after("<a href='" + data.route + "' id='block-user'></a>");
+                        result.find('.status-block').remove();
                     }
                 } else {
                     modalAlert('Ocorreu um erro inesperado. Atualize a página e tente novamente.', 'OK');
@@ -918,7 +899,7 @@ $(document).ready(function() {
     });*/
 
     // Avaliar
-    /*$(document).on('click', '#form-avaliar-trabalho .nota label', function() {
+    $(document).on('click', '#form-avaliar-trabalho .nota label', function() {
         var nota = $(this).prev().val();
 
         $(this).parents('.nota').find('label').each(function() {
@@ -932,33 +913,27 @@ $(document).ready(function() {
         $(this).addClass('star-full');
     });
 
+    $(document).on('change', '#form-avaliar-trabalho input[type=radio]', function() {
+        $('#form-avaliar-trabalho').submit();
+    });
+
     $(document).on('submit', '#form-avaliar-trabalho', function() {
-        if($(this).find('input[type=radio]').is(':checked')) {
-            if(logged) {
-                $.ajax({
-                    url: $(this).attr('action'),
-                    method: 'POST',
-                    dataType: 'json',
-                    data: $(this).serialize(),
-                    success: function(data) {
-                        if(data.status && data.descricao) {
-                            $('.show-trabalho').find('.comentarios .sem-resultados').remove();
-
-                            var imagem = data.imagem ? "<img src='/uploads/perfil/" + data.imagem + "' />" : "<img src='/img/paisagem.png' class='sem-imagem' />";
-
-                            $('.show-trabalho').find('.comentarios').prepend("<div class='comentario'><div class='imagem-user'>" + imagem + "</div><div class='header-comentario'><h4>" + data.nome + "</h4><span class='nota'>" + data.nota + ".0</span><span class='data'>" + data.data + "</span></div><div class='descricao-comentario'><p>" + data.descricao + "</p></div></div>");
-                        }
-
-                        modalAlert(data.msg, 'OK');
-                    }
-                });
-            } else {
-                modalAlert('Acesse sua conta para poder avaliar.', 'OK');
-            }
+        if(logged) {
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                dataType: 'json',
+                data: $(this).serialize(),
+                success: function(data) {
+                    modalAlert(data.msg, 'OK');
+                }
+            });
+        } else {
+            modalAlert('Acesse sua conta para poder avaliar.', 'OK');
         }
 
         return false;
-    });*/
+    });
 
     // Listar Comentarios
     /*$(document).on('click', '.load-more-avaliacoes', function() {
@@ -1013,7 +988,7 @@ $(document).ready(function() {
         });
     });
 
-    $(document).on('click', '#open-usuario-config', function(e) {
+    /*$(document).on('click', '#open-usuario-config', function(e) {
         e.preventDefault();
 
         $.ajax({
@@ -1025,7 +1000,7 @@ $(document).ready(function() {
                 modal.removeAttr('class');
                 modal.addClass('modal fade user-config');
                 modal.find('.modal-body').html(data.body);
-                modal.modal('show');
+                modal.modal('show');*/
 
                 $('#form-usuario-config').validate({
                     rules: {
@@ -1102,9 +1077,9 @@ $(document).ready(function() {
                         });
                     }
                 });
-            }
+            /*}
         });
-    });
+    });*/
 
     // Pre visualizar imagem
     $(document).on('change', '#form-usuario-config .imagem input[type=file]', function() {
@@ -1481,7 +1456,7 @@ $(document).ready(function() {
     });
 
     // Open, validate and submit form
-    $(document).on('click', '#open-trabalho-config', function(e) {
+    /*$(document).on('click', '#open-trabalho-config', function(e) {
         e.preventDefault();
 
         $.ajax({
@@ -1498,7 +1473,7 @@ $(document).ready(function() {
                 $('.selectpicker').selectpicker('refresh');
 
                 $('#cep').mask('00000-000', {reverse: false, clearIfNotMatch : true});
-                $('.fone-mask').mask(SPMaskBehavior, spOptions);
+                $('.fone-mask').mask(SPMaskBehavior, spOptions);*/
 
                 $('#form-trabalho-config').validate({
                     rules: {
@@ -1561,55 +1536,14 @@ $(document).ready(function() {
                         return false;
                     }
                 });
-            }
+            /*}
         });
-     });
+    });*/
 
     ////////////////////////////// CHAT //////////////////////////////
 
-    $(document).on('tap', '.open-chat', function(e) {
-        e.preventDefault();
-
-        // Remover numero de novas mensagens
-        $(this).find('.new-messages').remove();
-
-        var chatid = $(this).data('chatid'),
-            url = '/mensagem/chat/show/' + $(this).data('id') + '/' + $(this).data('type');
-
-        if(chatid) {
-            url = url + '/' + chatid;
-        }
-
-        $.ajax({
-            url: url,
-            method: 'GET',
-            dataType:'json',
-            success: function(data) {
-                if(data.destinatario_slug) {
-                    window.history.pushState('', '', data.destinatario_slug);
-                }
-
-                var modal = $('#modal-default');
-                modal.removeAttr('class');
-                modal.addClass('modal fade chat');
-                modal.find('.modal-body').html(data.trabalho);
-                modal.modal('show');
-
-                // Scroll to bottom
-                setTimeout(function() {
-                    $('.chat').find('.mensagens').scrollTop($('.chat').find('.mensagens')[0].scrollHeight);
-                }, 500);
-
-                //Scroll custom para funcionar em conteudo carregdao dinamicamente
-                listenForScrollEvent($('.chat .mensagens'));
-
-                // Atualizar count da aba trabalho
-                newMessagesTrabalho(data.new_messages_trabalho);
-
-                // Atualizar count da aba pessoal
-                newMessagesPessoal(data.new_messages_pessoal);
-            }
-        });
+    if($('.chat').is(':visible')) {
+        $('.chat').find('.mensagens').scrollTop($('.chat').find('.mensagens')[0].scrollHeight);
 
         if(typeof interval === 'undefined') {
             interval = null;
@@ -1620,27 +1554,23 @@ $(document).ready(function() {
 
         // Atualizar chat em tempo real
         interval = setInterval(function() {
-            if($('.chat').is(':visible')) {
-                if($('.chat').find('input[name=chat_id]').val()) {
-                    $.ajax({
-                        url: 'mensagem/list/' + $('.chat').find('input[name=chat_id]').val() + '/0/true',
-                        method: 'GET',
-                        dataType: 'json',
-                        success: function(data) {
-                            var div = $('.chat').find('.mensagens');
+            if($('.chat').find('input[name=chat_id]').val()) {
+                $.ajax({
+                    url: 'mensagem/list/' + $('.chat').find('input[name=chat_id]').val() + '/0/true',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        var div = $('.chat').find('.mensagens');
 
-                            // Verifica se a ultima mensagem que esta no chat foi a ultima recebida
-                            if(div.find('.recebida:last p').text() != data.last_msg) {
-                                div.html(data.mensagens);
-                            }
+                        // Verifica se a ultima mensagem que esta no chat foi a ultima recebida
+                        if(div.find('.recebida:last p').text() != data.last_msg) {
+                            div.html(data.mensagens);
                         }
-                    });
-                }
-            } else {
-                clearInterval(interval);
+                    }
+                });
             }
         }, 10000);
-    });
+    }
 
     // Avaliar atendimento
     $(document).on('change', '#form-avaliar input[type=radio]', function() {
@@ -1731,7 +1661,7 @@ $(document).ready(function() {
     });
 
     // Scroll infinito nas mensagens do chat
-    $(document).on('custom-scroll', '.chat .mensagens', function() {
+    $('.chat .mensagens').scroll(function() {
         var btn = $('.load-more-messages');
 
         if($(this).scrollTop() == 0 && btn.length) {

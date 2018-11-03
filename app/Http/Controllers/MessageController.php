@@ -123,7 +123,7 @@ class MessageController extends Controller
 
                             if($chat->from_id == $user_logged && !$chat->user_to->claimed) {
                                 $claimed_url = url('/') . '/reivindicar-conta/check/' . app('App\Http\Controllers\ClaimedController')->createToken($email);
-                                $work_url = route('show-chat', $chat->user_to->trabalho->slug);
+                                $work_url = route('show-work', $chat->user_to->trabalho->slug);
 
                                 Mail::send('emails.new_message_claimed', ['client' => $client, 'work_url' => $work_url, 'claimed_url' => $claimed_url], function($q) use($email) {
                                     $q->from('no-reply@infochat.com.br', 'Infochat');

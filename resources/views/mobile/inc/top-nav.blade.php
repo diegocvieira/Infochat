@@ -29,11 +29,11 @@
 
             @if(Auth::guard('web')->check() && !_temporaryAccount())
                 <li>
-                    <a href="{{ route('get-usuario-config') }}" id="open-usuario-config" class="icon-conta">Minha conta</a>
+                    <a href="{{ route('get-usuario-config') }}" class="icon-conta">Minha conta</a>
                 </li>
 
                 <li>
-                    <a href="{{ action('TrabalhoController@getConfig') }}" class="icon-perfil-trabalho" id="open-trabalho-config">Perfil de trabalho</a>
+                    <a href="{{ action('TrabalhoController@getConfig') }}" class="icon-perfil-trabalho">Perfil de trabalho</a>
                 </li>
             @else
                 <li>

@@ -1,30 +1,32 @@
 @foreach($trabalhos as $trabalho)
-    <div class="result open-chat result-tab" data-type="trabalho" data-id="{{ $trabalho->id }}">
-        <div class="imagem">
-            @if($trabalho->imagem)
-                <img src="{{ asset('uploads/' . $trabalho->user_id . '/' . $trabalho->imagem) }}" alt="Foto de perfil de {{ $trabalho->nome }}" />
-            @else
-                <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" alt="Foto de perfil de {{ $trabalho->nome }}" />
-            @endif
-        </div>
+    <div class="result result-tab">
+        <a href="{{ route('chat', [$trabalho->id, 'trabalho']) }}">
+            <div class="imagem">
+                @if($trabalho->imagem)
+                    <img src="{{ asset('uploads/' . $trabalho->user_id . '/' . $trabalho->imagem) }}" alt="Foto de perfil de {{ $trabalho->nome }}" />
+                @else
+                    <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" alt="Foto de perfil de {{ $trabalho->nome }}" />
+                @endif
+            </div>
 
-        <div class="infos">
-            <div class="nome-tags">
-                <h3><a href="{{ route('show-chat', $trabalho->slug) }}">{{ $trabalho->nome }}</a></h3>
+            <div class="infos">
+                <div class="nome-tags">
+                    <h3>{{ $trabalho->nome }}</h3>
 
-                <div class="tags">
-                    @foreach($trabalho->tags as $t)
-                        <p><span>-</span> {{ $t->tag }}</p>
-                    @endforeach
+                    <div class="tags">
+                        @foreach($trabalho->tags as $t)
+                            <p><span>-</span> {{ $t->tag }}</p>
+                        @endforeach
+                    </div>
                 </div>
             </div>
-        </div>
+        </a>
 
-        <?php /*<div class="manage-options">
+        <div class="manage-options">
             <div class="options">
-                <a href="{{ route('show-trabalho', $trabalho->id) }}" id="work-details"></a>
+                <a href="{{ route('show-work', $trabalho->slug) }}" id="work-details"></a>
             </div>
-        </div>*/ ?>
+        </div>
     </div>
 @endforeach
 

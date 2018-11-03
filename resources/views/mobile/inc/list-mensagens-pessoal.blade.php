@@ -1,42 +1,44 @@
 @if(isset($chats) && count($chats) > 0)
     @foreach($chats as $chat)
         @if($chat->user_to->trabalho)
-            <div class="result open-chat" data-type="trabalho" data-id="{{ $chat->user_to->trabalho->id }}" data-chatid="{{ $chat->id }}">
-                <div class="imagem">
-                    @if($chat->user_to->trabalho->imagem)
-                        <img src="{{ asset('uploads/' . $chat->user_to->id . '/' . $chat->user_to->trabalho->imagem) }}" alt="Foto de perfil de {{ $chat->user_to->trabalho->nome }}" />
-                    @else
-                        <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" alt="Foto de perfil de {{ $chat->user_to->trabalho->nome }}" />
-                    @endif
-                </div>
+            <div class="result" data-chatid="{{ $chat->id }}">
+                <a href="{{ route('chat', [$chat->user_to->trabalho->id, 'trabalho', $chat->id]) }}">
+                    <div class="imagem">
+                        @if($chat->user_to->trabalho->imagem)
+                            <img src="{{ asset('uploads/' . $chat->user_to->id . '/' . $chat->user_to->trabalho->imagem) }}" alt="Foto de perfil de {{ $chat->user_to->trabalho->nome }}" />
+                        @else
+                            <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" alt="Foto de perfil de {{ $chat->user_to->trabalho->nome }}" />
+                        @endif
+                    </div>
 
-                <div class="infos">
-                    <div class="nome-tags">
-                        <h3>{{ $chat->user_to->trabalho->nome }}</h3>
+                    <div class="infos">
+                        <div class="nome-tags">
+                            <h3>{{ $chat->user_to->trabalho->nome }}</h3>
 
-                        <div class="tags">
-                            @foreach($chat->user_to->trabalho->tags as $t)
-                                <p><span>-</span> {{ $t->tag }}</p>
-                            @endforeach
+                            <div class="tags">
+                                @foreach($chat->user_to->trabalho->tags as $t)
+                                    <p><span>-</span> {{ $t->tag }}</p>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <div class="status">
+                            <span class="date">{{ diaSemana($chat->created_at) }}</span>
+
+                            @if($chat->close)
+                                <span class="status-close"></span>
+                            @endif
+
+                            @if($chat->count_new_messages() > 0)
+                                <span class="new-messages">{{ $chat->count_new_messages() }}</span>
+                            @endif
                         </div>
                     </div>
-
-                    <div class="status">
-                        <span class="date">{{ diaSemana($chat->created_at) }}</span>
-
-                        @if($chat->close)
-                            <span class="status-close"></span>
-                        @endif
-
-                        @if($chat->count_new_messages() > 0)
-                            <span class="new-messages">{{ $chat->count_new_messages() }}</span>
-                        @endif
-                    </div>
-                </div>
+                </a>
 
                 <div class="manage-options">
                     <div class="options">
-                        <?php /*<a href="{{ route('show-trabalho', $chat->user_to->trabalho->id) }}" id="work-details"></a>*/ ?>
+                        <a href="{{ route('show-work', $chat->user_to->trabalho->slug) }}" id="work-details"></a>
 
                         @if(!$chat->close || $chat->close && $chat->close == Auth::guard('web')->user()->id)
                             @if($chat->close)

@@ -61,14 +61,12 @@ class TrabalhoController extends Controller
             $categorias = Categoria::where('area_id', $trabalho->area_id)->get();
         }*/
 
-        if(Agent::isMobile()) {
-            return response()->json([
-                'body' => view('mobile.admin.work-config', compact('trabalho', 'states', 'cities'))->render()
-            ]);
-        } else {
+        if(Agent::isDesktop()) {
             return response()->json([
                 'body' => view('admin.trabalho-config', compact('trabalho', 'states', 'cities'))->render()
             ]);
+        } else {
+            return view('mobile.admin.work-config', compact('trabalho', 'states', 'cities'));
         }
     }
 
@@ -273,33 +271,48 @@ class TrabalhoController extends Controller
         }
     }
 
-    /*public function show($id)
+    public function show($slug)
     {
-        $trabalho = Trabalho::find($id);
+        $trabalhos = Trabalho::filtroStatus()->where('slug', $slug)->paginate(1);
 
-        $avaliacoes = app('App\Http\Controllers\AvaliarController')->list($trabalho->id, 1);
+        if(count($trabalhos) > 0) {
+            // SEO
+            $header_title = $trabalhos->first()->nome . ' - ' . Cookie::get('sessao_cidade_title') . '/' . Cookie::get('sessao_estado_letter') . ' | Infochat';
+            $header_desc = 'Clique para ver o perfil de ' . $trabalhos->first()->nome . ' em ' . Cookie::get('sessao_cidade_title') . '/' . Cookie::get('sessao_estado_letter') . ' no site infochat.com.br';
 
-        pageview($trabalho->id);
+            pageview($trabalhos->first()->id);
 
-        if(Auth::guard('web')->check()) {
-            $avaliacao_usuario = Avaliar::where('trabalho_id', $id)
-                ->where('user_id', Auth::guard('web')->user()->id)
-                ->select('nota', 'descricao')
-                ->first();
-        }
+            if(Cookie::get('sessao_cidade_id') != $trabalhos->first()->cidade_id || Cookie::get('sessao_estado_letter_lc') != $trabalhos->first()->cidade->estado->letter_lc) {
+                _setCidade($trabalhos->first()->cidade, $force = true);
 
-        if(Agent::isMobile()) {
-            return response()->json([
-                'trabalho' => view('mobile.show-trabalho', compact('trabalho', 'avaliacao_usuario', 'avaliacoes'))->render(),
-                'status' => true
-            ]);
+                return redirect(action('TrabalhoController@show', $slug));
+            }
+
+            if(Agent::isDesktop()) {
+                $destinatario = $trabalhos->first();
+                $palavra_chave = $trabalhos->first()->nome;
+                $tipo = 'trabalho';
+                $destinatario_id = $trabalhos->first()->user_id;
+
+                return view('pagina-inicial', compact('palavra_chave', 'trabalhos', 'messages', 'tipo', 'destinatario', 'destinatario_id', 'header_desc', 'header_title'));
+            } else {
+                //$avaliacoes = app('App\Http\Controllers\AvaliarController')->list($trabalho->id, 1);
+
+                $work = $trabalhos->first();
+
+                if(Auth::guard('web')->check()) {
+                    $avaliacao_usuario = Avaliar::where('trabalho_id', $work->id)
+                        ->where('user_id', Auth::guard('web')->user()->id)
+                        ->select('nota', 'descricao')
+                        ->first();
+                }
+
+                return view('mobile.show-work', compact('work', 'avaliacao_usuario', 'header_desc', 'header_title'));
+            }
         } else {
-            return response()->json([
-                'trabalho' => view('show-trabalho', compact('trabalho', 'avaliacao_usuario', 'avaliacoes'))->render(),
-                'status' => true
-            ]);
+            return view('errors.404');
         }
-    }*/
+    }
 
     /*public function favoritar($id)
     {

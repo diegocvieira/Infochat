@@ -16,9 +16,13 @@
             </div>
 
             <div class="chat">
-                <div class="sem-mensagens">
-                    <img src="{{ asset('img/icon-logo.png') }}" alt="Selecione um profissional ou estabelecimento" />
-                </div>
+                @if(isset($destinatario))
+                    @include('inc.chat')
+                @else
+                    <div class="sem-mensagens">
+                        <img src="{{ asset('img/icon-logo.png') }}" alt="Selecione um profissional ou estabelecimento" />
+                    </div>
+                @endif
             </div>
         </div>
     </div>
