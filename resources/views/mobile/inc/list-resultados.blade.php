@@ -31,5 +31,5 @@
 @endforeach
 
 @if($trabalhos->currentPage() < $trabalhos->lastPage())
-    <a href="{{ $trabalhos->url($trabalhos->currentPage()+1) }}" class="load-more-results"><span>+</span> Mais resultados</a>
+    <a href="{{ $trabalhos->nextPageUrl() }}" class="load-more-results"><span>+</span> Mais resultados</a>
 @endif
