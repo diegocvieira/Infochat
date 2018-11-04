@@ -232,7 +232,7 @@ class TrabalhoController extends Controller
             }
         }
 
-        $trabalhos = $trabalhos->paginate(10);
+        $trabalhos = $trabalhos->paginate(2);
 
         // Gera a URL
         //$url = '/busca/' . $city_slug . '/' . $state_letter_lc;
@@ -240,9 +240,15 @@ class TrabalhoController extends Controller
             //$url =  $url . '/' . urlencode($palavra_chave);
         //}
 
-        $page = $trabalhos->currentPage() == 1 ? '2' : $trabalhos->currentPage();
-        $url = '/busca/' . $city_slug . '/' . $state_letter_lc . '/' . urlencode($palavra_chave) . '?page=' . $page;
+        $url = '/busca/' . $city_slug . '/' . $state_letter_lc . '/' . urlencode($palavra_chave);
 
+        if($trabalhos->currentPage() > 1) {
+            $url = $url . '?page=' . $trabalhos->currentPage();
+        }
+
+
+
+//return $trabalhos->nextPageUrl();
         /*if(count($trabalhos) > 0) {
             $filtro_ordem = [
                 'populares' => 'populares',

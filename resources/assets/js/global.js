@@ -573,7 +573,7 @@ $(document).ready(function() {
 
                         $('#form-search-results').html(data.trabalhos);
 
-                        $('.pagination .next').attr('href', data.url);
+                        $('.pagination .next').attr('href', data.url + '?page=2');
                     } else {
                         //$('div.filtro-ordem').hide();
 

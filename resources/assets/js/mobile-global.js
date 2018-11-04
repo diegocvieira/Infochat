@@ -731,7 +731,7 @@ $(document).ready(function() {
 
                          $('#form-search-results').html(data.trabalhos);
 
-                         $('.load-more-results').attr('href', data.url);
+                         $('.load-more-results').attr('href', data.url + '?page=2');
                      } else {
                          //$('div.filtro-ordem').hide();
 
