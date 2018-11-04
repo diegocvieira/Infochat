@@ -98,7 +98,7 @@ class TrabalhoController extends Controller
                 $trabalho->slug = str_slug($request->slug, '-');
                 //$trabalho->tipo = $request->tipo;
                 $trabalho->nome = $request->nome;
-                //$trabalho->descricao = $request->descricao;
+                $trabalho->descricao = $request->descricao;
                 //$trabalho->logradouro = $request->logradouro;
                 //$trabalho->numero = $request->numero;
                 //$trabalho->bairro = $request->bairro;
@@ -181,10 +181,10 @@ class TrabalhoController extends Controller
         $city = Cookie::get('sessao_cidade_slug');
         $state = Cookie::get('sessao_estado_letter_lc');
 
-        return $this->busca($city, $state, $palavra_chave, $request->ordem);
+        return $this->busca($city, $state, $palavra_chave);
     }
 
-    public function busca($city_slug, $state_letter_lc, $palavra_chave = null, $ordem = null)
+    public function busca($city_slug, $state_letter_lc, $palavra_chave = null)
     {
         // Verifica e seta a requisicao se for uma cidade diferente
         if($city_slug != Cookie::get('sessao_cidade_slug') || $state_letter_lc != Cookie::get('sessao_estado_letter_lc')) {
@@ -206,8 +206,7 @@ class TrabalhoController extends Controller
         $palavra_chave = urldecode($palavra_chave);
 
         $trabalhos = Trabalho::filtroStatus()
-            ->filtroCidade()
-            ->filtroOrdem($ordem);
+            ->filtroCidade();
 
         if($palavra_chave) {
             // SEO
@@ -233,39 +232,44 @@ class TrabalhoController extends Controller
             }
         }
 
-        $trabalhos = $trabalhos->paginate(20);
+        $trabalhos = $trabalhos->paginate(10);
 
         // Gera a URL
-        $url = '/busca/' . $city_slug . '/' . $state_letter_lc;
-        if($palavra_chave) {
-            $url =  $url . '/' . urlencode($palavra_chave);
-        }
+        //$url = '/busca/' . $city_slug . '/' . $state_letter_lc;
+        //if($palavra_chave) {
+            //$url =  $url . '/' . urlencode($palavra_chave);
+        //}
 
-        if(count($trabalhos) > 0) {
+        $page = $trabalhos->currentPage() == 1 ? '2' : $trabalhos->currentPage();
+        $url = '/busca/' . $city_slug . '/' . $state_letter_lc . '/' . urlencode($palavra_chave) . '?page=' . $page;
+
+        /*if(count($trabalhos) > 0) {
             $filtro_ordem = [
                 'populares' => 'populares',
                 'avaliados' => 'mais bem avaliados',
                 'a_z' => 'a - z'
             ];
-        }
+        }*/
 
         // Detecta se foi acessado por url ou ajax
         if(!\Request::ajax()) {
             if(Agent::isMobile()) {
-                return view('mobile.pagina-inicial', compact('trabalhos', 'palavra_chave', 'filtro_ordem', 'header_title', 'header_desc'));
+                return view('mobile.pagina-inicial', compact('trabalhos', 'palavra_chave', 'header_title', 'header_desc'));
             } else {
-                return view('pagina-inicial', compact('trabalhos', 'palavra_chave', 'filtro_ordem', 'header_title', 'header_desc'));
+                return view('pagina-inicial', compact('trabalhos', 'palavra_chave', 'header_title', 'header_desc'));
             }
         } else {
             if(Agent::isMobile()) {
                 return response()->json([
                     'trabalhos' => view('mobile.inc.list-resultados', compact('trabalhos'))->render(),
-                    'url' => $url
+                    'url' => $url,
+                    'header_title' => $header_title
                 ]);
             } else {
                 return response()->json([
                     'trabalhos' => view('inc.list-resultados', compact('trabalhos'))->render(),
-                    'url' => $url
+                    'url' => $url,
+                    'header_title' => $header_title
                 ]);
             }
         }
@@ -314,6 +318,28 @@ class TrabalhoController extends Controller
         }
     }
 
+    public function showDesktop($slug)
+    {
+        $work = Trabalho::filtroStatus()->where('slug', $slug)->first();
+
+        if($work) {
+            pageview($work->id);
+
+            if(Auth::guard('web')->check()) {
+                $avaliacao_usuario = Avaliar::where('trabalho_id', $work->id)
+                    ->where('user_id', Auth::guard('web')->user()->id)
+                    ->select('nota', 'descricao')
+                    ->first();
+            }
+
+            return response()->json([
+                'work' => view('show-trabalho', compact('work', 'avaliacao_usuario'))->render()
+            ]);
+        } else {
+            return view('errors.404');
+        }
+    }
+
     /*public function favoritar($id)
     {
         $user_id = Auth::guard('web')->user()->id;
@@ -351,7 +377,8 @@ class TrabalhoController extends Controller
             //'numero' => 'max:10',
             'cidade' => 'required',
             //'estado' => 'required',
-            'img' => 'image|max:5000'
+            'img' => 'image|max:5000',
+            'descricao' => 'max:300'
         ];
     }
 
@@ -377,6 +404,7 @@ class TrabalhoController extends Controller
             //'numero.max' => 'O número deve ter menos de 10 caracteres.',
             'cidade.required' => 'Informe a cidade.',
             //'estado.required' => 'Informe o estado.'
+            'descricao.max' => 'A descrição deve ter menos de 300 caracteres.'
         ];
     }
 }

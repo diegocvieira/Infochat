@@ -76,7 +76,7 @@
         }
     }
 
-    input[type=text] {
+    input[type=text], textarea {
         font-size: 13.3px;
         color: #000;
         border-radius: 5px;
@@ -87,6 +87,11 @@
         padding-left: 15px;
         float: left;
         margin-bottom: 15px;
+    }
+
+    textarea {
+        height: 150px;
+        padding: 15px;
     }
 
     .bootstrap-select {
@@ -273,7 +278,7 @@
                 background-color: rgb(245, 245, 245);
                 position: relative;
                 border-radius: 5px;
-                height: 92px;
+                height: 150px;
                 overflow: auto;
                 font-weight: normal;
 

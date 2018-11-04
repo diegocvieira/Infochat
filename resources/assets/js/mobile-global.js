@@ -694,13 +694,22 @@ $(document).ready(function() {
 
      ////////////////////////////// RESULTADOS DAS BUSCAS //////////////////////////////
 
-     $(document).on('keyup', '#form-search input[type=text]', function(e) {
-         $('#form-search').submit();
+    //$(document).on('keyup', '#form-search input[type=text]', function(e) {
+        //$('#form-search').submit();
+     //});
+
+     $(document).on('click', '.show-info-description', function() {
+         $(this).after("<div class='info-description'><p><span>Os resultados são mostrados com base nas palavras-chaves digitadas e em diversos outros fatores. Alguns deles são:</span><span>1. relevância</span><span>2. tempo de resposta</span><span>3. avaliação dos usuários</span><span>4. avaliação dos atendimentos</span><span>5. popularidade</span></p></div>");
+     });
+     $(document).click(function(e) {
+         if(!$(e.target).closest('.show-info-description').length) {
+             $('.info-description').remove();
+         }
      });
 
      // Submeter form principal de busca
      $(document).on('submit', '#form-search', function() {
-         $(this).find('#form-search-page').val('');
+         //$(this).find('#form-search-page').val('');
 
          if($(this).find('input[type=text]').val().length) {
              $.ajax({
@@ -709,23 +718,35 @@ $(document).ready(function() {
                  dataType: 'json',
                  data: $(this).serialize(),
                  success: function(data) {
-                     window.history.pushState('', '', data.url);
+                     document.title = data.header_title;
+                     window.history.pushState('', data.header_title, data.url);
 
                      $('.abas-resultados').find('a').removeClass('active');
                      $('.abas-resultados').find('a[data-type=resultado]').addClass('active');
 
                      if(data.trabalhos.length > 0) {
-                         $('div.filtro-ordem').show();
+                         //$('div.filtro-ordem').show();
+
+                         $('.info-results').show();
 
                          $('#form-search-results').html(data.trabalhos);
+
+                         $('.load-more-results').attr('href', data.url);
                      } else {
-                         $('div.filtro-ordem').hide();
+                         //$('div.filtro-ordem').hide();
+
+                         $('.info-results').hide();
 
                          $('#form-search-results').html("<div class='sem-resultados'><p>Sua pesquisa não encontrou resultado.<br>Verifique se todas as palavras estão corretas ou tente palavras-chave diferentes.</p></div>");
                      }
                  }
              });
          } else {
+             document.title = 'Infochat - O atendimento online da sua cidade';
+             window.history.pushState('', '', '/');
+
+             $('.info-results').hide();
+
              $('#form-search-results').html('');
              $('#form-search-results').append("<div class='sem-resultados'><p>Pesquise um profissional ou estabelecimento<br>para pedir informações ou tirar dúvidas</p></div>");
          }
@@ -738,12 +759,9 @@ $(document).ready(function() {
          e.preventDefault();
 
          $('.abas-resultados').find('a').removeClass('active');
-
          $(this).addClass('active');
 
-         var type = $(this).data('type');
-
-         if(type == 'resultado') {
+         if($(this).data('type') == 'resultado') {
              $('#form-search').submit();
          } else {
              $.ajax({
@@ -751,7 +769,7 @@ $(document).ready(function() {
                  method: 'GET',
                  dataType: 'json',
                  success: function(data) {
-                     $('div.filtro-ordem').hide();
+                     //$('div.filtro-ordem').hide();
 
                      window.history.pushState('', '', '/');
 
@@ -762,23 +780,28 @@ $(document).ready(function() {
      });
 
      // Load more results
-     $(document).on('click', '.load-more-results', function() {
-         var form = $('#form-search'),
-             btn = $(this);
+     $(document).on('click', '.load-more-results', function(e) {
+         e.preventDefault();
+
+         //var form = $('#form-search'),
+        var btn = $(this);
 
          btn.html('Carregando...');
 
-         form.find('#form-search-page').val($(this).data('page'));
+        // form.find('#form-search-page').val($(this).data('page'));
 
          $.ajax({
-             url : form.attr('action'),
+             //url : form.attr('action'),
+             url: $(this).attr('href'),
              method: 'GET',
-             dataType:'json',
-             data: form.serialize(),
+             dataType: 'json',
+             //data: form.serialize(),
              success: function(data) {
                  btn.remove();
 
                  $('#form-search-results').append(data.trabalhos);
+
+                 window.history.pushState('', '', data.url);
              }
          });
      });

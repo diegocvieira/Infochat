@@ -7,21 +7,33 @@
         <div class="top-page">
             <a href="javascript:history.back()" class="back-arrow"></a>
 
-            <div class="imagem {{ !$destinatario->imagem ? 'border' : '' }}">
-                @if($destinatario->imagem)
-                    <img src="{{ asset('uploads/' . $destinatario_id . '/' . $destinatario->imagem) }}" alt="Foto de perfil de {{ $destinatario->nome }}" />
-                @else
-                    <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" alt="Foto de perfil de {{ $destinatario->nome }}" />
-                @endif
-            </div>
+            <a href="{{ $tipo == 'trabalho' ? route('show-work', $destinatario->slug) : '#' }}" onclick="{{ $tipo != 'trabalho' ? 'return false;' : '' }}">
+                <div class="imagem {{ !$destinatario->imagem ? 'border' : '' }}">
+                    @if($destinatario->imagem)
+                        <img src="{{ asset('uploads/' . $destinatario_id . '/' . $destinatario->imagem) }}" alt="Foto de perfil de {{ $destinatario->nome }}" />
+                    @else
+                        <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" alt="Foto de perfil de {{ $destinatario->nome }}" />
+                    @endif
+                </div>
 
-            <div class="title-status">
-                <h3 class="title {{ ($tipo == 'trabalho' && $destinatario->user->online || $tipo == 'pessoal' && $destinatario->online) ? 'margin' : '' }}">{{ $destinatario->nome }}</h3>
+                <div class="title-status">
+                    <h3 class="title {{ ($tipo == 'trabalho' || $tipo == 'pessoal' && $destinatario->online) ? 'margin' : '' }}">{{ $destinatario->nome }}</h3>
 
-                @if($tipo == 'trabalho' && $destinatario->user->online || $tipo == 'pessoal' && $destinatario->online)
-                    <span class="online">online</span>
-                @endif
-            </div>
+                    <span>
+                        @if($tipo == 'trabalho')
+                            ver perfil
+                        @endif
+
+                        @if(($tipo == 'trabalho' && $destinatario->user->online || $tipo == 'pessoal' && $destinatario->online) && $tipo == 'trabalho')
+                            -
+                        @endif
+
+                        @if($tipo == 'trabalho' && $destinatario->user->online || $tipo == 'pessoal' && $destinatario->online)
+                            online
+                        @endif
+                    </span>
+                </div>
+            </a>
 
             @if(Auth::guard('web')->check() && $tipo == 'trabalho')
                 {!! Form::open(['method' => 'post', 'id' => 'form-avaliar', 'route' => 'avaliar-atendimento']) !!}
@@ -47,7 +59,7 @@
         </div>
 
         {!! Form::open(['method' => 'post', 'action' => 'MessageController@send', 'id' => 'form-enviar-msg']) !!}
-            {!! Form::text('message', null, ['class' => !Auth::guard('web')->check() ? 'unlogged' : '', 'placeholder' => Auth::guard('web')->check() ? 'Envie uma mensagem para começar' : 'Escreva seu nome antes de começar', 'autofocus']) !!}
+            {!! Form::text('message', null, ['class' => !Auth::guard('web')->check() ? 'unlogged' : '', 'placeholder' => Auth::guard('web')->check() ? 'Envie uma mensagem para começar' : 'Escreva seu nome antes de começar', 'autofocus', 'autocomplete' => 'off']) !!}
 
             {!! Form::hidden('chat_id', isset($chat_id) ? $chat_id : '') !!}
             {!! Form::hidden('work_user', $tipo == 'trabalho' ? $destinatario->user->id : '') !!}

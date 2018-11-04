@@ -1,513 +1,194 @@
 .modal-trabalho-perfil {
     .modal-dialog {
-        width: 920px;
-        height: 90%;
         margin: 0;
+        width: 738px;
+        height: 718px;
     }
 
     .modal-content {
         width: 100%;
         height: 100%;
-        padding: 20px 40px 20px 25px;
+        padding: 30px 50px;
         text-align: left;
+        overflow: auto;
     }
 
-    .imagem {
-        width: 29%;
+    .image {
+        margin-bottom: 20px;
+        box-shadow: 2.5px 4.33px 19px 1px rgba(100, 100, 100, 0.118);
+        width: 215px;
         height: 215px;
+        position: relative;
+        margin: 0 auto 30px auto;
 
-        .bg {
-            border: 1px solid rgb(230, 230, 230);
-            float: left;
+        img {
             width: 100%;
             height: 100%;
+            object-fit: cover;
             border-radius: 5px;
-            background-position: center;
-            background-repeat: no-repeat;
-            box-shadow: 2.5px 4.33px 19px 1px rgba(100, 100, 100, 0.118);
 
-            &.sem-imagem {
-                background-size: 80px;
-                background-image: url('../img/paisagem.png');
-            }
-
-            .trocar-imagem {
-                border: 1px solid rgb(230, 230, 230);
-                border-radius: 3px;
-                background-color: rgba(0, 0, 0, 0.5);
+            &.no-image {
+                width: 73px;
+                height: 56px;
                 position: absolute;
                 left: 50%;
                 top: 50%;
-                width: 98px;
-                margin: -14px 0 0 -49px;
-                text-align: center;
-                line-height: 1.8;
-                height: 28px;
-                font-size: 12.5px;
-                color: rgb(255, 255, 255);
-                font-weight: normal;
-                cursor: pointer;
+                margin: -28px 0 0 -36.5px;
             }
         }
     }
 
-    .infos {
-        width: 71%;
-        padding: 0;
+    .work-name {
+        font-size: 18.7px;
+        color: rgb(100, 100, 100);
+        font-weight: 700;
+        width: 100%;
+        float: left;
+        text-align: center;
+    }
 
-        .header-info {
-            width: 100%;
-            float: left;
+    .work-tags {
+        text-align: center;
+        width: 70%;
+        margin: 0 auto;
 
-            .nome {
-                max-width: calc(100% - 80px);
-                float: left;
-                height: 26px;
-                overflow: hidden;
-                padding-left: 10px;
-                margin-top: 5px;
-
-                h1 {
-                    font-size: 20.8px;
-                    color: rgb(100, 100, 100);
-                    font-weight: 700;
-                    margin: 0;
-                }
-            }
-
-            .online {
-                font-size: 14.5px;
-                color: rgb(132, 206, 111);
-                position: relative;
-                float: left;
-                width: 70px;
-                padding-left: 17px;
-                margin: 7px 0 0 10px;
-
-                &:after {
-                    content: '';
-                    position: absolute;
-                    left: 0;
-                    top: 6px;
-                    border-radius: 50%;
-                    background-color: rgb(132, 206, 111);
-                    width: 10px;
-                    height: 10px;
-                }
-            }
-        }
-
-        .tags {
-            width: 100%;
-            float: left;
+        span {
             font-size: 14.5px;
             color: rgb(150, 150, 150);
-            margin-bottom: 15px;
-            padding-left: 10px;
+            line-height: 1.286;
+            display: inline-block;
 
-            p {
-                margin: 0;
-                display: inline-block;
-
-                &:last-child span {
-                    display: none;
-                }
+            &:not(:last-child):after {
+                content: '-';
+                padding-left: 5px;
             }
         }
+    }
 
-        /*.add-favoritos {
-            width: 100%;
-            float: left;
-            margin-top: 57px;
+    .work-city {
+        font-size: 13.7px;
+        color: rgb(150, 150, 150);
+        text-transform: uppercase;
+        float: left;
+        width: 100%;
+        text-align: center;
+        margin-top: 10px;
+    }
 
-            .favoritar {
-                float: left;
-                font-size: 12.5px;
-                color: rgb(150, 150, 150);
-                border: 1px solid rgb(230, 230, 230);
-                border-radius: 15px;
-                padding: 5px 15px 5px 40px;
-                background-position: 9%;
-                background-repeat: no-repeat;
-                background-size: 20px;
-                background-image: url('../img/icon-heart.png');
+    .work-statistics {
+        width: 100%;
+        float: left;
+        text-align: center;
+        margin-top: 10px;
 
-                &:after {
-                    content: 'adicionar aos favoritos';
-                    position: relative;
-                }
-
-                &.favorito {
-                    border: none;
-                    background-image: url('../img/icon-heart2.png');
-                    background-position: 18%;
-
-                    &:after {
-                        content: 'favorito';
-                    }
-                }
-            }
-        }*/
-
-        .info {
-            width: 100%;
-            float: left;
-            background-position: 2.5%;
+        .stat {
+            display: inline-block;
+            background-position: 4.5%;
             background-repeat: no-repeat;
             background-size: contain;
-            padding-left: 40px;
-            margin-top: 10px;
+            padding-left: 30px;
+            position: relative;
+
+            p {
+                position: absolute;
+                right: 75px;
+                top: 0;
+                font-size: 13.3px;
+                color: rgb(100, 100, 100);
+                border-radius: 3px;
+                background-color: rgb(255, 255, 255);
+                box-shadow: 2.5px 4.33px 19px 1px rgba(100, 100, 100, 0.078);
+                width: 150px;
+                height: 24px;
+            }
+
+            span {
+                font-size: 16.6px;
+                color: rgb(100, 100, 100);
+                font-weight: 700;
+            }
 
             &.avaliacao {
-                background-image: url('../img/icon-star.png');
+                background-image: url('../../img/icon-star.png');
                 background-size: 25px;
-                background-position: 2.2%;
-                padding-left: 42px;
+                background-position: 3.8%;
             }
 
             &.atendimento {
-                background-image: url('../img/icon-like.png');
-            }
-
-            &.tempo-resposta {
-                background-image: url('../img/icon-clock.png');
-            }
-
-            p {
-                margin: 0;
-                font-size: 14.5px;
-                color: rgb(100, 100, 100);
-            }
-        }
-    }
-
-    .abas {
-        border-bottom: 1px solid rgb(228, 228, 228);
-        margin: 40px auto 10px auto;
-        padding: 0 0 5px 0;
-
-        a {
-            font-size: 14.5px;
-            color: rgb(100, 100, 100);
-            padding: 3px 10px;
-            margin-right: 20px;
-
-            &:hover {
-                color: rgb(122, 162, 244);
-            }
-        }
-
-        .active {
-            color: rgb(122, 162, 244);
-            border-bottom: 4px solid rgb(122, 162, 244);
-        }
-    }
-
-    .aba-aberta {
-        display: none;
-        overflow: auto;
-        margin-top: 10px;
-        max-height: calc(100vh - 470px);
-
-        .sem-resultados p {
-            font-size: 14.5px;
-            color: rgb(100, 100, 100);
-        }
-
-        &.sobre {
-            display: inherit;
-
-            .descricao {
-                width: 100%;
-                float: left;
-            }
-
-            .tipo-perfil {
-                float: left;
-                width: 100%;
-                font-size: 13.7px;
-                color: rgb(100, 100, 100);
-            }
-
-            .tags {
-                max-width: 80%;
-                float: left;
-
-                span {
-                    border-radius: 3px;
-                    background-color: rgb(150, 150, 150);
-                    font-size: 13.3px;
-                    color: rgb(255, 255, 255);
-                    float: left;
-                    padding: 3px 10px;
-                    margin: 0 10px 10px 0;
-                }
-            }
-        }
-
-        &.informacoes {
-            .group {
-                background-position: left top;
-                background-repeat: no-repeat;
-                background-size: 20px;
-                padding-left: 25px;
-                margin-top: 30px;
-                float: left;
-                width: 100%;
-
-                &:first-child {
-                    margin-top: 0;
-                }
-
-                p {
-                    margin: 0;
-                    font-size: 14.5px;
-                    color: rgb(100, 100, 100);
-                    line-height: 1.429;
-
-                    .ver-no-mapa {
-                        font-size: 12.5px;
-                        color: rgb(122, 162, 244);
-                    }
-                }
-
-                &.endereco {
-                    background-image: url('../img/icon-map.png');
-                    background-size: 25px;
-                }
-
-                &.fones {
-                    background-image: url('../img/icon-phone.png');
-                }
-
-                &.email {
-                    background-image: url('../img/icon-email.png');
-                }
-
-                &.redes-sociais {
-                    background-image: url('../img/icon-earth.png');
-                }
-
-                &.horarios-atendimento {
-                    background-image: url('../img/icon-clock.png');
-
-                    .dia {
-                        float: left;
-                        width: 80px;
-                        margin-bottom: 5px;
-                    }
-
-                    .hora {
-                        float: left;
-                        width: calc(100% - 80px);
-                        margin-bottom: 5px;
-
-                        span {
-                            position: relative;
-
-                            &:nth-child(2), &:last-child {
-                                padding-left: 8px;
-
-                                &:before {
-                                    content: '-';
-                                    position: absolute;
-                                    top: 0;
-                                    left: 0;
-                                }
-                            }
-
-                            &:nth-child(3) {
-                                padding-left: 10px;
-
-                                &:before {
-                                    content: '|';
-                                    position: absolute;
-                                    top: 0;
-                                    left: 0;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        &.avaliar {
-            label, p {
-                font-size: 14.5px;
-                color: rgb(100, 100, 100);
-                font-weight: normal;
-            }
-
-            form {
-                float: left;
-                width: 500px;
-            }
-
-            .nota {
-				width: 100%;
-				float: left;
+                background-image: url('../../img/icon-like.png');
                 margin-left: 20px;
 
                 p {
-                    margin: 0 0 2px 0;
+                    right: 0;
+                    left: 85px;
+                    width: 180px;
                 }
+            }
+        }
+    }
 
-				input[type=radio] {
-					display: none;
+    .work-description {
+        font-size: 14.5px;
+        color: rgb(100, 100, 100);
+        line-height: 1.714;
+        float: left;
+        width: 100%;
+        margin: 20px 0 0 0;
+    }
+
+    .work-slug {
+        font-size: 14.5px;
+        color: rgb(122, 162, 244);
+        float: left;
+        width: 100%;
+        margin: 20px 0 0 0;
+    }
+
+    #form-avaliar-trabalho {
+        float: left;
+        width: 100%;
+        margin-top: 20px;
+
+        label, p {
+            font-size: 14.5px;
+            color: rgb(100, 100, 100);
+            font-weight: normal;
+        }
+
+        .nota {
+			width: 100%;
+			float: left;
+
+            p {
+                margin: 0 0 2px 0;
+            }
+
+			input[type=radio] {
+				display: none;
+			}
+
+			label {
+				width: 24px;
+				height: 24px;
+				background-image: url('../img/icon-star2.png');
+				background-repeat: no-repeat;
+				background-size: contain;
+				background-position: center;
+				display: inline-block;
+				cursor: pointer;
+
+				&:not(:first-child) {
+					margin-left: -4px;
 				}
 
-				label {
-					width: 24px;
-					height: 24px;
-					background-image: url('../img/icon-star2.png');
-					background-repeat: no-repeat;
-					background-size: contain;
-					background-position: center;
-					display: inline-block;
-					cursor: pointer;
-
-					&:not(:first-child) {
-  						margin-left: -4px;
-					}
-
-					&:hover {
-						background-image: url('../img/icon-star3.png');
-					}
-				}
-
-				.star-full {
+				&:hover {
 					background-image: url('../img/icon-star3.png');
 				}
 			}
 
-            .comentario {
-                width: 100%;
-                float: left;
-                margin-top: 25px;
-
-                label {
-                    margin-left: 20px;
-                }
-
-                textarea {
-                    font-size: 14.5px;
-                    color: #000;
-                    line-height: 1.429;
-                    border-radius: 5px;
-                    background-color: rgb(245, 245, 245);
-                    width: 100%;
-                    resize: none;
-                    height: 150px;
-                    border: none;
-                    float: left;
-                    padding: 20px 15px;
-                }
-            }
-
-            input[type=submit] {
-                font-size: 14.5px;
-                color: rgb(255, 255, 255);
-                font-weight: 700;
-                border-radius: 5px;
-                background-color: rgb(122, 162, 244);
-                padding: 8px 25px;
-                border: none;
-                float: right;
-                margin-top: 10px;
-            }
-        }
-
-        &.comentarios {
-            .load-more-avaliacoes {
-                font-size: 13.7px;
-                color: rgb(122, 162, 244);
-                float: left;
-                margin-top: 10px;
-                border: none;
-                background-color: transparent;
-                padding: 0;
-            }
-
-            .comentario {
-                width: 100%;
-                float: left;
-                margin-top: 10px;
-
-                &:first-child {
-                    margin-top: 0;
-                }
-
-                .imagem-user {
-                    border: 1px solid rgb(230, 230, 230);
-                    border-radius: 3px;
-                    width: 38px;
-                    height: 38px;
-                    float: left;
-
-                    img {
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-
-                        &.sem-imagem {
-                            width: 20px;
-                            display: block;
-                            height: auto;
-                            margin: auto;
-                            position: relative;
-                            top: 50%;
-                            transform: translateY(-50%);
-                            object-fit: cover;
-                        }
-                    }
-                }
-
-                .header-comentario {
-                    float: left;
-                    width: calc(100% - 38px);
-                    padding-left: 10px;
-
-                    h4 {
-                        font-size: 14.5px;
-                        color: rgb(100, 100, 100);
-                        font-weight: 700;
-                        float: left;
-                        margin: 13px 0 0 0;
-                    }
-
-                    .nota {
-                        font-size: 14.5px;
-                        color: rgb(100, 100, 100);
-                        float: left;
-                        background-repeat: no-repeat;
-                        background-size: contain;
-                        background-image: url('../img/icon-star3.png');
-                        background-position: left;
-                        padding-left: 22px;
-                        margin: 10px 15px 0 10px;
-                    }
-
-                    .data {
-                        font-size: 11.6px;
-                        color: rgb(150, 150, 150);
-                        float: left;
-                        margin-top: 12px;
-                    }
-                }
-
-                .descricao-comentario {
-                    float: left;
-                    width: 100%;
-                    margin-top: 5px;
-
-                    p {
-                        font-size: 14.5px;
-                        color: rgb(100, 100, 100);
-                        line-height: 1.429;
-                    }
-                }
-            }
-        }
+			.star-full {
+				background-image: url('../img/icon-star3.png');
+			}
+		}
     }
 }

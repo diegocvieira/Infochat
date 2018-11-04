@@ -2,7 +2,7 @@
 	.modal-dialog {
 		margin: 0;
 		width: 738px;
-		height: 690px;
+		height: 790px;
 	}
 
 	.modal-content {
@@ -10,6 +10,7 @@
 		height: 100%;
 		padding: 40px 70px;
 		text-align: left;
+		overflow: auto;
 	}
 
 	.imagem {
@@ -61,7 +62,7 @@
         }
     }
 
-	input[type=text] {
+	input[type=text], textarea {
         font-size: 13.3px;
         color: #000;
         border-radius: 5px;
@@ -71,20 +72,14 @@
         border: none;
         padding-left: 15px;
         float: left;
-
-        &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-            color: rgb(150, 150, 150);
-            opacity: 1; /* Firefox */
-        }
-
-        &:-ms-input-placeholder { /* Internet Explorer 10-11 */
-            color: rgb(150, 150, 150);
-        }
-
-        &::-ms-input-placeholder { /* Microsoft Edge */
-            color: rgb(150, 150, 150);
-        }
     }
+
+	textarea {
+		height: 92px;
+		padding: 15px;
+		resize: none;
+		margin-top: 15px;
+	}
 
 	.bootstrap-select {
         float: left !important;

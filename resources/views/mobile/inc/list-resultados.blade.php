@@ -31,5 +31,5 @@
 @endforeach
 
 @if($trabalhos->currentPage() < $trabalhos->lastPage())
-    <button class="load-more-results" data-page="{{ $trabalhos->currentPage() + 1 }}">+</button>
+    <a href="{{ $trabalhos->url($trabalhos->currentPage()+1) }}" class="load-more-results"><span>+</span> Mais resultados</a>
 @endif

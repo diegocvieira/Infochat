@@ -16,6 +16,9 @@ Route::get('/', 'GlobalController@inicial')->name('inicial');
 // Acessar o chat pela url
 Route::get('{slug}', 'TrabalhoController@show')->name('show-work');
 
+// Show perfil desktop
+Route::get('{slug}/desktop', 'TrabalhoController@showDesktop')->name('show-work-desktop');
+
 // Cities
 Route::group(['prefix' => 'cidades'], function() {
     Route::post('get', 'GlobalController@getCidade');

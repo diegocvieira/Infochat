@@ -48,6 +48,8 @@
         </label>
     </div>
 
+    {!! Form::textarea('descricao', null, ['placeholder' => 'Descrição', 'maxlength' => '300']) !!}
+
     {!! Form::select('state', $states, isset($trabalho) ? $trabalho->cidade->estado->id : null, ['class' => 'selectpicker state', 'data-live-search' => 'true', 'title' => 'Estado', 'required']) !!}
 
     {!! Form::select('cidade', $cities, isset($trabalho) ? $trabalho->cidade_id : null, ['class' => 'selectpicker city', 'data-live-search' => 'true', 'title' => 'Cidade', 'required']) !!}

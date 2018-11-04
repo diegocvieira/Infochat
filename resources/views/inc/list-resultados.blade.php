@@ -28,6 +28,20 @@
     </div>
 @endforeach
 
-@if($trabalhos->currentPage() < $trabalhos->lastPage())
-    <button class="load-more-results" data-page="{{ $trabalhos->currentPage() + 1 }}">+</button>
+@if($trabalhos->lastPage() > 1)
+    <div class="pagination">
+        @if($trabalhos->currentPage() > 1)
+            <a class="load-more-results prev" href="{{ $trabalhos->url($trabalhos->currentPage()-1) }}">anterior</a>
+        @else
+            <a class="disabled prev">anterior</a>
+        @endif
+
+        <span>{{ $trabalhos->currentPage() }}</span>
+
+        @if($trabalhos->currentPage() < $trabalhos->lastPage())
+            <a class="load-more-results next" href="{{ $trabalhos->url($trabalhos->currentPage()+1) }}">próximo</a>
+        @else
+            <a class="disabled next">próximo</a>
+        @endif
+    </div>
 @endif
