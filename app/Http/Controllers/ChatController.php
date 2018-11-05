@@ -24,6 +24,17 @@ class ChatController extends Controller
             $destinatario_slug = $destinatario->slug;
 
             pageview($destinatario->id);
+
+            if(Auth::guard('web')->check()) {
+                $check_chat = Chat::whereNull('close')
+                    ->where('from_id', Auth::guard('web')->user()->id)
+                    ->where('to_id', $destinatario_id)
+                    ->first();
+
+                if($check_chat) {
+                    $chat_id = $check_chat->id;
+                }
+            }
         } else {
             $destinatario = User::find($id);
 
