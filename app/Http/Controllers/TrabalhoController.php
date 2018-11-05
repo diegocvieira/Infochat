@@ -208,7 +208,7 @@ class TrabalhoController extends Controller
         $trabalhos = Trabalho::filtroStatus()->filtroCidade()
             ->leftJoin('avaliacoes as a', 'trabalhos.id', '=', 'a.trabalho_id')
             ->leftJoin('avaliacoes_atendimento as b', 'trabalhos.id', '=', 'b.trabalho_id')
-            ->select('trabalhos.id', 'trabalhos.imagem', 'trabalhos.nome', DB::raw('IFNULL(ROUND((SUM(a.nota) / COUNT(a.id)), 1), 0) + IFNULL(CEILING((SUM(b.likes) * 5) / (SUM(b.likes) + SUM(b.dislikes))), 0) as best'));
+            ->select('trabalhos.id', 'trabalhos.user_id', 'trabalhos.slug', 'trabalhos.imagem', 'trabalhos.nome', DB::raw('IFNULL(ROUND((SUM(a.nota) / COUNT(a.id)), 1), 0) + IFNULL(CEILING((SUM(b.likes) * 5) / (SUM(b.likes) + SUM(b.dislikes))), 0) as best'));
 
         if($palavra_chave) {
             // SEO
