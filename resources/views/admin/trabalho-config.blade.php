@@ -51,7 +51,7 @@
     <div class="description">
         {!! Form::label('description', 'Descrição') !!}
 
-        <span class="description-counter">{{ (300 - strlen($trabalho->descricao)) }}</span>
+        <span class="description-counter">{{ isset($trabalho) ? (300 - strlen($trabalho->descricao)) : 300 }}</span>
 
         {!! Form::textarea('descricao', null, ['id' => 'description', 'placeholder' => 'Escreva uma breve descrição do seu serviço ou estabelecimento', 'maxlength' => '300']) !!}
     </div>
