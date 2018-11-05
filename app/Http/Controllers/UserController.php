@@ -62,6 +62,7 @@ class UserController extends Controller
     {
         $user = User::find(Auth::guard('web')->user()->id);
         $user->online = 0;
+        $user->onesignal_token = null;
         $user->save();
 
         Session::flush();
