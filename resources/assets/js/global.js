@@ -29,7 +29,7 @@ $(document).ready(function() {
     }
 
     // Atualizar count aba trabalho
-    function newMessagesTrabalho(count) {
+    function newMessagesTrabalho(count, sound = true) {
         var trabalho = $('.resultados').find('.abas-resultados a[data-type=trabalho]');
 
         if(count) {
@@ -37,12 +37,16 @@ $(document).ready(function() {
                 if(count != parseInt(trabalho.find('span').text())) {
                     trabalho.find('span').text(count);
 
-                    $('#alert-new-message')[0].play();
+                    if(sound) {
+                        $('#alert-new-message')[0].play();
+                    }
                 }
             } else {
                 trabalho.append("<span>" + count + "</span>");
 
-                $('#alert-new-message')[0].play();
+                if(sound) {
+                    $('#alert-new-message')[0].play();
+                }
             }
         } else {
             trabalho.find('span').remove();
@@ -50,7 +54,7 @@ $(document).ready(function() {
     }
 
     // Atualizar count aba pessoal
-    function newMessagesPessoal(count) {
+    function newMessagesPessoal(count, sound = true) {
         var pessoal = $('.resultados').find('.abas-resultados a[data-type=pessoal]');
 
         if(count) {
@@ -58,12 +62,16 @@ $(document).ready(function() {
                 if(count != parseInt(pessoal.find('span').text())) {
                     pessoal.find('span').text(count);
 
-                    $('#alert-new-message')[0].play();
+                    if(sound) {
+                        $('#alert-new-message')[0].play();
+                    }
                 }
             } else {
                 pessoal.append("<span>" + count + "</span>");
 
-                $('#alert-new-message')[0].play();
+                if(sound) {
+                    $('#alert-new-message')[0].play();
+                }
             }
         } else {
             pessoal.find('span').remove();
@@ -857,10 +865,10 @@ $(document).ready(function() {
                     $('#form-enviar-msg').find('input[type=text]').focus();
 
                     // Atualizar count da aba trabalho
-                    newMessagesTrabalho(data.new_messages_trabalho);
+                    newMessagesTrabalho(data.new_messages_trabalho, false);
 
                     // Atualizar count da aba pessoal
-                    newMessagesPessoal(data.new_messages_pessoal);
+                    newMessagesPessoal(data.new_messages_pessoal, false);
                 }
             });
 
