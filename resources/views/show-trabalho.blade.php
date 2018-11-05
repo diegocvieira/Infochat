@@ -42,7 +42,7 @@
     @endif
 </p>
 
-<p class="work-slug">www.infochat.com.br/{{ $work->slug }}</p>
+<a href="{{ route('show-work', $work->slug) }}" class="work-slug">www.infochat.com.br/{{ $work->slug }}</a>
 
 {!! Form::open(['method' => 'post', 'id' => 'form-avaliar-trabalho', 'route' => 'avaliar-trabalho']) !!}
     {!! Form::hidden('trabalho_id', $work->id) !!}
