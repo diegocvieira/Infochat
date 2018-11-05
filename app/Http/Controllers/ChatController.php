@@ -48,15 +48,15 @@ class ChatController extends Controller
             $new_messages_pessoal = null;
         }
 
-        if(Agent::isDesktop()) {
+        if(Agent::isMobile() || Agent::isTablet()) {
+            return view('mobile.inc.chat', compact('destinatario', 'tipo', 'chat_id', 'destinatario_id', 'messages'));
+        } else {
             return response()->json([
                 'trabalho' => view('inc.chat', compact('destinatario', 'tipo', 'chat_id', 'destinatario_id', 'messages'))->render(),
                 'new_messages_trabalho' => $new_messages_trabalho,
                 'new_messages_pessoal' => $new_messages_pessoal,
                 'destinatario_slug' => $destinatario_slug
             ]);
-        } else {
-            return view('mobile.inc.chat', compact('destinatario', 'tipo', 'chat_id', 'destinatario_id', 'messages'));
         }
     }
 
