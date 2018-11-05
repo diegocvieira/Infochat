@@ -699,10 +699,13 @@ $(document).ready(function() {
      //});
 
      $(document).on('click', '.show-info-description', function() {
+         $('body').append("<div class='info-overlay' style='position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%;'></div>");
+
          $(this).after("<div class='info-description'><p><span>Os resultados são mostrados com base nas palavras-chaves digitadas e em diversos outros fatores. Alguns deles são:</span><span>1. relevância</span><span>2. tempo de resposta</span><span>3. avaliação dos usuários</span><span>4. avaliação dos atendimentos</span><span>5. popularidade</span></p></div>");
      });
      $(document).click(function(e) {
          if(!$(e.target).closest('.show-info-description').length) {
+             $('.info-overlay').remove();
              $('.info-description').remove();
          }
      });
@@ -770,6 +773,8 @@ $(document).ready(function() {
                  dataType: 'json',
                  success: function(data) {
                      //$('div.filtro-ordem').hide();
+
+                     $('.info-results').hide();
 
                      window.history.pushState('', '', '/');
 
