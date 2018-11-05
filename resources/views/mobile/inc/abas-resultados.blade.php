@@ -17,6 +17,10 @@
     @endif
 </div>
 
+<div class="info-results" style="{{ (!isset($trabalhos) || isset($trabalhos) && count($trabalhos) == 0) ? 'display: none;' : '' }}">
+    <p class="show-info-description">Melhores resultados</p>
+</div>
+
 <div id="form-search-results">
     @if(isset($trabalhos) && count($trabalhos) > 0)
         @include('mobile.inc.list-resultados')

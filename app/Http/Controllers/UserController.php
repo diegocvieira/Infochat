@@ -74,14 +74,12 @@ class UserController extends Controller
     {
         $usuario = User::find(Auth::guard('web')->user()->id);
 
-        if(Agent::isMobile()) {
-            return response()->json([
-                'body' => view('mobile.admin.usuario-config', compact('usuario'))->render()
-            ]);
-        } else {
+        if(Agent::isDesktop()) {
             return response()->json([
                 'body' => view('admin.usuario-config', compact('usuario'))->render()
             ]);
+        } else {
+            return view('mobile.admin.usuario-config', compact('usuario'));
         }
     }
 

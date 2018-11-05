@@ -46,7 +46,7 @@ class AvaliarController extends Controller
         return json_encode($return);
     }
 
-    /*public function avaliar(Request $request)
+    public function avaliar(Request $request)
     {
         $user_id = Auth::guard('web')->user()->id;
         $trabalho = Trabalho::findOrFail($request->trabalho_id);
@@ -57,16 +57,16 @@ class AvaliarController extends Controller
             $avaliar->trabalho_id = $trabalho->id;
             $avaliar->user_id = $user_id;
             $avaliar->nota = $request->nota;
-            $avaliar->descricao = $request->descricao;
+            //$avaliar->descricao = $request->descricao;
 
             if($avaliar->save()) {
                 $return['status'] = true;
                 $return['msg'] = 'Avaliação realizada com sucesso!';
-                $return['nome'] = Auth::guard('web')->user()->nome;
-                $return['imagem'] = Auth::guard('web')->user()->imagem;
-                $return['nota'] = $request->nota;
-                $return['data'] = date('d/m/Y');
-                $return['descricao'] = $request->descricao;
+                //$return['nome'] = Auth::guard('web')->user()->nome;
+                //$return['imagem'] = Auth::guard('web')->user()->imagem;
+                //$return['nota'] = $request->nota;
+                //$return['data'] = date('d/m/Y');
+                //$return['descricao'] = $request->descricao;
             } else {
                 $return['status'] = false;
                 $return['msg'] = 'Ocorreu um erro. Atualize a página e tente novamente.';
@@ -77,7 +77,7 @@ class AvaliarController extends Controller
         }
 
         return json_encode($return);
-    }*/
+    }
 
     /*public function list($id, $page)
     {

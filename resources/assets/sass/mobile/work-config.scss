@@ -1,5 +1,7 @@
 .work-config {
-    .top-modal {
+    padding-top: 50px;
+
+    .top-page {
         .status {
             float: right;
 
@@ -74,7 +76,7 @@
         }
     }
 
-    input[type=text] {
+    input[type=text], textarea {
         font-size: 13.3px;
         color: #000;
         border-radius: 5px;
@@ -85,6 +87,11 @@
         padding-left: 15px;
         float: left;
         margin-bottom: 15px;
+    }
+
+    textarea {
+        height: 150px;
+        padding: 15px;
     }
 
     .bootstrap-select {
@@ -157,7 +164,10 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 5px;
+            //border-radius: 5px;
+            position: absolute;
+            left: 0;
+            top: 0;
 
             &.sem-imagem {
                 width: 73px;
@@ -192,6 +202,32 @@
         float: left;
         width: 100%;
         padding: 0 5px;
+
+        .description {
+            float: left;
+            width: 100%;
+
+            .description-counter {
+                float: right;
+                padding-right: 15px;
+                font-size: 13.3px;
+                color: rgb(100, 100, 100);
+            }
+
+            label {
+                float: left;
+                font-size: 13.3px;
+                color: #000;
+                font-weight: normal;
+                padding: 0;
+                margin: 0;
+                padding-left: 15px;
+            }
+
+            textarea {
+                margin-top: 5px;
+            }
+        }
 
         .tags {
             width: 100%;
@@ -268,7 +304,7 @@
                 background-color: rgb(245, 245, 245);
                 position: relative;
                 border-radius: 5px;
-                height: 92px;
+                height: 150px;
                 overflow: auto;
                 font-weight: normal;
 

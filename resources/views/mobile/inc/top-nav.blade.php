@@ -29,11 +29,11 @@
 
             @if(Auth::guard('web')->check() && !_temporaryAccount())
                 <li>
-                    <a href="{{ route('get-usuario-config') }}" id="open-usuario-config" class="icon-conta">Minha conta</a>
+                    <a href="{{ route('get-usuario-config') }}" class="icon-conta">Minha conta</a>
                 </li>
 
                 <li>
-                    <a href="{{ action('TrabalhoController@getConfig') }}" class="icon-perfil-trabalho" id="open-trabalho-config">Perfil de trabalho</a>
+                    <a href="{{ action('TrabalhoController@getConfig') }}" class="icon-perfil-trabalho">Perfil de trabalho</a>
                 </li>
             @else
                 <li>
@@ -72,7 +72,7 @@
     {!! Form::open(['method' => 'post', 'id' => 'form-search', 'action' => 'TrabalhoController@formBusca']) !!}
         <?php /*<a href="#" class="close-form-search"></a>*/ ?>
 
-        {!! Form::text('palavra_chave', isset($palavra_chave) ? $palavra_chave : '', ['class' => 'form-control', 'id' => 'form-search-palavra-chave', 'placeholder' => 'Pesquise aqui']) !!}
+        {!! Form::text('palavra_chave', isset($palavra_chave) ? $palavra_chave : '', ['class' => 'form-control', 'id' => 'form-search-palavra-chave', 'placeholder' => 'Pesquise aqui', 'autocomplete' => 'off']) !!}
 
         <?php /*{!! Form::hidden('area', isset($area) ? $area : '', ['id' => 'form-search-area']) !!}
         {!! Form::hidden('tag', isset($tag) ? $tag : '', ['id' => 'form-search-tag']) !!}

@@ -10,9 +10,7 @@
 
         <div class="infos">
             <div class="top">
-                <h3>
-                    <a href="{{ route('show-chat', $trabalho->slug) }}">{{ $trabalho->nome }}</a>
-                </h3>
+                <h3>{{ $trabalho->nome }}</h3>
             </div>
 
             <div class="bottom">
@@ -30,6 +28,20 @@
     </div>
 @endforeach
 
-@if($trabalhos->currentPage() < $trabalhos->lastPage())
-    <button class="load-more-results" data-page="{{ $trabalhos->currentPage() + 1 }}">+</button>
+@if($trabalhos->lastPage() > 1)
+    <div class="pagination">
+        @if($trabalhos->currentPage() > 1)
+            <a class="load-more-results prev" href="{{ $trabalhos->previousPageUrl() }}">anterior</a>
+        @else
+            <a class="disabled prev">anterior</a>
+        @endif
+
+        <span>{{ $trabalhos->currentPage() }}</span>
+
+        @if($trabalhos->currentPage() < $trabalhos->lastPage())
+            <a class="load-more-results next" href="{{ $trabalhos->nextPageUrl() }}">próximo</a>
+        @else
+            <a class="disabled next">próximo</a>
+        @endif
+    </div>
 @endif

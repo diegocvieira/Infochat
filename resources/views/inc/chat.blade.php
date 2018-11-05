@@ -1,19 +1,27 @@
 <div class="topo-chat">
     {!! Form::hidden('user_id', $destinatario_id, ['id' => 'user_id']) !!}
 
-    <div class="imagem">
-        @if($destinatario->imagem)
-            <img src="{{ asset('uploads/' . $destinatario_id . '/' . $destinatario->imagem) }}" alt="Foto de perfil de {{ $destinatario->nome }}" />
-        @else
-            <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" alt="Foto de perfil de {{ $destinatario->nome }}" />
-        @endif
-    </div>
+    <a class="show-work" href="{{ $tipo == 'trabalho' ? route('show-work-desktop', $destinatario->slug) : '#' }}" onclick="{{ $tipo != 'trabalho' ? 'return false;' : '' }}">
+        <div class="imagem">
+            @if($destinatario->imagem)
+                <img src="{{ asset('uploads/' . $destinatario_id . '/' . $destinatario->imagem) }}" alt="Foto de perfil de {{ $destinatario->nome }}" />
+            @else
+                <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" alt="Foto de perfil de {{ $destinatario->nome }}" />
+            @endif
+        </div>
 
-    <h3>{{ $destinatario->nome }}</h3>
+        <div class="name">
+            <h3 class="{{ $tipo == 'trabalho' ? 'margin' : '' }}">{{ $destinatario->nome }}</h3>
 
-    @if($tipo == 'trabalho' && $destinatario->calc_atendimento($destinatario->id))
-        <p class="rate">{{ $destinatario->calc_atendimento($destinatario->id) }}%</p>
-    @endif
+            @if($tipo == 'trabalho' && $destinatario->user->online || $tipo == 'pessoal' && $destinatario->online)
+                <span class="online {{ $tipo == 'trabalho' ? 'margin' : '' }}">online</span>
+            @endif
+
+            @if($tipo == 'trabalho')
+                <span class="perfil">ver perfil</span>
+            @endif
+        </div>
+    </a>
 
     @if(Auth::guard('web')->check() && $tipo == 'trabalho')
         {!! Form::open(['method' => 'post', 'id' => 'form-avaliar', 'route' => 'avaliar-atendimento']) !!}

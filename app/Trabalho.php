@@ -18,12 +18,12 @@ class Trabalho extends Model
     ];
     protected $dates = ['created_at', 'updated_at'];
 
-    public function tipoNome($tipo)
+    /*public function tipoNome($tipo)
     {
         return $tipo == '1' ? 'profissional' : 'estabelecimento';
-    }
+    }*/
 
-    public function calc_atendimento($id)
+    /*public function calc_atendimento($id)
     {
         $atendimento = AvaliarAtendimento::select(DB::raw('CEILING((SUM(likes) * 100) / (SUM(likes) + SUM(dislikes))) as nota'))
             ->where('trabalho_id', $id)
@@ -39,14 +39,14 @@ class Trabalho extends Model
             ->first();
 
         return $avaliacao->nota;
-    }
+    }*/
 
     public function user()
     {
         return $this->belongsTo('App\User');
     }
 
-    public function favoritos()
+    /*public function favoritos()
     {
         return $this->hasMany('App\Favoritar');
     }
@@ -59,14 +59,14 @@ class Trabalho extends Model
     public function redes()
     {
         return $this->hasMany('App\RedeSocial');
-    }
+    }*/
 
     public function tags()
     {
         return $this->hasMany('App\Tag');
     }
 
-    public function horarios()
+    /*public function horarios()
     {
         return $this->hasMany('App\HorarioAtendimento')->orderBy('dia', 'asc');
     }
@@ -74,11 +74,11 @@ class Trabalho extends Model
     public function area()
     {
         return $this->belongsTo('App\Area');
-    }
+    }*/
 
     public function avaliacoes()
     {
-        return $this->hasMany('App\Avaliar')->whereNotNull('descricao')->orderBy('created_at', 'desc');
+        return $this->hasMany('App\Avaliar')->orderBy('created_at', 'desc');
     }
 
     public function notas_atendimento()
@@ -111,7 +111,7 @@ class Trabalho extends Model
         }
     }*/
 
-    public function scopeFiltroOrdem($query, $ordem)
+    /*public function scopeFiltroOrdem($query, $ordem)
     {
         if($ordem == 'a_z') {
             return $query->orderBy('nome', 'asc');
@@ -125,7 +125,7 @@ class Trabalho extends Model
                 ->orderBy('calc_nota', 'desc')
                 ->groupBy('trabalhos.id');
         }
-    }
+    }*/
 
     /*public function scopeFiltroTipo($query, $tipo)
     {

@@ -228,7 +228,7 @@ class GlobalController extends Controller
             $client['id'] = $logged_user;
 
             $claimed_url = url('/') . '/reivindicar-conta/check/' . app('App\Http\Controllers\ClaimedController')->createToken($email);
-            $work_url = route('show-chat', $work->slug);
+            $work_url = route('show-work', $work->slug);
 
             \Mail::send('emails.new_message_claimed', ['client' => $client, 'work_url' => $work_url, 'claimed_url' => $claimed_url], function($q) use($email) {
                 $q->from('no-reply@infochat.com.br', 'Infochat');

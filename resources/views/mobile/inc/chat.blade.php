@@ -1,52 +1,70 @@
-{!! Form::hidden('user_id', $destinatario_id, ['id' => 'user_id']) !!}
+@extends('mobile.base')
 
-<div class="top-modal">
-    <a href="#" data-dismiss="modal" class="close-modal-arrow"></a>
+@section('content')
+    <div class="chat">
+        {!! Form::hidden('user_id', $destinatario_id, ['id' => 'user_id']) !!}
 
-    <div class="imagem {{ !$destinatario->imagem ? 'border' : '' }}">
-        @if($destinatario->imagem)
-            <img src="{{ asset('uploads/' . $destinatario_id . '/' . $destinatario->imagem) }}" alt="Foto de perfil de {{ $destinatario->nome }}" />
-        @else
-            <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" alt="Foto de perfil de {{ $destinatario->nome }}" />
-        @endif
-    </div>
+        <div class="top-page">
+            <a href="javascript:history.back()" class="back-arrow"></a>
 
-    <div class="title-status">
-        <h3 class="title {{ ($tipo == 'trabalho' && $destinatario->user->online || $tipo == 'pessoal' && $destinatario->online) ? 'margin' : '' }}">{{ $destinatario->nome }}</h3>
+            <a href="{{ $tipo == 'trabalho' ? route('show-work', $destinatario->slug) : '#' }}" onclick="{{ $tipo != 'trabalho' ? 'return false;' : '' }}">
+                <div class="imagem {{ !$destinatario->imagem ? 'border' : '' }}">
+                    @if($destinatario->imagem)
+                        <img src="{{ asset('uploads/' . $destinatario_id . '/' . $destinatario->imagem) }}" alt="Foto de perfil de {{ $destinatario->nome }}" />
+                    @else
+                        <img src="{{ asset('img/paisagem.png') }}" class="sem-imagem" alt="Foto de perfil de {{ $destinatario->nome }}" />
+                    @endif
+                </div>
 
-        @if($tipo == 'trabalho' && $destinatario->user->online || $tipo == 'pessoal' && $destinatario->online)
-            <span class="online">online</span>
-        @endif
-    </div>
+                <div class="title-status">
+                    <h3 class="title {{ ($tipo == 'trabalho' || $tipo == 'pessoal' && $destinatario->online) ? 'margin' : '' }}">{{ $destinatario->nome }}</h3>
 
-    @if(Auth::guard('web')->check() && $tipo == 'trabalho')
-        {!! Form::open(['method' => 'post', 'id' => 'form-avaliar', 'route' => 'avaliar-atendimento']) !!}
-            {!! Form::hidden('trabalho_id', $destinatario->id) !!}
+                    <span>
+                        @if($tipo == 'trabalho')
+                            ver perfil
+                        @endif
 
-            {!! Form::radio('like', '1', (Session::has('atendimento') && session('atendimento_' . $destinatario->id) == '1') ? true : false, ['id' => 'like']) !!}
-            {!! Form::label('like', ' ') !!}
+                        @if(($tipo == 'trabalho' && $destinatario->user->online || $tipo == 'pessoal' && $destinatario->online) && $tipo == 'trabalho')
+                            -
+                        @endif
 
-            {!! Form::radio('like', '0', (Session::has('atendimento') && session('atendimento_' . $destinatario->id) == '0') ? true : false, ['id' => 'dislike']) !!}
-            {!! Form::label('dislike', ' ') !!}
-        {!! Form::close() !!}
-    @endif
-</div>
+                        @if($tipo == 'trabalho' && $destinatario->user->online || $tipo == 'pessoal' && $destinatario->online)
+                            online
+                        @endif
+                    </span>
+                </div>
+            </a>
 
-<div class="mensagens">
-    @if(isset($messages) && count($messages) > 0)
-        @include('inc.list-mensagens-chat')
-    @else
-        <div class="sem-mensagens">
-            <img src="{{ asset('img/icon-logo.png') }}" alt="Escreva uma mensagem" />
+            @if(Auth::guard('web')->check() && $tipo == 'trabalho')
+                {!! Form::open(['method' => 'post', 'id' => 'form-avaliar', 'route' => 'avaliar-atendimento']) !!}
+                    {!! Form::hidden('trabalho_id', $destinatario->id) !!}
+
+                    {!! Form::radio('like', '1', (Session::has('atendimento') && session('atendimento_' . $destinatario->id) == '1') ? true : false, ['id' => 'like']) !!}
+                    {!! Form::label('like', ' ') !!}
+
+                    {!! Form::radio('like', '0', (Session::has('atendimento') && session('atendimento_' . $destinatario->id) == '0') ? true : false, ['id' => 'dislike']) !!}
+                    {!! Form::label('dislike', ' ') !!}
+                {!! Form::close() !!}
+            @endif
         </div>
-    @endif
-</div>
 
-{!! Form::open(['method' => 'post', 'action' => 'MessageController@send', 'id' => 'form-enviar-msg']) !!}
-    {!! Form::text('message', null, ['class' => !Auth::guard('web')->check() ? 'unlogged' : '', 'placeholder' => Auth::guard('web')->check() ? 'Envie uma mensagem para começar' : 'Escreva seu nome antes de começar']) !!}
+        <div class="mensagens">
+            @if(isset($messages) && count($messages) > 0)
+                @include('inc.list-mensagens-chat')
+            @else
+                <div class="sem-mensagens">
+                    <img src="{{ asset('img/icon-logo.png') }}" alt="Escreva uma mensagem" />
+                </div>
+            @endif
+        </div>
 
-    {!! Form::hidden('chat_id', isset($chat_id) ? $chat_id : '') !!}
-    {!! Form::hidden('work_user', $tipo == 'trabalho' ? $destinatario->user->id : '') !!}
+        {!! Form::open(['method' => 'post', 'action' => 'MessageController@send', 'id' => 'form-enviar-msg']) !!}
+            {!! Form::text('message', null, ['class' => !Auth::guard('web')->check() ? 'unlogged' : '', 'placeholder' => Auth::guard('web')->check() ? 'Envie uma mensagem para começar' : 'Escreva seu nome antes de começar', 'autofocus', 'autocomplete' => 'off']) !!}
 
-    {!! Form::submit('', ['class' => 'button']) !!}
-{!! Form::close() !!}
+            {!! Form::hidden('chat_id', isset($chat_id) ? $chat_id : '') !!}
+            {!! Form::hidden('work_user', $tipo == 'trabalho' ? $destinatario->user->id : '') !!}
+
+            {!! Form::submit('', ['class' => 'button']) !!}
+        {!! Form::close() !!}
+    </div>
+@endsection

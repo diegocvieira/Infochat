@@ -15,6 +15,12 @@ class AppServiceProvider extends ServiceProvider
     {
         if(!app()->environment('local')) {
             \URL::forceScheme('https');
+
+            \Illuminate\Pagination\AbstractPaginator::currentPathResolver(function () {
+                /** @var \Illuminate\Routing\UrlGenerator $url */
+               $url = app('url');
+               return $url->current();
+            });
         }
     }
 

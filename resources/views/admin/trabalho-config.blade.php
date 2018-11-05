@@ -48,6 +48,14 @@
         </label>
     </div>
 
+    <div class="description">
+        {!! Form::label('description', 'Descrição') !!}
+
+        <span class="description-counter">{{ (300 - strlen($trabalho->descricao)) }}</span>
+
+        {!! Form::textarea('descricao', null, ['id' => 'description', 'placeholder' => 'Escreva uma breve descrição do seu serviço ou estabelecimento', 'maxlength' => '300']) !!}
+    </div>
+
     {!! Form::select('state', $states, isset($trabalho) ? $trabalho->cidade->estado->id : null, ['class' => 'selectpicker state', 'data-live-search' => 'true', 'title' => 'Estado', 'required']) !!}
 
     {!! Form::select('cidade', $cities, isset($trabalho) ? $trabalho->cidade_id : null, ['class' => 'selectpicker city', 'data-live-search' => 'true', 'title' => 'Cidade', 'required']) !!}

@@ -4,11 +4,11 @@
 
         <?php /*{!! Form::hidden('area', isset($area) ? $area : '', ['id' => 'form-search-area']) !!}
         {!! Form::hidden('tag', isset($tag) ? $tag : '', ['id' => 'form-search-tag']) !!}
-        {!! Form::hidden('tipo', isset($tipo) ? $tipo : 'todos', ['id' => 'form-search-tipo']) !!}*/ ?>
+        {!! Form::hidden('tipo', isset($tipo) ? $tipo : 'todos', ['id' => 'form-search-tipo']) !!}
 
-        {!! Form::hidden('ordem', isset($ordem) ? $ordem : '', ['id' => 'form-search-ordem']) !!}
+        {!! Form::hidden('ordem', isset($ordem) ? $ordem : '', ['id' => 'form-search-ordem']) !!}*/ ?>
 
-        {!! Form::hidden('page', '', ['id' => 'form-search-page']) !!}
+        <?php /*{!! Form::hidden('page', '', ['id' => 'form-search-page']) !!}*/ ?>
 
         {!! Form::submit('') !!}
     {!! Form::close() !!}
@@ -31,9 +31,13 @@
         @endif
     </div>
 
-    @if(isset($filtro_ordem) && isset($trabalhos) && count($trabalhos) > 0)
+    <div class="info-results" style="{{ (!isset($trabalhos) || isset($trabalhos) && count($trabalhos) == 0) ? 'display: none;' : '' }}">
+        <p class="show-info-description">Melhores resultados</p>
+    </div>
+
+    <?php /*@if(isset($filtro_ordem) && isset($trabalhos) && count($trabalhos) > 0)
         {!! Form::select('ordem', $filtro_ordem, null, ['class' => 'selectpicker filtro-ordem', 'title' => 'filtrar por']) !!}
-    @endif
+    @endif*/ ?>
 </div>
 
 <div id="form-search-results">

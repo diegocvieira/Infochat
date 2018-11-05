@@ -14,7 +14,10 @@
 Route::get('/', 'GlobalController@inicial')->name('inicial');
 
 // Acessar o chat pela url
-Route::get('{slug}', 'ChatController@showChatUrl')->name('show-chat');
+Route::get('{slug}', 'TrabalhoController@show')->name('show-work');
+
+// Show perfil desktop
+Route::get('{slug}/desktop', 'TrabalhoController@showDesktop')->name('show-work-desktop');
 
 // Cities
 Route::group(['prefix' => 'cidades'], function() {
@@ -78,7 +81,7 @@ Route::group(['prefix' => 'mensagem'], function() {
     // Listar mensagens de trabalho
     Route::get('list/trabalho', 'ChatController@trabalho')->name('msg-trabalho');
     // Exibir chat
-    Route::get('chat/show/{id}/{tipo}/{chat_id?}', 'ChatController@show');
+    Route::get('chat/show/{id}/{tipo}/{chat_id?}', 'ChatController@show')->name('chat');
     // Enviar
     Route::post('send', 'MessageController@send');
 
@@ -101,8 +104,6 @@ Route::group(['prefix' => 'mensagem'], function() {
 });
 
 Route::group(['prefix' => 'trabalho'], function() {
-    //Route::get('show/{id}', 'TrabalhoController@show')->name('show-trabalho');
-
     //Route::get('avaliar/list/{id}/{page}', 'AvaliarController@list')->name('listar-avaliacoes');
 
     Route::group(['middleware' => 'auth:web'], function() {
@@ -111,7 +112,7 @@ Route::group(['prefix' => 'trabalho'], function() {
         Route::post('config/status', 'TrabalhoController@setStatus');
 
         Route::post('avaliar-atendimento', 'AvaliarController@avaliarAtendimento')->name('avaliar-atendimento');
-        //Route::post('avaliar', 'AvaliarController@avaliar')->name('avaliar-trabalho');
+        Route::post('avaliar', 'AvaliarController@avaliar')->name('avaliar-trabalho');
 
         //Route::get('favoritar/{id}', 'TrabalhoController@favoritar');
 

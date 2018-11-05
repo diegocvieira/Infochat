@@ -61,14 +61,12 @@ class TrabalhoController extends Controller
             $categorias = Categoria::where('area_id', $trabalho->area_id)->get();
         }*/
 
-        if(Agent::isMobile()) {
-            return response()->json([
-                'body' => view('mobile.admin.work-config', compact('trabalho', 'states', 'cities'))->render()
-            ]);
-        } else {
+        if(Agent::isDesktop()) {
             return response()->json([
                 'body' => view('admin.trabalho-config', compact('trabalho', 'states', 'cities'))->render()
             ]);
+        } else {
+            return view('mobile.admin.work-config', compact('trabalho', 'states', 'cities'));
         }
     }
 
@@ -100,7 +98,7 @@ class TrabalhoController extends Controller
                 $trabalho->slug = str_slug($request->slug, '-');
                 //$trabalho->tipo = $request->tipo;
                 $trabalho->nome = $request->nome;
-                //$trabalho->descricao = $request->descricao;
+                $trabalho->descricao = $request->descricao;
                 //$trabalho->logradouro = $request->logradouro;
                 //$trabalho->numero = $request->numero;
                 //$trabalho->bairro = $request->bairro;
@@ -183,10 +181,10 @@ class TrabalhoController extends Controller
         $city = Cookie::get('sessao_cidade_slug');
         $state = Cookie::get('sessao_estado_letter_lc');
 
-        return $this->busca($city, $state, $palavra_chave, $request->ordem);
+        return $this->busca($city, $state, $palavra_chave);
     }
 
-    public function busca($city_slug, $state_letter_lc, $palavra_chave = null, $ordem = null)
+    public function busca($city_slug, $state_letter_lc, $palavra_chave = null)
     {
         // Verifica e seta a requisicao se for uma cidade diferente
         if($city_slug != Cookie::get('sessao_cidade_slug') || $state_letter_lc != Cookie::get('sessao_estado_letter_lc')) {
@@ -207,9 +205,10 @@ class TrabalhoController extends Controller
         // Desformatar para pesquisar
         $palavra_chave = urldecode($palavra_chave);
 
-        $trabalhos = Trabalho::filtroStatus()
-            ->filtroCidade()
-            ->filtroOrdem($ordem);
+        $trabalhos = Trabalho::filtroStatus()->filtroCidade()
+            ->leftJoin('avaliacoes as a', 'trabalhos.id', '=', 'a.trabalho_id')
+            ->leftJoin('avaliacoes_atendimento as b', 'trabalhos.id', '=', 'b.trabalho_id')
+            ->select('trabalhos.id', 'trabalhos.user_id', 'trabalhos.slug', 'trabalhos.imagem', 'trabalhos.nome', DB::raw('IFNULL(ROUND((SUM(a.nota) / COUNT(a.id)), 1), 0) + IFNULL(CEILING((SUM(b.likes) * 5) / (SUM(b.likes) + SUM(b.dislikes))), 0) as best'));
 
         if($palavra_chave) {
             // SEO
@@ -235,71 +234,128 @@ class TrabalhoController extends Controller
             }
         }
 
-        $trabalhos = $trabalhos->paginate(20);
+        $trabalhos = $trabalhos->groupBy('trabalhos.id')->orderBy('best', 'DESC')->paginate(10);
 
         // Gera a URL
-        $url = '/busca/' . $city_slug . '/' . $state_letter_lc;
-        if($palavra_chave) {
-            $url =  $url . '/' . urlencode($palavra_chave);
-        }
+        //$url = '/busca/' . $city_slug . '/' . $state_letter_lc;
+        //if($palavra_chave) {
+            //$url =  $url . '/' . urlencode($palavra_chave);
+        //}
 
-        if(count($trabalhos) > 0) {
+        $url = $trabalhos->currentPage() == 1 ? '/busca/' . $city_slug . '/' . $state_letter_lc . '/' . urlencode($palavra_chave): $trabalhos->url($trabalhos->currentPage());
+
+        /*if(count($trabalhos) > 0) {
             $filtro_ordem = [
                 'populares' => 'populares',
                 'avaliados' => 'mais bem avaliados',
                 'a_z' => 'a - z'
             ];
-        }
+        }*/
 
         // Detecta se foi acessado por url ou ajax
         if(!\Request::ajax()) {
             if(Agent::isMobile()) {
-                return view('mobile.pagina-inicial', compact('trabalhos', 'palavra_chave', 'filtro_ordem', 'header_title', 'header_desc'));
+                return view('mobile.pagina-inicial', compact('trabalhos', 'palavra_chave', 'header_title', 'header_desc'));
             } else {
-                return view('pagina-inicial', compact('trabalhos', 'palavra_chave', 'filtro_ordem', 'header_title', 'header_desc'));
+                return view('pagina-inicial', compact('trabalhos', 'palavra_chave', 'header_title', 'header_desc'));
             }
         } else {
             if(Agent::isMobile()) {
                 return response()->json([
                     'trabalhos' => view('mobile.inc.list-resultados', compact('trabalhos'))->render(),
-                    'url' => $url
+                    'url' => $url,
+                    'header_title' => $header_title
                 ]);
             } else {
                 return response()->json([
                     'trabalhos' => view('inc.list-resultados', compact('trabalhos'))->render(),
-                    'url' => $url
+                    'url' => $url,
+                    'header_title' => $header_title
                 ]);
             }
         }
     }
 
-    /*public function show($id)
+    public function show($slug)
     {
-        $trabalho = Trabalho::find($id);
+        $trabalhos = Trabalho::filtroStatus()
+            ->where('slug', $slug)
+            ->withCount(['avaliacoes as nota_avaliacao' => function($query) {
+                $query->select(DB::raw('ROUND((SUM(nota) / COUNT(id)), 1)'));
+            }])
+            ->withCount(['notas_atendimento as nota_atendimento' => function($query) {
+                $query->select(DB::raw('CEILING((SUM(likes) * 100) / (SUM(likes) + SUM(dislikes)))'));
+            }])
+            ->paginate(1);
 
-        $avaliacoes = app('App\Http\Controllers\AvaliarController')->list($trabalho->id, 1);
+        if(count($trabalhos) > 0) {
+            // SEO
+            $header_title = $trabalhos->first()->nome . ' - ' . Cookie::get('sessao_cidade_title') . '/' . Cookie::get('sessao_estado_letter') . ' | Infochat';
+            $header_desc = 'Clique para ver o perfil de ' . $trabalhos->first()->nome . ' em ' . Cookie::get('sessao_cidade_title') . '/' . Cookie::get('sessao_estado_letter') . ' no site infochat.com.br';
 
-        pageview($trabalho->id);
+            pageview($trabalhos->first()->id);
 
-        if(Auth::guard('web')->check()) {
-            $avaliacao_usuario = Avaliar::where('trabalho_id', $id)
-                ->where('user_id', Auth::guard('web')->user()->id)
-                ->select('nota', 'descricao')
-                ->first();
+            if(Cookie::get('sessao_cidade_id') != $trabalhos->first()->cidade_id || Cookie::get('sessao_estado_letter_lc') != $trabalhos->first()->cidade->estado->letter_lc) {
+                _setCidade($trabalhos->first()->cidade, $force = true);
+
+                return redirect(action('TrabalhoController@show', $slug));
+            }
+
+            if(Agent::isDesktop()) {
+                $destinatario = $trabalhos->first();
+                $palavra_chave = $trabalhos->first()->nome;
+                $tipo = 'trabalho';
+                $destinatario_id = $trabalhos->first()->user_id;
+
+                return view('pagina-inicial', compact('palavra_chave', 'trabalhos', 'messages', 'tipo', 'destinatario', 'destinatario_id', 'header_desc', 'header_title'));
+            } else {
+                //$avaliacoes = app('App\Http\Controllers\AvaliarController')->list($trabalho->id, 1);
+
+                $work = $trabalhos->first();
+
+                if(Auth::guard('web')->check()) {
+                    $avaliacao_usuario = Avaliar::where('trabalho_id', $work->id)
+                        ->where('user_id', Auth::guard('web')->user()->id)
+                        ->select('nota', 'descricao')
+                        ->first();
+                }
+
+                return view('mobile.show-work', compact('work', 'avaliacao_usuario', 'header_desc', 'header_title'));
+            }
+        } else {
+            return view('errors.404');
         }
+    }
 
-        if(Agent::isMobile()) {
+    public function showDesktop($slug)
+    {
+        $work = Trabalho::filtroStatus()
+            ->where('slug', $slug)
+            ->withCount(['avaliacoes as nota_avaliacao' => function($query) {
+                $query->select(DB::raw('ROUND((SUM(nota) / COUNT(id)), 1)'));
+            }])
+            ->withCount(['notas_atendimento as nota_atendimento' => function($query) {
+                $query->select(DB::raw('CEILING((SUM(likes) * 100) / (SUM(likes) + SUM(dislikes)))'));
+            }])
+            ->first();
+
+        if($work) {
+            pageview($work->id);
+
+            if(Auth::guard('web')->check()) {
+                $avaliacao_usuario = Avaliar::where('trabalho_id', $work->id)
+                    ->where('user_id', Auth::guard('web')->user()->id)
+                    ->select('nota', 'descricao')
+                    ->first();
+            }
+
             return response()->json([
-                'trabalho' => view('mobile.show-trabalho', compact('trabalho', 'avaliacao_usuario', 'avaliacoes'))->render(),
-                'status' => true
+                'work' => view('show-trabalho', compact('work', 'avaliacao_usuario'))->render()
             ]);
         } else {
-            return response()->json([
-                'trabalho' => view('show-trabalho', compact('trabalho', 'avaliacao_usuario', 'avaliacoes'))->render(),
-                'status' => true
-            ]);
+            return view('errors.404');
         }
-    }*/
+    }
 
     /*public function favoritar($id)
     {
@@ -338,7 +394,8 @@ class TrabalhoController extends Controller
             //'numero' => 'max:10',
             'cidade' => 'required',
             //'estado' => 'required',
-            'img' => 'image|max:5000'
+            'img' => 'image|max:5000',
+            'descricao' => 'max:300'
         ];
     }
 
@@ -364,6 +421,7 @@ class TrabalhoController extends Controller
             //'numero.max' => 'O número deve ter menos de 10 caracteres.',
             'cidade.required' => 'Informe a cidade.',
             //'estado.required' => 'Informe o estado.'
+            'descricao.max' => 'A descrição deve ter menos de 300 caracteres.'
         ];
     }
 }

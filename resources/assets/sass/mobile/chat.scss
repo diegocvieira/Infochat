@@ -1,8 +1,7 @@
 .chat {
-    .modal-body {
-        height: 100%;
-        padding-bottom: 0 !important;
-    }
+    height: 100%;
+    display: block;
+    padding-top: 50px;
 
     .sem-selecao, .sem-mensagens {
         text-align: center;
@@ -22,7 +21,7 @@
         }
     }
 
-    .top-modal {
+    .top-page {
         .imagem {
             width: 30px;
             height: 30px;
@@ -55,22 +54,23 @@
         .title-status {
             float: left;
             width: calc(100% - 134px);
-        }
 
-        .title {
-            width: 100%;
-            font-size: 13.75px;
-            margin-top: 20px;
+            .title {
+                width: 100%;
+                font-size: 13.75px;
+                margin-top: 20px;
+                color: #fff;
 
-            &.margin {
-                margin-top: 12px;
+                &.margin {
+                    margin-top: 12px;
+                }
             }
-        }
 
-        .online {
-            font-size: 11.6px;
-            color: rgb(255, 255, 255);
-            float: left;
+            span {
+                font-size: 11.6px;
+                color: #fff;
+                float: left;
+            }
         }
 
         #form-avaliar {

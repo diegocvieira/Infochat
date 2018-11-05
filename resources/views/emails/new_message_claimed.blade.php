@@ -38,6 +38,12 @@
                 </tr>
 
                 <tr>
+                    <td style="background-color: #fff; padding: 20px 50px 0 50px;">
+                        <span style="display: block; cursor: default; font-size: 14.5px; color: rgb(49, 49, 49);">Isso pode ter acontecido porque estamos sempre nas primeiras posições do Google quando alguém pesquisa pelo seu serviço na sua cidade.</span>
+                    </td>
+                </tr>
+
+                <tr>
                     <td style="background-color: #fff; padding: 40px 50px 0 50px;">
                         @if($client['image'])
                             <img src="{{ asset('uploads/' . $client['id'] . '/' . _getOriginalImage($client['image'])) }}" style="float: left; width: 38px; height: 38px; object-fit: cover;" />
@@ -61,7 +67,7 @@
 
                 <tr>
                     <td style="background-color: #fff; padding: 0 50px;">
-                        <span style="display: block; cursor: default; margin: 10px 0; font-size: 16.6; color: rgb(100, 100, 100);">Para responder clique no botão abaixo</span>
+                        <span style="display: block; cursor: default; margin: 10px 0; font-size: 16.6; color: rgb(100, 100, 100);">Para responder seu cliente clique no botão abaixo</span>
                     </td>
                 </tr>
 
@@ -69,25 +75,25 @@
                     <td style="background-color: #fff; padding: 0 50px 40px 50px;">
                         <a href="{{ $claimed_url }}" style="float: left; font-weight: 700; border-radius: 25px; cursor: pointer; font-size: 14.5; margin-top: 10px; background-color: rgb(241, 240, 240); color: rgb(100, 100, 100); padding: 13px 25px;">REIVINDICAR PERFIL</a>
 
-                        <a href="{{ $work_url }}" style="float: left; margin: 23px 0 0 30px; color: rgb(118, 145, 198); font-size: 14.5px;">ou veja o perfil primeiro</a>
+                        <span style="float: left; margin: 23px 0 0 10px; font-size: 14.5px; color: rgb(150, 150, 150); cursor: default;">ou <a href="{{ $work_url }}" style="color: rgb(118, 145, 198); cursor: pointer;">clique aqui</a> para primeiro ver o perfil</span>
                     </td>
                 </tr>
 
                 <tr>
                     <td style="background-color: #fff; padding: 30px 50px 0 50px;">
-                        <span style="display: block; cursor: default; font-size: 25px; color: rgb(49, 49, 49); font-weight: 700">O que é infochat?</span>
+                        <span style="display: block; cursor: default; font-size: 25px; color: rgb(49, 49, 49); font-weight: 700">O QUE É INFOCHAT?</span>
                     </td>
                 </tr>
 
                 <tr>
                     <td style="background-color: #fff; padding: 20px 50px 0 50px;">
-                        <span style="display: block; cursor: default; font-size: 14.5px; color: rgb(150, 150, 150);">Em resumo, é um whatsapp para encontrar e falar com profissionais e estabelecimentos da sua cidade.</span>
+                        <span style="display: block; cursor: default; font-size: 14.5px; color: rgb(150, 150, 150);">Em resumo, é um whatsapp para encontrar e falar com profissionais e estabelecimentos.</span>
                     </td>
                 </tr>
 
                 <tr>
                     <td style="background-color: #fff; padding: 20px 50px 50px 50px;">
-                        <span style="display: block; cursor: default; font-size: 14.5px; color: rgb(150, 150, 150);">O infochat é um serviço <b>gratuito</b> de atendimento online ao cliente e se você está recebendo este e-mail é porque está cadastrado no infochat e algum cliente entrou em contato com você.</span>
+                        <span style="display: block; cursor: default; font-size: 14.5px; color: rgb(150, 150, 150);">O infochat é um serviço <b>gratuito</b> de atendimento online ao cliente, onde você pode ser encontrado de forma rápida e fácil e também atender clientes interessandos nos seus serviços através de mensagens de texto.</span>
                     </td>
                 </tr>
             </table>

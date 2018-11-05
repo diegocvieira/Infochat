@@ -29,7 +29,7 @@ $(document).ready(function() {
     }
 
     // Atualizar count aba trabalho
-    function newMessagesTrabalho(count) {
+    function newMessagesTrabalho(count, sound = true) {
         var trabalho = $('.resultados').find('.abas-resultados a[data-type=trabalho]');
 
         if(count) {
@@ -37,12 +37,16 @@ $(document).ready(function() {
                 if(count != parseInt(trabalho.find('span').text())) {
                     trabalho.find('span').text(count);
 
-                    $('#alert-new-message')[0].play();
+                    if(sound) {
+                        $('#alert-new-message')[0].play();
+                    }
                 }
             } else {
                 trabalho.append("<span>" + count + "</span>");
 
-                $('#alert-new-message')[0].play();
+                if(sound) {
+                    $('#alert-new-message')[0].play();
+                }
             }
         } else {
             trabalho.find('span').remove();
@@ -50,7 +54,7 @@ $(document).ready(function() {
     }
 
     // Atualizar count aba pessoal
-    function newMessagesPessoal(count) {
+    function newMessagesPessoal(count, sound = true) {
         var pessoal = $('.resultados').find('.abas-resultados a[data-type=pessoal]');
 
         if(count) {
@@ -58,12 +62,16 @@ $(document).ready(function() {
                 if(count != parseInt(pessoal.find('span').text())) {
                     pessoal.find('span').text(count);
 
-                    $('#alert-new-message')[0].play();
+                    if(sound) {
+                        $('#alert-new-message')[0].play();
+                    }
                 }
             } else {
                 pessoal.append("<span>" + count + "</span>");
 
-                $('#alert-new-message')[0].play();
+                if(sound) {
+                    $('#alert-new-message')[0].play();
+                }
             }
         } else {
             pessoal.find('span').remove();
@@ -530,19 +538,31 @@ $(document).ready(function() {
     ////////////////////////////// RESULTADOS DAS BUSCAS //////////////////////////////
 
     // Filtrar a ordem dos resultados
-    $(document).on('change', 'select.filtro-ordem', function() {
+    /*$(document).on('change', 'select.filtro-ordem', function() {
         $('#form-search-ordem').val($(this).val());
 
         $('#form-search').submit();
-    });
+    });*/
 
-    $(document).on('keyup', '#form-search input[type=text]', function(e) {
-        $('#form-search').submit();
+    //$(document).on('keyup', '#form-search input[type=text]', function(e) {
+        //$('#form-search').submit();
+    //});
+
+    $(document).on('click', '.show-info-description', function() {
+        $('body').append("<div class='info-overlay' style='position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%;'></div>");
+
+        $(this).after("<div class='info-description'><p><span>Os resultados são mostrados com base nas palavras-chaves digitadas e em diversos outros fatores. Alguns deles são:</span><span>1. relevância</span><span>2. tempo de resposta</span><span>3. avaliação dos usuários</span><span>4. avaliação dos atendimentos</span><span>5. popularidade</span></p></div>");
+    });
+    $(document).click(function(e) {
+        if(!$(e.target).closest('.show-info-description').length) {
+            $('.info-overlay').remove();
+            $('.info-description').remove();
+        }
     });
 
     // Submeter form principal de busca
     $(document).on('submit', '#form-search', function() {
-        $(this).find('#form-search-page').val('');
+        //$(this).find('#form-search-page').val('');
 
         if($(this).find('input[type=text]').val().length) {
             $.ajax({
@@ -551,23 +571,35 @@ $(document).ready(function() {
                 dataType: 'json',
                 data: $(this).serialize(),
                 success: function(data) {
-                    window.history.pushState('', '', data.url);
+                    document.title = data.header_title;
+                    window.history.pushState('', data.header_title, data.url);
 
                     $('.abas-resultados').find('a').removeClass('active');
                     $('.abas-resultados').find('a[data-type=resultado]').addClass('active');
 
                     if(data.trabalhos.length > 0) {
-                        $('div.filtro-ordem').show();
+                        //$('div.filtro-ordem').show();
+
+                        $('.info-results').show();
 
                         $('#form-search-results').html(data.trabalhos);
+
+                        $('.pagination .next').attr('href', data.url + '?page=2');
                     } else {
-                        $('div.filtro-ordem').hide();
+                        //$('div.filtro-ordem').hide();
+
+                        $('.info-results').hide();
 
                         $('#form-search-results').html("<div class='sem-resultados'><p>Sua pesquisa não encontrou resultado.<br>Verifique se todas as palavras estão corretas ou tente palavras-chave diferentes.</p></div>");
                     }
                 }
             });
         } else {
+            document.title = 'Infochat - O atendimento online da sua cidade';
+            window.history.pushState('', '', '/');
+
+            $('.info-results').hide();
+
             $('#form-search-results').html('');
             $('#form-search-results').append("<div class='sem-resultados'><p>Pesquise um profissional ou estabelecimento<br>para pedir informações ou tirar dúvidas</p></div>");
         }
@@ -580,12 +612,9 @@ $(document).ready(function() {
         e.preventDefault();
 
         $('.abas-resultados').find('a').removeClass('active');
-
         $(this).addClass('active');
 
-        var type = $(this).data('type');
-
-        if(type == 'resultado') {
+        if($(this).data('type') == 'resultado') {
             $('#form-search').submit();
         } else {
             $.ajax({
@@ -593,7 +622,9 @@ $(document).ready(function() {
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {
-                    $('div.filtro-ordem').hide();
+                    //$('div.filtro-ordem').hide();
+
+                    $('.info-results').hide();
 
                     window.history.pushState('', '', '/');
 
@@ -604,44 +635,44 @@ $(document).ready(function() {
     });
 
     // Load more results
-    $(document).on('click', '.load-more-results', function() {
-        var form = $('#form-search'),
-            btn = $(this);
+    $(document).on('click', '.load-more-results', function(e) {
+        e.preventDefault();
 
-        btn.html('Carregando...');
+        //var form = $('#form-search'),
+        var btn = $(this);
 
-        form.find('#form-search-page').val($(this).data('page'));
+        //form.find('#form-search-page').val($(this).data('page'));
 
         $.ajax({
-            url : form.attr('action'),
+            url: $(this).attr('href'),
             method: 'GET',
-            dataType:'json',
-            data: form.serialize(),
+            dataType: 'json',
+            //data: form.serialize(),
             success: function(data) {
-                btn.remove();
+                $('#form-search-results').html(data.trabalhos);
 
-                $('#form-search-results').append(data.trabalhos);
+                window.history.pushState('', '', data.url);
             }
         });
     });
 
     // Abrir modal do perfil do trabalho
-    /*$(document).on('click', '.ver-perfil', function(e) {
+    $(document).on('click', '.show-work', function(e) {
         e.preventDefault();
 
         $.ajax({
-            url: '/trabalho/show/' + $(this).data('id'),
+            url: $(this).attr('href'),
             method: 'GET',
             dataType: 'json',
             success: function (data) {
                 var modal = $('#modal-default');
                 modal.removeAttr('class');
                 modal.addClass('modal fade modal-trabalho-perfil');
-                modal.find('.modal-body').html(data.trabalho);
+                modal.find('.modal-body').html(data.work);
                 modal.modal('show');
             }
         });
-    });*/
+    });
 
     // Favoritar (Add e remover)
     /*$(document).on('click', '.favoritar', function(e) {
@@ -673,7 +704,7 @@ $(document).ready(function() {
     });*/
 
     // Avaliar
-    /*$(document).on('mouseover click', '#form-avaliar-trabalho .nota label', function() {
+    $(document).on('mouseover click', '#form-avaliar-trabalho .nota label', function() {
         var nota = $(this).prev().val();
 
         $(this).parents('.nota').find('label').each(function() {
@@ -686,6 +717,7 @@ $(document).ready(function() {
 
         $(this).addClass('star-full');
     });
+
     $(document).on('mouseleave', '#form-avaliar-trabalho .nota label', function() {
         var input_checked = $(this).parents('.nota').find('input[type=radio]:checked')
 
@@ -703,33 +735,28 @@ $(document).ready(function() {
             $(this).parents('.nota').find('label').removeClass('star-full');
         }
     });
+
+    $(document).on('change', '#form-avaliar-trabalho input[type=radio]', function() {
+        $('#form-avaliar-trabalho').submit();
+    });
+
     $(document).on('submit', '#form-avaliar-trabalho', function() {
-        if($(this).find('input[type=radio]').is(':checked')) {
-            if(logged) {
-                $.ajax({
-                    url: $(this).attr('action'),
-                    method: 'POST',
-                    dataType: 'json',
-                    data: $(this).serialize(),
-                    success: function(data) {
-                        if(data.status && data.descricao) {
-                            $('.modal-trabalho-perfil').find('.comentarios .sem-resultados').remove();
-
-                            var imagem = data.imagem ? "<img src='/uploads/perfil/" + data.imagem + "' />" : "<img src='/img/paisagem.png' class='sem-imagem' />";
-
-                            $('.modal-trabalho-perfil').find('.comentarios').prepend("<div class='comentario'><div class='imagem-user'>" + imagem + "</div><div class='header-comentario'><h4>" + data.nome + "</h4><span class='nota'>" + data.nota + ".0</span><span class='data'>" + data.data + "</span></div><div class='descricao-comentario'><p>" + data.descricao + "</p></div></div>");
-                        }
-
-                        modalAlert(data.msg, 'OK');
-                    }
-                });
-            } else {
-                modalAlert('Acesse sua conta para poder avaliar.', 'OK');
-            }
+        if(logged) {
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                dataType: 'json',
+                data: $(this).serialize(),
+                success: function(data) {
+                    modalAlert(data.msg, 'OK');
+                }
+            });
+        } else {
+            modalAlert('Acesse sua conta para poder avaliar.', 'OK');
         }
 
         return false;
-    });*/
+    });
 
     // Listar Comentarios
     /*$(document).on('click', '.load-more-avaliacoes', function() {
@@ -838,10 +865,10 @@ $(document).ready(function() {
                     $('#form-enviar-msg').find('input[type=text]').focus();
 
                     // Atualizar count da aba trabalho
-                    newMessagesTrabalho(data.new_messages_trabalho);
+                    newMessagesTrabalho(data.new_messages_trabalho, false);
 
                     // Atualizar count da aba pessoal
-                    newMessagesPessoal(data.new_messages_pessoal);
+                    newMessagesPessoal(data.new_messages_pessoal, false);
                 }
             });
 
@@ -1258,6 +1285,11 @@ $(document).ready(function() {
             $('.tags').find('.count-tag').text(count - 1);
         }
     }*/
+
+    // Description counter
+    $(document).on('keyup', '#form-trabalho-config #description', function() {
+        $('.description-counter').text(300 - $(this).val().length);
+    });
 
     // Inserir uma nova tag
     $(document).on('keydown', '#insert-tag', function(e) {
