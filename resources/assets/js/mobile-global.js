@@ -714,7 +714,9 @@ $(document).ready(function() {
      $(document).on('submit', '#form-search', function() {
          //$(this).find('#form-search-page').val('');
 
-         if($(this).find('input[type=text]').val().length) {
+         var input = $(this).find('input[type=text]');
+
+         if(input.val().length) {
              $.ajax({
                  url: $(this).attr('action'),
                  method: 'GET',
@@ -735,6 +737,9 @@ $(document).ready(function() {
                          $('#form-search-results').html(data.trabalhos);
 
                          $('.load-more-results').attr('href', data.url + '?page=2');
+
+                         // Remove focus from input
+                         input.blur();
                      } else {
                          //$('div.filtro-ordem').hide();
 
