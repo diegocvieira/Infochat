@@ -76,10 +76,10 @@
 
         <?php /*{!! Form::hidden('area', isset($area) ? $area : '', ['id' => 'form-search-area']) !!}
         {!! Form::hidden('tag', isset($tag) ? $tag : '', ['id' => 'form-search-tag']) !!}
-        {!! Form::hidden('tipo', isset($tipo) ? $tipo : 'todos', ['id' => 'form-search-tipo']) !!}*/ ?>
+        {!! Form::hidden('tipo', isset($tipo) ? $tipo : 'todos', ['id' => 'form-search-tipo']) !!}
 
         {!! Form::hidden('ordem', isset($ordem) ? $ordem : '', ['id' => 'form-search-ordem']) !!}
 
-        {!! Form::hidden('page', '', ['id' => 'form-search-page']) !!}
+        {!! Form::hidden('page', '', ['id' => 'form-search-page']) !!}*/ ?>
     {!! Form::close() !!}
 </header>
