@@ -1278,6 +1278,11 @@ $(document).ready(function() {
         }
     }*/
 
+    // Description counter
+    $(document).on('keyup', '#form-trabalho-config #description', function() {
+        $('.description-counter').text(300 - $(this).val().length);
+    });
+
     // Inserir uma nova tag
     $(document).on('keydown', '#insert-tag', function(e) {
         $('.tags').find('.placeholder').hide();
