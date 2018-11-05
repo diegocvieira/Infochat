@@ -35,12 +35,16 @@
                 @if($work->calc_avaliacao($work->id))
                     <div class="avaliacao">
                         <span>{{ $work->calc_avaliacao($work->id) }}%</span>
+
+                        <p>Avaliação dos usuários</p>
                     </div>
                 @endif
 
                 @if($work->calc_atendimento($work->id))
                     <div class="atendimento">
                         <span>{{ $work->calc_atendimento($work->id) }}%</span>
+
+                        <p>Avaliação dos atendimentos</p>
                     </div>
                 @endif
             </div>

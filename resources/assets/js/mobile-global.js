@@ -921,6 +921,16 @@ $(document).ready(function() {
         $(this).addClass('active');
     });*/
 
+    $(document).on('click', '.show-work .work-statistics div', function() {
+        $(this).parent().find('p').hide();
+        $(this).find('p').show();
+    });
+    $(document).click(function(e) {
+        if(!$(e.target).closest('.work-statistics').length) {
+            $('.work-statistics').find('p').hide();
+        }
+    });
+
     // Avaliar
     $(document).on('click', '#form-avaliar-trabalho .nota label', function() {
         var nota = $(this).prev().val();
