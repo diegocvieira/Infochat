@@ -32,17 +32,17 @@
             <p class="work-city">{{ $work->cidade->title }}/{{ $work->cidade->estado->letter }}</p>
 
             <div class="work-statistics">
-                @if($work->calc_avaliacao($work->id))
+                @if($work->nota_avaliacao)
                     <div class="avaliacao">
-                        <span>{{ $work->calc_avaliacao($work->id) }}%</span>
+                        <span>{{ $work->nota_avaliacao }}%</span>
 
                         <p>Avaliação dos usuários</p>
                     </div>
                 @endif
 
-                @if($work->calc_atendimento($work->id))
+                @if($work->nota_atendimento)
                     <div class="atendimento">
-                        <span>{{ $work->calc_atendimento($work->id) }}%</span>
+                        <span>{{ $work->nota_atendimento }}%</span>
 
                         <p>Avaliação dos atendimentos</p>
                     </div>

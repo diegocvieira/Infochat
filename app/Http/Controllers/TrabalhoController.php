@@ -276,7 +276,15 @@ class TrabalhoController extends Controller
 
     public function show($slug)
     {
-        $trabalhos = Trabalho::filtroStatus()->where('slug', $slug)->paginate(1);
+        $trabalhos = Trabalho::filtroStatus()
+            ->where('slug', $slug)
+            ->withCount(['avaliacoes as nota_avaliacao' => function($query) {
+                $query->select(DB::raw('ROUND((SUM(nota) / COUNT(id)), 1)'));
+            }])
+            ->withCount(['notas_atendimento as nota_atendimento' => function($query) {
+                $query->select(DB::raw('CEILING((SUM(likes) * 100) / (SUM(likes) + SUM(dislikes)))'));
+            }])
+            ->paginate(1);
 
         if(count($trabalhos) > 0) {
             // SEO
@@ -319,7 +327,15 @@ class TrabalhoController extends Controller
 
     public function showDesktop($slug)
     {
-        $work = Trabalho::filtroStatus()->where('slug', $slug)->first();
+        $work = Trabalho::filtroStatus()
+            ->where('slug', $slug)
+            ->withCount(['avaliacoes as nota_avaliacao' => function($query) {
+                $query->select(DB::raw('ROUND((SUM(nota) / COUNT(id)), 1)'));
+            }])
+            ->withCount(['notas_atendimento as nota_atendimento' => function($query) {
+                $query->select(DB::raw('CEILING((SUM(likes) * 100) / (SUM(likes) + SUM(dislikes)))'));
+            }])
+            ->first();
 
         if($work) {
             pageview($work->id);
