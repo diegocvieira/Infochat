@@ -14,6 +14,8 @@
     @endforeach
 </div>
 
+<p class="work-city">{{ $work->cidade->title }}/{{ $work->cidade->estado->letter }}</p>
+
 <div class="work-statistics">
     @if($work->calc_avaliacao($work->id))
         <div class="stat avaliacao">
@@ -31,8 +33,6 @@
         </div>
     @endif
 </div>
-
-<p class="work-city">{{ $work->cidade->title }}/{{ $work->cidade->estado->letter }}</p>
 
 <p class="work-description">
     @if($work->descricao)
