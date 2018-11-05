@@ -55,7 +55,7 @@ $(document).ready(function() {
     };
 
     // Atualizar as abas de mensagens em tempo real
-    if(logged) {
+    if(logged && $('.abas-resultados').length) {
         setInterval(function() {
             $.ajax({
                 url: 'mensagem/new-messages',
