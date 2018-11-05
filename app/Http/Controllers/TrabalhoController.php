@@ -205,8 +205,10 @@ class TrabalhoController extends Controller
         // Desformatar para pesquisar
         $palavra_chave = urldecode($palavra_chave);
 
-        $trabalhos = Trabalho::filtroStatus()
-            ->filtroCidade();
+        $trabalhos = Trabalho::filtroStatus()->filtroCidade()
+            ->leftJoin('avaliacoes as a', 'trabalhos.id', '=', 'a.trabalho_id')
+            ->leftJoin('avaliacoes_atendimento as b', 'trabalhos.id', '=', 'b.trabalho_id')
+            ->select('trabalhos.id', 'trabalhos.imagem', 'trabalhos.nome', DB::raw('IFNULL(ROUND((SUM(a.nota) / COUNT(a.id)), 1), 0) + IFNULL(CEILING((SUM(b.likes) * 5) / (SUM(b.likes) + SUM(b.dislikes))), 0) as best'));
 
         if($palavra_chave) {
             // SEO
@@ -232,7 +234,7 @@ class TrabalhoController extends Controller
             }
         }
 
-        $trabalhos = $trabalhos->paginate(10);
+        $trabalhos = $trabalhos->groupBy('trabalhos.id')->orderBy('best', 'DESC')->paginate(10);
 
         // Gera a URL
         //$url = '/busca/' . $city_slug . '/' . $state_letter_lc;
