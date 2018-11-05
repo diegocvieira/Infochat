@@ -30,16 +30,20 @@ class ClaimedController extends Controller
 
     public function checkToken($token)
     {
-        $pr = PasswordReset::where('token', $token)->firstOrFail();
+        $pr = PasswordReset::where('token', $token)->first();
 
-        $email = $pr->email;
+        if($pr) {
+            $email = $pr->email;
 
-        $header_title = 'Reivindicar perfil | Infochat';
+            $header_title = 'Reivindicar perfil | Infochat';
 
-        if(Agent::isMobile()) {
-            return view('mobile.claimed-account', compact('email', 'header_title'));
+            if(Agent::isMobile()) {
+                return view('mobile.claimed-account', compact('email', 'header_title'));
+            } else {
+                return view('claimed-account', compact('email', 'header_title'));
+            }
         } else {
-            return view('claimed-account', compact('email', 'header_title'));
+            return redirect()->route('inicial');
         }
     }
 
