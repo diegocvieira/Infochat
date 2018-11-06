@@ -3,7 +3,7 @@
 @section('content')
     <div class="show-work">
         <div class="top-page">
-            <a href="{{ URL::previous() }}" class="back-arrow"></a>
+            <a href="javascript:history.go(-1);" class="back-arrow"></a>
 
             <h3 class="title {{ $work->user->online ? 'margin' : '' }}">{{ $work->nome }}</h3>
 
