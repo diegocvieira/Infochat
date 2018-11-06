@@ -63,7 +63,7 @@
         .name {
             float: left;
             margin-left: 10px;
-            max-width: calc(100% - 270px);
+            max-width: calc(100% - 340px);
 
             h3 {
                 font-size: 16.6px;
@@ -71,10 +71,10 @@
                 margin: 20px 0 0 0;
                 font-weight: 700;
                 float: left;
-                text-overflow: ellipsis; 
+                text-overflow: ellipsis;
                 overflow: hidden;
                 white-space: nowrap;
-                max-width: calc(100% - 100px);
+                width: 100%;
 
                 &.margin {
                     margin-top: 13px;
@@ -87,30 +87,30 @@
                 float: left;
                 width: 100%;
             }
+        }
 
-            .online {
-                float: left;
-                font-size: 13.3px;
-                color: rgb(132, 206, 111);
-                margin: 20px 0 0 10px;
-                position: relative;
-                padding-left: 15px;
-                width: 60px;
+        .online {
+            float: left;
+            font-size: 13.3px;
+            color: rgb(132, 206, 111);
+            margin-top: 20px;
+            position: relative;
+            padding-left: 15px;
+            width: 60px;
 
-                &:after {
-                    content: '';
-                    position: absolute;
-                    left: 0;
-                    top: 6px;
-                    width: 10px;
-                    height: 10px;
-                    border-radius: 50%;
-                    background-color: rgb(132, 206, 111);
-                }
+            &:after {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 6px;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background-color: rgb(132, 206, 111);
+            }
 
-                &.margin {
-                    margin-top: 13px;
-                }
+            &.margin {
+                margin-top: 13px;
             }
         }
 
