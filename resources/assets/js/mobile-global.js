@@ -1166,19 +1166,56 @@ $(document).ready(function() {
         $('.tags').find('.placeholder').hide();
     });
 
-    // Insert a new tag
+    // Insert/edit a new tag
     $(document).on('click', '#insert-tag', function() {
-        var val = $('#input-tag').val(),
-            count = parseInt($('.tags').find('.count-tag').text());
+        if($('.new-tag').find('input:visible').length) {
+            var input = $('.new-tag').find('input:visible'),
+                parent = input.parent(),
+                value = input.val(),
+                span = parent.find('span');
 
-        if(val && count > 0) {
-            $('#input-tag').before("<div class='new-tag'><span>" + val + "</span><input style='display: none; width:" + ((val.length + 1) * 10) + "px;' type='text' name='tag[]' value='" + val + "' /><a href='#'></a></div>");
+            input.toggle();
+            span.toggle();
 
-            $('#input-tag').val('');
-            $('select.categoria, select.subcategoria').val('').selectpicker('refresh');
+            span.text(value);
 
-            $('.tags').find('.count-tag').text(count - 1);
+            if(!value) {
+                parent.remove();
+            }
+        } else {
+            var val = $('#input-tag').val(),
+                count = parseInt($('.tags').find('.count-tag').text());
+
+            if(val && count > 0) {
+                $('#input-tag').before("<div class='new-tag'><span>" + val + "</span><input style='display: none; width:" + ((val.length + 1) * 10) + "px;' type='text' name='tag[]' value='" + val + "' /><a href='#'></a></div>");
+
+                $('#input-tag').val('');
+                //$('select.categoria, select.subcategoria').val('').selectpicker('refresh');
+
+                $('.tags').find('.count-tag').text(count - 1);
+            }
         }
+    });
+
+    // Open tag edit
+    $(document).on('click', '.new-tag span', function(e) {
+        e.preventDefault();
+
+        $(this).toggle();
+        $(this).parent().find('input').toggle().focus();
+    });
+
+    // Remover tag
+    $(document).on('click', '.new-tag a', function(e) {
+        e.preventDefault();
+
+        var count = $('.tags').find('.count-tag');
+
+        $('.tags').find('.count-tag').text(parseInt(count.text()) + 1);
+
+        $(this).parent().remove();
+
+        $('.tags').find('#input-tag').focus();
     });
 
     $(document).on('change', '#form-trabalho-config select.state', function() {
@@ -1245,45 +1282,6 @@ $(document).ready(function() {
             $('.tags').find('.placeholder').show();
         }
     });*/
-
-    // Editar tag
-    $(document).on('click', '.new-tag span', function(e) {
-        e.preventDefault();
-
-        $(this).toggle();
-        $(this).parent().find('input').toggle().focus();
-    });
-
-    // Setar a edicao da tag
-    $(document).on('focusout', '.new-tag input', function(e) {
-        e.preventDefault();
-
-        var parent = $(this).parent(),
-            value = $(this).val(),
-            span = parent.find('span');
-
-        $(this).toggle();
-        span.toggle();
-
-        span.text(value);
-
-        if(!value) {
-            parent.remove();
-        }
-    });
-
-    // Remover tag
-    $(document).on('click', '.new-tag a', function(e) {
-        e.preventDefault();
-
-        var count = $('.tags').find('.count-tag');
-
-        $('.tags').find('.count-tag').text(parseInt(count.text()) + 1);
-
-        $(this).parent().remove();
-
-        $('.tags').find('#input-tag').focus();
-    });
 
     // Alternar entre abas
     /*$(document).on('click', '#form-trabalho-config .abas a', function(e) {
