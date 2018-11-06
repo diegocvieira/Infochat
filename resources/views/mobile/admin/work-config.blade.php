@@ -95,7 +95,7 @@
                 {!! Form::select('cidade', $cities, isset($trabalho) ? $trabalho->cidade_id : null, ['class' => 'selectpicker city', 'data-live-search' => 'true', 'title' => 'Cidade', 'required']) !!}
 
                 <div class="slug">
-                    {!! Form::text('slug', null, ['id' => 'slug', 'required']) !!}
+                    {!! Form::text('slug', null, ['id' => 'slug', 'required', 'placeholder' => 'infochat.com.br/']) !!}
                 </div>
             </div>
 
