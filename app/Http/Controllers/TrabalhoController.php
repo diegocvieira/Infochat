@@ -254,21 +254,21 @@ class TrabalhoController extends Controller
 
         // Detecta se foi acessado por url ou ajax
         if(!\Request::ajax()) {
-            if(Agent::isMobile()) {
-                return view('mobile.pagina-inicial', compact('trabalhos', 'palavra_chave', 'header_title', 'header_desc'));
-            } else {
+            if(Agent::isDesktop()) {
                 return view('pagina-inicial', compact('trabalhos', 'palavra_chave', 'header_title', 'header_desc'));
+            } else {
+                return view('mobile.pagina-inicial', compact('trabalhos', 'palavra_chave', 'header_title', 'header_desc'));
             }
         } else {
-            if(Agent::isMobile()) {
+            if(Agent::isDesktop()) {
                 return response()->json([
-                    'trabalhos' => view('mobile.inc.list-resultados', compact('trabalhos'))->render(),
+                    'trabalhos' => view('inc.list-resultados', compact('trabalhos'))->render(),
                     'url' => $url,
                     'header_title' => $header_title
                 ]);
             } else {
                 return response()->json([
-                    'trabalhos' => view('inc.list-resultados', compact('trabalhos'))->render(),
+                    'trabalhos' => view('mobile.inc.list-resultados', compact('trabalhos'))->render(),
                     'url' => $url,
                     'header_title' => $header_title
                 ]);

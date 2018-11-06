@@ -3,9 +3,9 @@
 @section('content')
     <div class="user-config">
         <div class="top-page">
-            <a href="javascript:history.back()" class="back-arrow"></a>
+            <?php /*<a href="javascript:history.go(-1);" class="back-arrow"></a>*/ ?>
 
-            <h3 class="title">Configurações</h3>
+            <h3 class="title">Minha conta</h3>
         </div>
 
         {!! Form::model($usuario, ['method' => 'post', 'route' => 'set-usuario-config', 'id' => 'form-usuario-config', 'files' => 'true']) !!}

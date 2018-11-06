@@ -4,9 +4,9 @@
     <div class="work-config">
         {!! Form::model($trabalho, ['method' => 'post', 'action' => 'TrabalhoController@setConfig', 'id' => 'form-trabalho-config', 'files' => 'true']) !!}
             <div class="top-page">
-                <a href="javascript:history.back()" class="back-arrow"></a>
+                <?php /*<a href="javascript:history.go(-1);" class="back-arrow"></a>*/ ?>
 
-                <h3 class="title">Trabalho</h3>
+                <h3 class="title">Perfil de trabalho</h3>
 
                 {!! Form::submit('Salvar') !!}
 
@@ -60,10 +60,12 @@
                             </p>
                         </div>
 
+                        <button type="button" id="insert-tag"></button>
+
                         <span class="count-tag">{{ (isset($trabalho) && count($trabalho->tags) > 0) ? 10 - count($trabalho->tags) : 10 }}</span>
                     </div>
 
-                    <label for="insert-tag">
+                    <label for="input-tag">
                         @if(isset($trabalho) && count($trabalho->tags) > 0)
                             @foreach($trabalho->tags as $tag)
                                 <div class="new-tag">
@@ -76,7 +78,7 @@
                             <span class="placeholder">ex.: fotógrafo, padaria, capinha celular, advogada, bar, bicicleta...</span>
                         @endif
 
-                        {!! Form::text('insert_tag', '', ['id' => 'insert-tag']) !!}
+                        {!! Form::text('insert_tag', '', ['id' => 'input-tag', 'autocomplete' => 'off']) !!}
                     </label>
                 </div>
 
@@ -93,7 +95,7 @@
                 {!! Form::select('cidade', $cities, isset($trabalho) ? $trabalho->cidade_id : null, ['class' => 'selectpicker city', 'data-live-search' => 'true', 'title' => 'Cidade', 'required']) !!}
 
                 <div class="slug">
-                    {!! Form::text('slug', null, ['id' => 'slug', 'required']) !!}
+                    {!! Form::text('slug', null, ['id' => 'slug', 'required', 'placeholder' => 'infochat.com.br/']) !!}
                 </div>
             </div>
 

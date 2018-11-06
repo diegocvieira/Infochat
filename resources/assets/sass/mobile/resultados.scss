@@ -221,8 +221,9 @@
                 margin: 5px 0 0 0;
                 float: left;
                 width: 100%;
-                height: 20px;
+                text-overflow: ellipsis; 
                 overflow: hidden;
+                white-space: nowrap;
 
                 &.usuario {
                     margin-top: 30px;

@@ -338,8 +338,9 @@
                 margin: 5px 0 0 0;
                 float: left;
                 width: calc(100% - 25px);
-                height: 21px;
-                overflow: hidden;
+                text-overflow: ellipsis;
+                overflow: hidden; 
+                white-space: nowrap;
                 color: rgb(100, 100, 100);
 
                 /*&.usuario {
