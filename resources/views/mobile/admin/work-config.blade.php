@@ -4,7 +4,7 @@
     <div class="work-config">
         {!! Form::model($trabalho, ['method' => 'post', 'action' => 'TrabalhoController@setConfig', 'id' => 'form-trabalho-config', 'files' => 'true']) !!}
             <div class="top-page">
-                <a href="javascript:history.back()" class="back-arrow"></a>
+                <a href="{{ URL::previous() }}" class="back-arrow"></a>
 
                 <h3 class="title">Trabalho</h3>
 
@@ -76,7 +76,7 @@
                             <span class="placeholder">ex.: fotógrafo, padaria, capinha celular, advogada, bar, bicicleta...</span>
                         @endif
 
-                        {!! Form::text('insert_tag', '', ['id' => 'insert-tag']) !!}
+                        {!! Form::text('insert_tag', '', ['id' => 'insert-tag', 'autocomplete' => 'off']) !!}
                     </label>
                 </div>
 

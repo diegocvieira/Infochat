@@ -5,7 +5,7 @@
         {!! Form::hidden('user_id', $destinatario_id, ['id' => 'user_id']) !!}
 
         <div class="top-page">
-            <a href="javascript:history.back()" class="back-arrow"></a>
+            <a href="{{ URL::previous() }}" class="back-arrow"></a>
 
             <a href="{{ $tipo == 'trabalho' ? route('show-work', $destinatario->slug) : '#' }}" onclick="{{ $tipo != 'trabalho' ? 'return false;' : '' }}">
                 <div class="imagem {{ !$destinatario->imagem ? 'border' : '' }}">

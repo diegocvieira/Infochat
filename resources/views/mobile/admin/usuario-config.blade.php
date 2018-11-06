@@ -3,7 +3,7 @@
 @section('content')
     <div class="user-config">
         <div class="top-page">
-            <a href="javascript:history.back()" class="back-arrow"></a>
+            <a href="{{ URL::previous() }}" class="back-arrow"></a>
 
             <h3 class="title">Configurações</h3>
         </div>
