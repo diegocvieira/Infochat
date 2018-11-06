@@ -1161,24 +1161,24 @@ $(document).ready(function() {
         $('.description-counter').text(300 - $(this).val().length);
     });
 
-    // Inserir uma nova tag
-    $(document).on('keydown', '#insert-tag', function(e) {
+    // Hide placeholder
+    $(document).on('keydown', '#input-tag', function(e) {
         $('.tags').find('.placeholder').hide();
+    });
 
-        /*var val = $(this).val(),
+    // Insert a new tag
+    $(document).on('click', '#insert-tag', function() {
+        var val = $('#input-tag').val(),
             count = parseInt($('.tags').find('.count-tag').text());
 
-        // Inserir tag ao apertar enter
-        if(e.which == 13 && val && count > 0) {
-            $('#insert-tag').before("<div class='new-tag'><span>" + val + "</span><input style='display: none; width:" + ((val.length + 1) * 10) + "px;' type='text' name='tag[]' value='" + val + "' /><a href='#'></a></div>");
+        if(val && count > 0) {
+            $('#input-tag').before("<div class='new-tag'><span>" + val + "</span><input style='display: none; width:" + ((val.length + 1) * 10) + "px;' type='text' name='tag[]' value='" + val + "' /><a href='#'></a></div>");
 
-            $('#insert-tag').val('');
+            $('#input-tag').val('');
             $('select.categoria, select.subcategoria').val('').selectpicker('refresh');
 
             $('.tags').find('.count-tag').text(count - 1);
-
-            return false;
-        }*/
+        }
     });
 
     $(document).on('change', '#form-trabalho-config select.state', function() {
@@ -1240,11 +1240,11 @@ $(document).ready(function() {
     });*/
 
     // Mostrar placeholder novamente
-    $(document).on('focusout', '.tags label', function() {
+    /*$(document).on('focusout', '.tags label', function() {
         if(parseInt($('.count-tag').text()) == 10) {
             $('.tags').find('.placeholder').show();
         }
-    });
+    });*/
 
     // Editar tag
     $(document).on('click', '.new-tag span', function(e) {
@@ -1282,7 +1282,7 @@ $(document).ready(function() {
 
         $(this).parent().remove();
 
-        $('.tags').find('#insert-tag').focus();
+        $('.tags').find('#input-tag').focus();
     });
 
     // Alternar entre abas
@@ -1564,39 +1564,22 @@ $(document).ready(function() {
                         }
                     },
                     submitHandler: function(form) {
-                        if($('#insert-tag').is(':focus')) {
-                            var val = $('#insert-tag').val(),
-                                count = parseInt($('.tags').find('.count-tag').text());
+                        $(form).find('input[type=submit]').val('SALVANDO').prop('disabled', true);
 
-                            // Inserir tag ao apertar enter
-                            if(val && count > 0) {
-                                $('#insert-tag').before("<div class='new-tag'><span>" + val + "</span><input style='display: none; width:" + ((val.length + 1) * 10) + "px;' type='text' name='tag[]' value='" + val + "' /><a href='#'></a></div>");
+                        $.ajax({
+                            url: $(form).attr('action'),
+                            method: 'POST',
+                            dataType: 'json',
+                            data: new FormData(form),
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+                                modalAlert(data.msg, 'OK');
 
-                                $('#insert-tag').val('');
-                                //$('select.categoria, select.subcategoria').val('').selectpicker('refresh');
-
-                                $('.tags').find('.count-tag').text(count - 1);
-
-                                //return false;
+                                $(form).find('input[type=submit]').val('SALVAR').prop('disabled', false);
                             }
-                        } else {
-                            $(form).find('input[type=submit]').val('SALVANDO').prop('disabled', true);
-
-                            $.ajax({
-                                url: $(form).attr('action'),
-                                method: 'POST',
-                                dataType: 'json',
-                                data: new FormData(form),
-                                cache: false,
-                                contentType: false,
-                                processData: false,
-                                success: function (data) {
-                                    modalAlert(data.msg, 'OK');
-
-                                    $(form).find('input[type=submit]').val('SALVAR').prop('disabled', false);
-                                }
-                            });
-                        }
+                        });
 
                         return false;
                     }
