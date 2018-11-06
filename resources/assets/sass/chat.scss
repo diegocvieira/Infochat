@@ -71,8 +71,9 @@
                 margin: 20px 0 0 0;
                 font-weight: 700;
                 float: left;
+                text-overflow: ellipsis; 
                 overflow: hidden;
-                height: 21.4px;
+                white-space: nowrap;
                 max-width: calc(100% - 100px);
 
                 &.margin {
