@@ -1165,7 +1165,7 @@ $(document).ready(function() {
     $(document).on('keydown', '#insert-tag', function(e) {
         $('.tags').find('.placeholder').hide();
 
-        var val = $(this).val(),
+        /*var val = $(this).val(),
             count = parseInt($('.tags').find('.count-tag').text());
 
         // Inserir tag ao apertar enter
@@ -1178,7 +1178,7 @@ $(document).ready(function() {
             $('.tags').find('.count-tag').text(count - 1);
 
             return false;
-        }
+        }*/
     });
 
     $(document).on('change', '#form-trabalho-config select.state', function() {
@@ -1564,22 +1564,39 @@ $(document).ready(function() {
                         }
                     },
                     submitHandler: function(form) {
-                        $(form).find('input[type=submit]').val('SALVANDO').prop('disabled', true);
+                        if($('#insert-tag').is(':focus')) {
+                            var val = $('#insert-tag').val(),
+                                count = parseInt($('.tags').find('.count-tag').text());
 
-                        $.ajax({
-                            url: $(form).attr('action'),
-                            method: 'POST',
-                            dataType: 'json',
-                            data: new FormData(form),
-                            cache: false,
-                            contentType: false,
-                            processData: false,
-                            success: function (data) {
-                                modalAlert(data.msg, 'OK');
+                            // Inserir tag ao apertar enter
+                            if(val && count > 0) {
+                                $('#insert-tag').before("<div class='new-tag'><span>" + val + "</span><input style='display: none; width:" + ((val.length + 1) * 10) + "px;' type='text' name='tag[]' value='" + val + "' /><a href='#'></a></div>");
 
-                                $(form).find('input[type=submit]').val('SALVAR').prop('disabled', false);
+                                $('#insert-tag').val('');
+                                //$('select.categoria, select.subcategoria').val('').selectpicker('refresh');
+
+                                $('.tags').find('.count-tag').text(count - 1);
+
+                                //return false;
                             }
-                        });
+                        } else {
+                            $(form).find('input[type=submit]').val('SALVANDO').prop('disabled', true);
+
+                            $.ajax({
+                                url: $(form).attr('action'),
+                                method: 'POST',
+                                dataType: 'json',
+                                data: new FormData(form),
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                success: function (data) {
+                                    modalAlert(data.msg, 'OK');
+
+                                    $(form).find('input[type=submit]').val('SALVAR').prop('disabled', false);
+                                }
+                            });
+                        }
 
                         return false;
                     }
