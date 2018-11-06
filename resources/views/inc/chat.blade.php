@@ -13,15 +13,15 @@
         <div class="name">
             <h3 class="{{ $tipo == 'trabalho' ? 'margin' : '' }}">{{ $destinatario->nome }}</h3>
 
-            @if($tipo == 'trabalho' && $destinatario->user->online || $tipo == 'pessoal' && $destinatario->online)
-                <span class="online {{ $tipo == 'trabalho' ? 'margin' : '' }}">online</span>
-            @endif
-
             @if($tipo == 'trabalho')
                 <span class="perfil">ver perfil</span>
             @endif
         </div>
     </a>
+
+    @if($tipo == 'trabalho' && $destinatario->user->online || $tipo == 'pessoal' && $destinatario->online)
+        <span class="online {{ $tipo == 'trabalho' ? 'margin' : '' }}">online</span>
+    @endif
 
     @if(Auth::guard('web')->check() && $tipo == 'trabalho')
         {!! Form::open(['method' => 'post', 'id' => 'form-avaliar', 'route' => 'avaliar-atendimento']) !!}
