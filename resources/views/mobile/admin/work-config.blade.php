@@ -4,9 +4,9 @@
     <div class="work-config">
         {!! Form::model($trabalho, ['method' => 'post', 'action' => 'TrabalhoController@setConfig', 'id' => 'form-trabalho-config', 'files' => 'true']) !!}
             <div class="top-page">
-                <a href="javascript:history.go(-1);" class="back-arrow"></a>
+                <?php /*<a href="javascript:history.go(-1);" class="back-arrow"></a>*/ ?>
 
-                <h3 class="title">Trabalho</h3>
+                <h3 class="title">Perfil de trabalho</h3>
 
                 {!! Form::submit('Salvar') !!}
 

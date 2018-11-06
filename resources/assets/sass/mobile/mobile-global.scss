@@ -49,7 +49,7 @@ a, a:hover, a:active, a:focus {
     left: 0;
     top: 0;
     z-index: 999;
-    padding: 0 5px;
+    padding: 0 5px 0 15px;
 
     .title {
         font-size: 16.6px;
@@ -58,7 +58,7 @@ a, a:hover, a:active, a:focus {
         margin: 15px 0 0 0;
     }
 
-    .back-arrow {
+    /*.back-arrow {
         width: 35px;
         height: 50px;
         background-position: center;
@@ -67,7 +67,7 @@ a, a:hover, a:active, a:focus {
         background-image: url('../../img/arrow2.png');
         filter: brightness(0) invert(1);
         float: left;
-    }
+    }*/
 }
 
 .page-user-login, .page-user-register {
