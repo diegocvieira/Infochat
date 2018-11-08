@@ -81,6 +81,13 @@ class MessageController extends Controller
                         $return['chat_id'] = $chat_id;
 
                         if($check) {
+                            // Name of who send the message
+                            $user_from_name = $chat->from_id == $user_logged ? $chat->user_from->nome : $chat->user_to->trabalho->nome;
+
+                            // Chat url
+                            $url_type = $chat->from_id == $user_logged ? 'pessoal' : 'trabalho';
+                            $chat_url = '/mensagem/chat/show/' . $user_logged . '/' . $url_type . '/' . $chat->id;
+
                             // Pega o token da pessoa que recebe a mensagem
                             $tokenDoDestinatario = $chat->from_id == $user_logged ? $chat->user_to->onesignal_token : $chat->user_from->onesignal_token;
 
@@ -98,8 +105,8 @@ class MessageController extends Controller
                                     'app_id' => '0305d6ca-af82-4b6a-8c38-253c20043016',
                                     'include_player_ids' => array($tokenDoDestinatario),
                                     'headings' => array('en' => 'Infochat'),
-                                    'contents' => array('en' => 'Nova Mensagem'),
-                                    'data' => array('endereco' => '/')
+                                    'contents' => array('en' => $user_from_name . ': ' . $request->message),
+                                    'data' => array('endereco' => $url_chat)
                                 );
 
                                 $curl = curl_init();
@@ -116,8 +123,8 @@ class MessageController extends Controller
 
                             $email = $check->from_id == $user_logged ? $check->user_to->email : $check->user_from->email;
 
-                            $client['name'] = Auth::guard('web')->user()->nome;
-                            $client['image'] = Auth::guard('web')->user()->imagem;
+                            $client['name'] = $user_from_name;
+                            $client['image'] = $chat->from_id == $user_logged ? $chat->user_from->imagem : $chat->user_to->trabalho->imagem;
                             $client['message'] = $request->message;
                             $client['id'] = $user_logged;
 
@@ -125,7 +132,7 @@ class MessageController extends Controller
                                 $claimed_url = url('/') . '/reivindicar-conta/check/' . app('App\Http\Controllers\ClaimedController')->createToken($email);
                                 $work_url = route('show-work', $chat->user_to->trabalho->slug);
 
-                                Mail::send('emails.new_message_claimed', ['client' => $client, 'work_url' => $work_url, 'claimed_url' => $claimed_url], function($q) use($email) {
+                                Mail::send('emails.new_message_claimed', ['client' => $client, 'work_url' => $work_url, 'claimed_url' => $claimed_url, 'chat_url' => url('/') . $chat_url], function($q) use($email) {
                                     $q->from('no-reply@infochat.com.br', 'Infochat');
                                     $q->to($email)->subject('Nova mensagem');
                                 });

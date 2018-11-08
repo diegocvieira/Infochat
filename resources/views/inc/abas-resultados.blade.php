@@ -14,16 +14,16 @@
     {!! Form::close() !!}
 
     <div class="abas-resultados">
-        <a href="#" data-type="resultado" class="active">PESQUISA</a>
+        <a href="#" data-type="resultado" class="{{ !isset($section) ? 'active' : '' }}">PESQUISA</a>
 
-        <a href="{{ route('msg-pessoal') }}" data-type="pessoal">CONVERSAS
+        <a href="{{ route('msg-pessoal') }}" data-type="pessoal" class="{{ (isset($section) && $section == 'pessoal') ? 'active' : '' }}">CONVERSAS
             @if($new_messages_pessoal)
                 <span>{{ $new_messages_pessoal }}</span>
             @endif
         </a>
 
         @if(Auth::guard('web')->check() && Auth::guard('web')->user()->trabalho)
-            <a href="{{ route('msg-trabalho') }}" data-type="trabalho">CLIENTES
+            <a href="{{ route('msg-trabalho') }}" data-type="trabalho" class="{{ (isset($section) && $section == 'trabalho') ? 'active' : '' }}">CLIENTES
                 @if($new_messages_trabalho)
                     <span>{{ $new_messages_trabalho }}</span>
                 @endif
@@ -43,6 +43,8 @@
 <div id="form-search-results">
     @if(isset($trabalhos) && count($trabalhos) > 0)
         @include('inc.list-resultados')
+    @elseif(isset($chats) && count($chats) > 0 && isset($section) && $section == 'pessoal')
+        @include('inc.list-mensagens-pessoal')
     @elseif(!isset($trabalhos))
         <div class="sem-resultados">
             <p>Pesquise um profissional ou estabelecimento<br>para pedir informações ou tirar dúvidas</p>

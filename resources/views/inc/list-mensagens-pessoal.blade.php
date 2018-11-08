@@ -1,7 +1,7 @@
 @if(isset($chats) && count($chats) > 0)
     @foreach($chats as $chat)
         @if($chat->user_to->trabalho)
-            <div class="result open-chat" data-type="trabalho" data-id="{{ $chat->user_to->trabalho->id }}" data-chatid="{{ $chat->id }}">
+            <div class="result open-chat {{ (isset($chat_id) && $chat_id == $chat->id) ? 'active-chat' : '' }}" data-type="trabalho" data-id="{{ $chat->user_to->trabalho->id }}" data-chatid="{{ $chat->id }}">
                 <div class="imagem">
                     @if($chat->user_to->trabalho->imagem)
                         <img src="{{ asset('uploads/' . $chat->user_to->id . '/' . $chat->user_to->trabalho->imagem) }}" alt="Foto de perfil de {{ $chat->user_to->trabalho->nome }}" />

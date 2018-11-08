@@ -14,7 +14,7 @@ $(document).ready(function() {
     }
 
     // Atualizar as abas de mensagens em tempo real
-    if(logged) {
+    if(logged && $('.abas-resultados').length) {
         setInterval(function() {
             $.ajax({
                 url: 'mensagem/new-messages',
@@ -828,12 +828,12 @@ $(document).ready(function() {
     $(document).on('click', '.open-chat', function(e) {
         e.preventDefault();
 
-        var target = $(e.target).attr('class');
+        //var target = $(e.target).attr('class');
 
-        if(target != 'ver-perfil' && target != 'option-chat') {
-            $('#form-search-results').find('.result').removeClass('active-trabalho');
+        //if(target != 'ver-perfil' && target != 'option-chat') {
+            $('#form-search-results').find('.result').removeClass('active-chat');
 
-            $(this).addClass('active-trabalho');
+            $(this).addClass('active-chat');
 
             // Remover numero de novas mensagens
             $(this).find('.new-messages').remove();
@@ -850,9 +850,8 @@ $(document).ready(function() {
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {
-                    if(data.destinatario_slug) {
-                        window.history.pushState('', '', data.destinatario_slug);
-                    }
+                    //chatid ? window.history.pushState('', '', url) : window.history.pushState('', '', data.destinatario_slug);
+                    window.history.pushState('', '', url);
 
                     $('.chat').html(data.trabalho);
 
@@ -897,7 +896,7 @@ $(document).ready(function() {
                     });
                 }
             }, 10000);
-        }
+        //}
     });
 
     // Avaliar atendimento
