@@ -107,7 +107,7 @@ class MessageController extends Controller
                                     'include_player_ids' => array($tokenDoDestinatario),
                                     'headings' => array('en' => 'Infochat'),
                                     'contents' => array('en' => $user_from_name . ': ' . $request->message),
-                                    'data' => array('endereco' => $url_chat)
+                                    'data' => array('endereco' => $chat_url)
                                 );
 
                                 $curl = curl_init();
