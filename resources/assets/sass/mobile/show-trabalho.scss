@@ -2,13 +2,12 @@
     padding-top: 50px;
 
     .top-page {
-        padding: 0 15px;
-
         .title {
-            width: 100%;
+            width: calc(100% - 50px);
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
+            line-height: normal;
 
             &.margin {
                 margin-top: 7px;

@@ -30,7 +30,7 @@
         }
     }
 
-    .active-trabalho {
+    .active-chat {
         background-color: rgba(63, 81, 181, 0.102);
     }
 
@@ -342,6 +342,7 @@
                 overflow: hidden;
                 white-space: nowrap;
                 color: rgb(100, 100, 100);
+                line-height: normal;
 
                 /*&.usuario {
                     margin-top: 30px;
@@ -380,7 +381,7 @@
                 width: calc(100% - 90px);
                 float: left;
                 text-overflow: ellipsis;
-                overflow: hidden; 
+                overflow: hidden;
                 white-space: nowrap;
 
                 p {
