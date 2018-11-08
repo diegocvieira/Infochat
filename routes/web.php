@@ -76,17 +76,17 @@ Route::get('como/funciona', function() {
 })->name('como-funciona');
 
 Route::group(['prefix' => 'mensagem'], function() {
-    // Listar mensagens pessoais
+    // List personal chats
     Route::get('list/pessoal', 'ChatController@pessoal')->name('msg-pessoal');
-    // Listar mensagens de trabalho
+    // List work chats
     Route::get('list/trabalho', 'ChatController@trabalho')->name('msg-trabalho');
-    // Exibir chat
+    // Show chat
     Route::get('chat/show/{id}/{tipo}/{chat_id?}', 'ChatController@show')->name('chat');
-    // Enviar
+    // Send message
     Route::post('send', 'MessageController@send');
 
     Route::group(['middleware' => 'auth:web'], function() {
-        // Listar mensagens do chat
+        // List messages from chat
         Route::get('list/{id}/{page}/{new_messages?}', 'MessageController@list');
         // Finalizar chat
         Route::get('chat/close/{id}', 'ChatController@close')->name('close-chat');

@@ -36,14 +36,12 @@
                         @if($client['image'])
                             <img src="{{ asset('uploads/' . $client['id'] . '/' . _getOriginalImage($client['image'])) }}" style="float: left; width: 38px; height: 38px; object-fit: cover;" />
                         @else
-                            <span style="float: left; width: 38px; text-align: center; height: 38px; border: 1px solid rgb(230, 230, 230);">
-                                <img src="{{ asset('img/paisagem.png') }}" style="width: 18px; height: 18px; position: relative; top: 50%; margin-top: -9px;" />
+                            <span style="float: left; width: 38px; height: 38px; border: 1px solid rgb(230, 230, 230); position: relative;">
+                                <img src="{{ asset('img/paisagem.png') }}" style="width: 18px; height: 18px; position: absolute; left: 50%; top: 50%; margin: -9px 0 0 -9px;" />
                             </span>
                         @endif
 
-                        <span style="float: left; margin: 10px 0 0 10px; cursor: default; font-weight: 700; font-size: 16.6; color: rgb(100, 100, 100);">
-                            {{ $client['name'] }}
-                        </span>
+                        <span style="float: left; margin: 10px 0 0 10px; cursor: default; font-weight: 700; font-size: 16.6; color: rgb(100, 100, 100);">{{ $client['name'] }}</span>
                     </td>
                 </tr>
 
@@ -61,7 +59,7 @@
 
                 <tr>
                     <td style="background-color: #fff; padding: 0 50px 40px 50px;">
-                        <a href="{{ url('/') }}" style="float: left; font-weight: 700; border-radius: 25px; cursor: pointer; font-size: 14.5; margin-top: 10px; background-color: rgb(241, 240, 240); color: rgb(100, 100, 100); padding: 13px 25px;">RESPONDER CLIENTE</a>
+                        <a href="{{ $chat_url }}" style="float: left; font-weight: 700; border-radius: 25px; cursor: pointer; font-size: 14.5; margin-top: 10px; background-color: rgb(241, 240, 240); color: rgb(100, 100, 100); padding: 13px 25px;">RESPONDER MENSAGEM</a>
                     </td>
                 </tr>
             </table>

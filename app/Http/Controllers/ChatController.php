@@ -60,12 +60,58 @@ class ChatController extends Controller
         }
 
         if(Agent::isDesktop()) {
-            return response()->json([
-                'trabalho' => view('inc.chat', compact('destinatario', 'tipo', 'chat_id', 'destinatario_id', 'messages'))->render(),
-                'new_messages_trabalho' => $new_messages_trabalho,
-                'new_messages_pessoal' => $new_messages_pessoal,
-                'destinatario_slug' => $destinatario_slug
-            ]);
+            if(\Request::ajax()) {
+                return response()->json([
+                    'trabalho' => view('inc.chat', compact('destinatario', 'tipo', 'chat_id', 'destinatario_id', 'messages'))->render(),
+                    'new_messages_trabalho' => $new_messages_trabalho,
+                    'new_messages_pessoal' => $new_messages_pessoal,
+                    'destinatario_slug' => $destinatario_slug
+                ]);
+            } else {
+                if($chat_id) {
+                    if(Auth::guard('web')->check()) {
+                        $user_id = Auth::guard('web')->user()->id;
+
+                        if($tipo == 'trabalho') {
+                            $section = 'pessoal';
+
+                            $chats = Chat::where('from_id', $user_id)
+                                ->whereHas('messages', function($query) use($user_id) {
+                                    $query->where('deleted', '!=', $user_id)
+                                        ->orWhereNull('deleted');
+                                })
+                                ->withCount(['messages as latest_message' => function($query) {
+                                    $query->select(DB::raw('max(created_at)'));
+                                }])
+                                ->orderByRaw("id = $chat_id DESC")
+                                ->orderByDesc('latest_message')
+                                ->get();
+                        } else {
+                            $section = 'trabalho';
+
+                            $chats = Chat::where('to_id', $user_id)
+                                ->whereHas('messages', function($query) use($user_id) {
+                                    $query->where('deleted', '!=', $user_id)
+                                        ->orWhereNull('deleted');
+                                })
+                                ->withCount(['messages as latest_message' => function($query) {
+                                    $query->select(DB::raw('max(created_at)'));
+                                }])
+                                ->orderByRaw("id = $chat_id DESC")
+                                ->orderByDesc('latest_message')
+                                ->get();
+                        }
+                    } else {
+                        return redirect()->route('user-login');
+                    }
+                } else {
+                    $palavra_chave = $destinatario->nome;
+
+                    $trabalhos = Trabalho::where('id', $id)->paginate(1);
+                }
+
+                return view('pagina-inicial', compact('destinatario', 'destinatario_id', 'tipo', 'section', 'chats', 'chat_id', 'messages', 'palavra_chave', 'trabalhos'));
+            }
         } else {
             return view('mobile.inc.chat', compact('destinatario', 'tipo', 'chat_id', 'destinatario_id', 'messages'));
         }
