@@ -4,7 +4,7 @@
     <div class="work-config">
         {!! Form::model($trabalho, ['method' => 'post', 'action' => 'TrabalhoController@setConfig', 'id' => 'form-trabalho-config', 'files' => 'true']) !!}
             <div class="top-page">
-                <?php /*<a href="javascript:history.go(-1);" class="back-arrow"></a>*/ ?>
+                <a href="{{ route('inicial') }}" class="back-home"></a>
 
                 <h3 class="title">Perfil de trabalho</h3>
 

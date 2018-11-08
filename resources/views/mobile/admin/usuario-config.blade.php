@@ -3,7 +3,7 @@
 @section('content')
     <div class="user-config">
         <div class="top-page">
-            <?php /*<a href="javascript:history.go(-1);" class="back-arrow"></a>*/ ?>
+            <a href="{{ route('inicial') }}" class="back-home"></a>
 
             <h3 class="title">Minha conta</h3>
         </div>

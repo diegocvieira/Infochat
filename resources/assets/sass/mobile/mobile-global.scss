@@ -49,13 +49,23 @@ a, a:hover, a:active, a:focus {
     left: 0;
     top: 0;
     z-index: 999;
-    padding: 0 5px 0 15px;
+    padding-right: 5px;
 
     .title {
         font-size: 16.6px;
         color: rgb(255, 255, 255);
         float: left;
         margin: 15px 0 0 0;
+    }
+
+    .back-home {
+        float: left;
+        width: 50px;
+        height: 50px;
+        background-image: url('../../img/icon-logo.png');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 18px;
     }
 
     /*.back-arrow {
