@@ -86,7 +86,8 @@ class MessageController extends Controller
 
                             // Chat url
                             $url_type = $chat->from_id == $user_logged ? 'pessoal' : 'trabalho';
-                            $chat_url = '/mensagem/chat/show/' . $user_logged . '/' . $url_type . '/' . $chat->id;
+                            $url_id = $chat->from_id == $user_logged ? $chat->user_from->id : $chat->user_to->trabalho->id;
+                            $chat_url = '/mensagem/chat/show/' . $url_id . '/' . $url_type . '/' . $chat->id;
 
                             // Pega o token da pessoa que recebe a mensagem
                             $tokenDoDestinatario = $chat->from_id == $user_logged ? $chat->user_to->onesignal_token : $chat->user_from->onesignal_token;
@@ -122,7 +123,6 @@ class MessageController extends Controller
                             }
 
                             $email = $check->from_id == $user_logged ? $check->user_to->email : $check->user_from->email;
-
                             $client['name'] = $user_from_name;
                             $client['image'] = $chat->from_id == $user_logged ? $chat->user_from->imagem : $chat->user_to->trabalho->imagem;
                             $client['message'] = $request->message;
