@@ -132,12 +132,12 @@ class MessageController extends Controller
                                 $claimed_url = url('/') . '/reivindicar-conta/check/' . app('App\Http\Controllers\ClaimedController')->createToken($email);
                                 $work_url = route('show-work', $chat->user_to->trabalho->slug);
 
-                                Mail::send('emails.new_message_claimed', ['client' => $client, 'work_url' => $work_url, 'claimed_url' => $claimed_url, 'chat_url' => url('/') . $chat_url], function($q) use($email) {
+                                Mail::send('emails.new_message_claimed', ['client' => $client, 'work_url' => $work_url, 'claimed_url' => $claimed_url], function($q) use($email) {
                                     $q->from('no-reply@infochat.com.br', 'Infochat');
                                     $q->to($email)->subject('Nova mensagem');
                                 });
                             } else {
-                                Mail::send('emails.new_message', ['client' => $client], function($q) use($email) {
+                                Mail::send('emails.new_message', ['client' => $client, 'chat_url' => url('/') . $chat_url], function($q) use($email) {
                                     $q->from('no-reply@infochat.com.br', 'Infochat');
                                     $q->to($email)->subject('Nova mensagem');
                                 });
