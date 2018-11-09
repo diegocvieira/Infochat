@@ -132,6 +132,9 @@ class ChatController extends Controller
                 ->withCount(['messages as latest_message' => function($query) {
                     $query->select(DB::raw('max(created_at)'));
                 }])
+                ->with(['messages' => function($query) {
+                    $query->orderByDesc('id');
+                }])
                 ->orderByDesc('latest_message')
                 ->get();
         }
