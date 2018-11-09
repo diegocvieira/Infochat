@@ -652,6 +652,11 @@ $(document).ready(function() {
                 $('#form-search-results').html(data.trabalhos);
 
                 window.history.pushState('', '', data.url);
+
+                // Scroll to top
+                $('#form-search-results').animate({
+                    'scrollTop' : 0
+                }, 300);
             }
         });
     });
