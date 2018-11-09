@@ -174,7 +174,7 @@ class GlobalController extends Controller
                 $work->user_id = $user->id;
                 $work->nome = $data[0];
                 $work->cidade_id = 4927;
-                $work->status = 1;
+                $work->status = 0;
                 $work->slug = str_slug($data[0], '-');
                 $work->save();
 
