@@ -11,7 +11,7 @@
         {!! Form::label('imagem', 'trocar imagem', ['class' => 'trocar-imagem']) !!}
     </div>
 
-    {!! Form::text('nome', null, ['placeholder' => 'Nome', 'class' => 'name', 'required']) !!}
+    {!! Form::text('nome', null, ['placeholder' => 'Nome do estabelecimento ou profissional', 'class' => 'name', 'required']) !!}
 
     <div class="tags">
         <div class="top-tags">

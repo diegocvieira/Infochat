@@ -33,7 +33,7 @@
             <div class="infos">
                 <?php /*{!! Form::select('tipo', $tipos, null, ['class' => 'selectpicker tipo', 'title' => 'Tipo *', 'required']) !!}*/ ?>
 
-                {!! Form::text('nome', null, ['placeholder' => 'Nome', 'class' => 'nome', 'required']) !!}
+                {!! Form::text('nome', null, ['placeholder' => 'Nome do estabelecimento ou profissional', 'class' => 'nome', 'required']) !!}
 
                 <?php /*{!! Form::select('area_id', isset($trabalho) ? $areas : [], null, ['class' => 'selectpicker area', 'title' => 'Área *', 'required']) !!}
 
