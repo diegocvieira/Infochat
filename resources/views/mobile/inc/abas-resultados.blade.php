@@ -8,7 +8,7 @@
         </a>
     </a>
 
-    @if(Auth::guard('web')->check() && Auth::guard('web')->user()->trabalho)
+    @if(Auth::guard('web')->check() && Auth::guard('web')->user()->trabalho && Auth::guard('web')->user()->trabalho->status)
         <a href="{{ route('msg-trabalho') }}" data-type="trabalho">CLIENTES
             @if($new_messages_trabalho)
                 <span>{{ $new_messages_trabalho }}</span>
