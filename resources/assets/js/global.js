@@ -812,7 +812,9 @@ $(document).ready(function() {
                                 window.location.reload(true);
                             }, 100);
                         } else {
-                            $('.chat').html("<div class='sem-mensagens'><img src='/img/icon-logo.png' /></div>");
+                            setTimeout(function() {
+                                $('.chat').html("<div class='sem-mensagens'><img src='/img/icon-logo.png' /></div>");
+                            }, 500);
                         }
                     } else if(type == 'block') {
                         parent.find('a').remove();
