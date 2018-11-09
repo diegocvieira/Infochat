@@ -13,10 +13,16 @@
                 <div class="infos">
                     <div class="nome-tags">
                         <h3>{{ $chat->user_from->nome }}</h3>
+
+                        @if(count($chat->messages) > 0)
+                            <div class="latest-message">
+                                <p>{{ $chat->messages->first()->message }}</p>
+                            </div>
+                        @endif
                     </div>
 
                     <div class="status">
-                        <span class="date">{{ diaSemana($chat->created_at) }}</span>
+                        <span class="date">{{ diaSemana($chat->latest_message) }}</span>
 
                         @if($chat->close)
                             <span class="status-close"></span>

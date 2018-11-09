@@ -11,7 +11,7 @@
 
             <div class="infos">
                 <div class="top">
-                    <h3 class="usuario">{{ $chat->user_from->nome }}</h3>
+                    <h3>{{ $chat->user_from->nome }}</h3>
 
                     @if($chat->count_new_messages() > 0)
                         <div class="new-messages">
@@ -21,6 +21,12 @@
                 </div>
 
                 <div class="bottom">
+                    @if(count($chat->messages) > 0)
+                        <div class="latest-message">
+                            <p>{{ $chat->messages->first()->message }}</p>
+                        </div>
+                    @endif
+
                     <div class="status-geral">
                         @if($chat->close)
                             <span class="status-chat status-close" title="Chat finalizado"></span>

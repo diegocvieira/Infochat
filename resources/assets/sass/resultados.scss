@@ -395,6 +395,20 @@
                 }
             }
 
+            .latest-message {
+                width: calc(100% - 90px);
+                float: left;
+
+                p {
+                    font-size: 12.5px;
+                    color: rgb(100, 100, 100);
+                    margin: 0;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap;
+                }
+            }
+
             .status-geral {
                 float: left;
                 width: 90px;

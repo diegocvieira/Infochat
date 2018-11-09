@@ -22,11 +22,11 @@
                     </div>
 
                     <div class="bottom">
-                        <div class="tags">
-                            @foreach($chat->user_to->trabalho->tags as $t)
-                                <p><span>-</span> {{ $t->tag }}</p>
-                            @endforeach
-                        </div>
+                        @if(count($chat->messages) > 0)
+                            <div class="latest-message">
+                                <p>{{ $chat->messages->first()->message }}</p>
+                            </div>
+                        @endif
 
                         <?php /*<a href="#" class="ver-perfil" data-id="{{ $chat->user_to->trabalho->id }}">ver perfil</a>*/ ?>
 
