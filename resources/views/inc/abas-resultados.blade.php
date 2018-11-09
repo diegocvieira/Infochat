@@ -45,6 +45,8 @@
         @include('inc.list-resultados')
     @elseif(isset($chats) && count($chats) > 0 && isset($section) && $section == 'pessoal')
         @include('inc.list-mensagens-pessoal')
+    @elseif(isset($chats) && count($chats) > 0 && isset($section) && $section == 'trabalho')
+        @include('inc.list-mensagens-trabalho')
     @elseif(!isset($trabalhos))
         <div class="sem-resultados">
             <p>Pesquise um profissional ou estabelecimento<br>para pedir informações ou tirar dúvidas</p>

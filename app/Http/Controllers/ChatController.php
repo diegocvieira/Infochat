@@ -17,6 +17,10 @@ class ChatController extends Controller
 {
     public function show($id, $tipo, $chat_id = null)
     {
+        if(!Auth::guard('web')->check() && $chat_id) {
+            return redirect()->route('user-login');
+        }
+
         if($tipo == 'trabalho') {
             $destinatario = Trabalho::find($id);
 
@@ -25,7 +29,7 @@ class ChatController extends Controller
 
             pageview($destinatario->id);
 
-            if(Auth::guard('web')->check()) {
+            if(Auth::guard('web')->check() && !$chat_id) {
                 $check_chat = Chat::whereNull('close')
                     ->where('from_id', Auth::guard('web')->user()->id)
                     ->where('to_id', $destinatario_id)
@@ -44,6 +48,17 @@ class ChatController extends Controller
 
         if(Auth::guard('web')->check()) {
             if($chat_id) {
+                $chat_validate = Chat::where('id', $chat_id)
+                    ->where(function($query) {
+                        $query->where('from_id',  Auth::guard('web')->user()->id)
+                            ->orWhere('to_id', Auth::guard('web')->user()->id);
+                    })
+                    ->first();
+
+                if(!$chat_validate) {
+                    return redirect()->route('inicial');
+                }
+
                 $messages = app('App\Http\Controllers\MessageController')->list($chat_id, 1);
 
                 // Visualizar as mensagens
@@ -69,41 +84,27 @@ class ChatController extends Controller
                 ]);
             } else {
                 if($chat_id) {
-                    if(Auth::guard('web')->check()) {
-                        $user_id = Auth::guard('web')->user()->id;
+                    $logged_user = Auth::guard('web')->user()->id;
 
-                        if($tipo == 'trabalho') {
-                            $section = 'pessoal';
-
-                            $chats = Chat::where('from_id', $user_id)
-                                ->whereHas('messages', function($query) use($user_id) {
-                                    $query->where('deleted', '!=', $user_id)
-                                        ->orWhereNull('deleted');
-                                })
-                                ->withCount(['messages as latest_message' => function($query) {
-                                    $query->select(DB::raw('max(created_at)'));
-                                }])
-                                ->orderByRaw("id = $chat_id DESC")
-                                ->orderByDesc('latest_message')
-                                ->get();
-                        } else {
-                            $section = 'trabalho';
-
-                            $chats = Chat::where('to_id', $user_id)
-                                ->whereHas('messages', function($query) use($user_id) {
-                                    $query->where('deleted', '!=', $user_id)
-                                        ->orWhereNull('deleted');
-                                })
-                                ->withCount(['messages as latest_message' => function($query) {
-                                    $query->select(DB::raw('max(created_at)'));
-                                }])
-                                ->orderByRaw("id = $chat_id DESC")
-                                ->orderByDesc('latest_message')
-                                ->get();
-                        }
+                    if($tipo == 'trabalho') {
+                        $section = 'pessoal';
+                        $column = 'from_id';
                     } else {
-                        return redirect()->route('user-login');
+                        $section = 'trabalho';
+                        $column = 'to_id';
                     }
+
+                    $chats = Chat::where($column, $logged_user)
+                        ->whereHas('messages', function($query) use($logged_user) {
+                            $query->where('deleted', '!=', $logged_user)
+                                ->orWhereNull('deleted');
+                        })
+                        ->withCount(['messages as latest_message' => function($query) {
+                            $query->select(DB::raw('max(created_at)'));
+                        }])
+                        ->orderByRaw("id = $chat_id DESC")
+                        ->orderByDesc('latest_message')
+                        ->get();
                 } else {
                     $palavra_chave = $destinatario->nome;
 
@@ -161,6 +162,9 @@ class ChatController extends Controller
                 })
                 ->withCount(['messages as latest_message' => function($query) {
                     $query->select(DB::raw('max(created_at)'));
+                }])
+                ->with(['messages' => function($query) {
+                    $query->orderByDesc('id');
                 }])
                 ->orderByDesc('latest_message')
                 ->get();

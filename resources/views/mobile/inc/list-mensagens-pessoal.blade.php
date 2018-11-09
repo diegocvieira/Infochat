@@ -15,15 +15,15 @@
                         <div class="nome-tags">
                             <h3>{{ $chat->user_to->trabalho->nome }}</h3>
 
-                            <div class="tags">
-                                @foreach($chat->user_to->trabalho->tags as $t)
-                                    <p><span>-</span> {{ $t->tag }}</p>
-                                @endforeach
-                            </div>
+                            @if(count($chat->messages) > 0)
+                                <div class="latest-message">
+                                    <p>{{ $chat->messages->first()->message }}</p>
+                                </div>
+                            @endif
                         </div>
 
                         <div class="status">
-                            <span class="date">{{ diaSemana($chat->created_at) }}</span>
+                            <span class="date">{{ diaSemana($chat->latest_message) }}</span>
 
                             @if($chat->close)
                                 <span class="status-close"></span>

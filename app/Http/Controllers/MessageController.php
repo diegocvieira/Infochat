@@ -213,6 +213,10 @@ class MessageController extends Controller
                 $query->where('deleted', '!=', $user_id)
                     ->orWhereNull('deleted');
             })
+            ->whereHas('chat', function($query) use($user_id) {
+                $query->where('from_id',  $user_id)
+                    ->orWhere('to_id', $user_id);
+            })
             ->where('chat_id', $id)
             ->orderBy('id', 'desc')
             ->paginate(20);

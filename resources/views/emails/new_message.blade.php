@@ -36,8 +36,8 @@
                         @if($client['image'])
                             <img src="{{ asset('uploads/' . $client['id'] . '/' . _getOriginalImage($client['image'])) }}" style="float: left; width: 38px; height: 38px; object-fit: cover;" />
                         @else
-                            <span style="float: left; width: 38px; height: 38px; border: 1px solid rgb(230, 230, 230); position: relative;">
-                                <img src="{{ asset('img/paisagem.png') }}" style="width: 18px; height: 18px; position: absolute; left: 50%; top: 50%; margin: -9px 0 0 -9px;" />
+                            <span style="float: left; width: 38px; height: 38px; border: 1px solid rgb(230, 230, 230); text-align: center;">
+                                <img src="{{ asset('img/paisagem.png') }}" style="width: 18px; height: 18px; margin-top: 11px;" />
                             </span>
                         @endif
 
