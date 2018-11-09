@@ -123,10 +123,14 @@ Route::group(['prefix' => 'trabalho'], function() {
 
 Route::group(['prefix' => 'usuario'], function() {
     Route::get('login', function() {
-        if(Agent::isMobile()) {
-            return view('mobile.user-login');
+        if(!Auth::guard('web')->check()) {
+            if(Agent::isMobile()) {
+                return view('mobile.user-login');
+            } else {
+                return view('user-login');
+            }
         } else {
-            return view('user-login');
+            return redirect()->route('inicial');
         }
     })->name('user-login');
 
