@@ -21,6 +21,10 @@ class ChatController extends Controller
             return redirect()->route('user-login');
         }
 
+        if(Auth::guard('web')->check()) {
+            $logged_user = Auth::guard('web')->user()->id;
+        }
+
         if($tipo == 'trabalho') {
             $destinatario = Trabalho::find($id);
 
@@ -31,7 +35,11 @@ class ChatController extends Controller
 
             if(Auth::guard('web')->check() && !$chat_id) {
                 $check_chat = Chat::whereNull('close')
-                    ->where('from_id', Auth::guard('web')->user()->id)
+                    ->whereHas('messages', function($query) use($logged_user) {
+                        $query->where('deleted', '!=', $logged_user)
+                            ->orWhereNull('deleted');
+                    })
+                    ->where('from_id', $logged_user)
                     ->where('to_id', $destinatario_id)
                     ->first();
 
@@ -49,9 +57,9 @@ class ChatController extends Controller
         if(Auth::guard('web')->check()) {
             if($chat_id) {
                 $chat_validate = Chat::where('id', $chat_id)
-                    ->where(function($query) {
-                        $query->where('from_id',  Auth::guard('web')->user()->id)
-                            ->orWhere('to_id', Auth::guard('web')->user()->id);
+                    ->where(function($query) use($logged_user) {
+                        $query->where('from_id', $logged_user)
+                            ->orWhere('to_id', $logged_user);
                     })
                     ->first();
 
@@ -84,8 +92,6 @@ class ChatController extends Controller
                 ]);
             } else {
                 if($chat_id) {
-                    $logged_user = Auth::guard('web')->user()->id;
-
                     if($tipo == 'trabalho') {
                         $section = 'pessoal';
                         $column = 'from_id';
