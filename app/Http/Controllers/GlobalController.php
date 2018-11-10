@@ -165,7 +165,13 @@ class GlobalController extends Controller
             while(($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
                 $user = new \App\User;
                 $user->nome = $data[0];
-                $user->email = $data[1];
+
+                if($request->type == 'fone') {
+                    $user->phone = $data[1];
+                } else {
+                    $user->email = $data[1];
+                }
+
                 $user->password = bcrypt(time() . rand(0, 99999));
                 $user->claimed = 0;
                 $user->save();
