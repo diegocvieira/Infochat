@@ -652,6 +652,11 @@ $(document).ready(function() {
                 $('#form-search-results').html(data.trabalhos);
 
                 window.history.pushState('', '', data.url);
+
+                // Scroll to top
+                $('#form-search-results').animate({
+                    'scrollTop' : 0
+                }, 300);
             }
         });
     });
@@ -807,7 +812,9 @@ $(document).ready(function() {
                                 window.location.reload(true);
                             }, 100);
                         } else {
-                            $('.chat').html("<div class='sem-mensagens'><img src='/img/icon-logo.png' /></div>");
+                            setTimeout(function() {
+                                $('.chat').html("<div class='sem-mensagens'><img src='/img/icon-logo.png' /></div>");
+                            }, 500);
                         }
                     } else if(type == 'block') {
                         parent.find('a').remove();

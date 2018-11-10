@@ -14,7 +14,7 @@ class Trabalho extends Model
 {
     protected $table = 'trabalhos';
     protected $fillable = [
-        'user_id', 'tipo', 'nome', 'area_id', 'imagem', 'descricao', 'cidade_id', 'logradouro', 'numero', 'bairro', 'complemento', 'slug', 'status', 'cep', 'email'
+        'user_id', 'tipo', 'nome', 'area_id', 'imagem', 'descricao', 'cidade_id', 'phone', 'logradouro', 'numero', 'bairro', 'complemento', 'slug', 'status', 'cep', 'email'
     ];
     protected $dates = ['created_at', 'updated_at'];
 

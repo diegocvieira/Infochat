@@ -4,7 +4,10 @@
     {!! Form::text('tag[]', null, ['placeholder' => 'Tag']) !!}
     {!! Form::text('tag[]', null, ['placeholder' => 'Tag']) !!}
     {!! Form::text('tag[]', null, ['placeholder' => 'Tag']) !!}
+
     {!! Form::file('file') !!}
+
+    {!! Form::select('type', ['' => 'tipo de planilha', 'phone' => 'fone', 'email' => 'email']) !!}
 
     {!! Form::submit('ENVIAR') !!}
 {!! Form::close() !!}
