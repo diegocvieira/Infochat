@@ -24,9 +24,11 @@
     @for($i = 0; $i <= 9; $i++)
         <div style="display: block; margin-top: 5px;">
             {!! Form::file('images[]') !!}
-            {!! Form::text('emails[]', null, ['placeholder' => 'E-mail']) !!}
+            {!! Form::text('identifiers[]', null, ['placeholder' => 'E-mail / Fone']) !!}
         </div>
     @endfor
+
+    {!! Form::select('type', ['' => 'tipo de planilha', 'phone' => 'fone', 'email' => 'email']) !!}
 
     {!! Form::submit('ENVIAR', ['style' => 'margin-top: 50px;']) !!}
 {!! Form::close() !!}

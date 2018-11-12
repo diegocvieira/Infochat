@@ -65,15 +65,35 @@ Route::get('politica/privacidade', function() {
     }
 })->name('termos-privacidade');
 
-Route::get('como/funciona', function() {
-    if(Agent::isMobile()) {
-        return view('mobile.como-funciona');
-    } else {
-        session()->flash('session_flash_como_funciona', 'Como funciona');
+Route::get('como-funciona/usuario', function() {
+    if(Agent::isDesktop()) {
+        session()->flash('session_flash_slider', 'user');
 
         return redirect()->route('inicial');
+    } else {
+        return view('mobile.how-works-user');
     }
-})->name('como-funciona');
+})->name('how-works-user');
+
+Route::get('como-funciona/profissional', function() {
+    if(Agent::isDesktop()) {
+        session()->flash('session_flash_slider', 'work');
+
+        return redirect()->route('inicial');
+    } else {
+        return view('mobile.how-works-work');
+    }
+})->name('how-works-user');
+
+Route::get('site/sobre', function() {
+    if(Agent::isDesktop()) {
+        session()->flash('session_flash_slider', 'about');
+
+        return redirect()->route('inicial');
+    } else {
+        return view('mobile.about');
+    }
+})->name('about');
 
 Route::group(['prefix' => 'mensagem'], function() {
     // List personal chats
@@ -164,6 +184,15 @@ Route::group(['prefix' => 'recuperar-senha'], function() {
 Route::group(['prefix' => 'reivindicar-conta'], function() {
     Route::get('check/{token}', 'ClaimedController@checkToken');
     Route::post('claimed-account', 'ClaimedController@claimedAccount');
+    Route::post('claimed-account-phone', 'ClaimedController@claimedAccountPhone')->name('claimed-phone');
+
+    Route::get('fone', function() {
+        if(Agent::isDesktop()) {
+            return view('claimed-account-phone');
+        } else {
+            return view('mobile.claimed-account-phone');
+        }
+    });
 });
 
 // Set OneSignal token

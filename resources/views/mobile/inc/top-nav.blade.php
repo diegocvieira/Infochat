@@ -37,7 +37,11 @@
                 </li>
             @else
                 <li>
-                    <a href="{{ route('como-funciona') }}" class="icon-como-funciona">Como funciona</a>
+                    <a href="{{ route('about') }}" class="icon-about">Sobre</a>
+                </li>
+
+                <li>
+                    <a href="#" class="icon-how-works open-how-works">Como funciona</a>
                 </li>
 
                 <li>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\PasswordReset;
 use App\User;
+use App\Trabalho;
 use Agent;
 use Validator;
 
@@ -51,10 +52,7 @@ class ClaimedController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'password' => 'confirmed|min:8'
-        ], [
-            'password.confirmed' => 'As senhas não conferem',
-            'password.min' => 'A senha deve ter no mínimo 8 caracteres'
-        ]);
+        ], $this->customMessages());
 
         if($validator->fails()) {
             return redirect()->back()->withErrors($validator);
@@ -73,5 +71,51 @@ class ClaimedController extends Controller
 
             return redirect('/');
         }
+    }
+
+    public function claimedAccountPhone(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'password' => 'confirmed|min:8',
+            'email' => 'max:65|required|email|unique:users'
+        ], $this->customMessages());
+
+        if($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        } else {
+            $work = Trabalho::where('phone', $request->phone)
+                ->whereHas('user', function($query) {
+                    $query->where('claimed', 0);
+                })
+                ->first();
+
+            if(!$work) {
+                return redirect()->back()->withErrors('O telefone cadastrado não foi encontrado. Utilize o mesmo número de celular que você recebeu o aviso no whatsapp.')->withInput();
+            } else {
+                // Salva o novo password
+                $user = User::find($work->user_id);
+                $user->email = $request->email;
+                $user->password = bcrypt($request->password);
+                $user->claimed = 1;
+                $user->save();
+
+                // Faz login
+                app('App\Http\Controllers\UserController')->login($request);
+
+                return redirect('/');
+            }
+        }
+    }
+
+    private function customMessages()
+    {
+        return [
+            'email.max' => 'Seu e-mail deve ter menos de 65 caracteres.',
+            'email.required' => 'Precisamos saber o seu e-mail.',
+            'email.email' => 'Seu endereço de e-mail é inválido.',
+            'email.unique' => 'Este email já está sendo utilizado por outro usuário',
+            'password.confirmed' => 'As senhas não conferem',
+            'password.min' => 'Sua senha deve ter no mínimo 8 caracteres.',
+        ];
     }
 }

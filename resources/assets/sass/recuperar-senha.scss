@@ -35,7 +35,15 @@
             padding-left: 15px;
         }
 
-        input[type=password] {
+        .half {
+            width: 49% !important;
+
+            &[name=password] {
+                margin-right: 2%;
+            }
+        }
+
+        input[type=password], input[type=text], input[type=email] {
             font-size: 14.5px;
             color: #000;
             border-radius: 5px;

@@ -166,22 +166,26 @@ class GlobalController extends Controller
                 $user = new \App\User;
                 $user->nome = $data[0];
 
-                if($request->type == 'fone') {
-                    $user->phone = $data[1];
-                } else {
+                if($request->type == 'email') {
                     $user->email = $data[1];
                 }
 
                 $user->password = bcrypt(time() . rand(0, 99999));
                 $user->claimed = 0;
+                $user->online = 0;
                 $user->save();
 
                 $work = new Trabalho;
                 $work->user_id = $user->id;
                 $work->nome = $data[0];
                 $work->cidade_id = 4927;
-                $work->status = 0;
+                $work->status = 1;
                 $work->slug = str_slug($data[0], '-');
+
+                if($request->type == 'phone') {                    
+                    $work->phone = '(' . substr($data[1], 0, 2) . ') ' . substr($data[1], 2, -4) . '-' . substr($data[1], -4);
+                }
+
                 $work->save();
 
                 foreach($request->tag as $tag) {
@@ -248,11 +252,15 @@ class GlobalController extends Controller
     public function automaticImages(Request $request)
     {
         foreach($request->images as $key_image => $image) {
-            foreach($request->emails as $key_email => $email) {
-                if($key_image == $key_email) {
-                    $work = Trabalho::whereHas('user', function($q) use($email) {
-                        $q->where('email', $email);
-                    })->first();
+            foreach($request->identifiers as $key_identifier => $identifier) {
+                if($key_image == $key_identifier) {
+                    if($request->type == 'phone') {
+                        $work = Trabalho::where('phone', $identifier)->first();
+                    } else {
+                        $work = Trabalho::whereHas('user', function($q) use($identifier) {
+                            $q->where('email', $identifier);
+                        })->first();
+                    }
 
                     $work->imagem = $this->uploadImage($image, $work->imagem, $work->user->id);
                     $work->save();

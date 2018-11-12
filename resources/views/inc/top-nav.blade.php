@@ -59,11 +59,25 @@
                 </li>
             @else
                 <li>
-                    <a href="https://play.google.com/store/apps/details?id=com.infochat" target="_blank">Baixe nosso app</a>
+                    <a href="#" data-type="about" class="open-modal-slider">Sobre</a>
                 </li>
 
                 <li>
-                    <a href="#" data-toggle="modal" data-target="#modal-como-funciona">Como funciona</a>
+                    <a href="#" data-toggle="dropdown" class="open-how-works" role="button" aria-haspopup="true" aria-expanded="false">Como funciona</a>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#" data-type="user" class="open-modal-slider">Para o usuário</a>
+                        </li>
+
+                        <li>
+                            <a href="#" data-type="work" class="open-modal-slider">Para o profissional</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="https://play.google.com/store/apps/details?id=com.infochat" target="_blank">Baixe nosso app</a>
                 </li>
 
                 <li class="button">
@@ -104,11 +118,11 @@
     </nav>
 </header>
 
-@if(session('session_flash_como_funciona'))
+@if(session('session_flash_slider'))
     @section('script')
         <script>
             $(function() {
-                $('#modal-como-funciona').modal('show');
+                $(".open-modal-slider[data-type={{ session('session_flash_slider') }}]").trigger('click');
             });
         </script>
     @endsection

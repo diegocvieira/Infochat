@@ -62,7 +62,13 @@ class UserController extends Controller
     {
         $user = User::find(Auth::guard('web')->user()->id);
         $user->online = 0;
-        $user->onesignal_token = null;
+
+        // Remove onesignal_token if the user is using the app
+        $split = explode(' ', $_SERVER['HTTP_USER_AGENT']);
+        if($split[count($split)-1] == 'com.infochat') {
+            $user->onesignal_token = null;
+        }
+
         $user->save();
 
         Session::flush();

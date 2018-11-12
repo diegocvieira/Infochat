@@ -18,20 +18,16 @@
             </div>
         </div><!-- /.modal -->
 
-        <div class="modal fade" id="modal-como-funciona" tabindex="-1" role="dialog">
+        <div class="modal fade modal-slider" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <a href="#" class="arrow prev" data-position="1"></a>
 
-                    <img src="{{ asset('img/como-funciona/1.png') }}" alt="Como funciona" />
+                    <img src="#" alt="Como funciona" />
 
                     <a href="#" class="arrow next" data-position="1"></a>
 
-                    <div class="position">
-                        @for($i = 1; $i <= 5; $i++)
-                            <a href="#" data-position="{{ $i }}" class="advance {{ $i == 1 ? 'active' : '' }}"></a>
-                        @endfor
-                    </div>
+                    <div class="position"></div>
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal -->

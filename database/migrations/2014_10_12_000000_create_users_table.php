@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('nome', 100)->nullable();
             $table->string('imagem', 100)->nullable();
-            $table->string('email', 62)->unique();
+            $table->string('email', 62)->nullable()->unique();
             $table->string('password');
             $table->boolean('online')->default(1);
             $table->boolean('claimed')->default(1);

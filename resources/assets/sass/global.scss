@@ -223,11 +223,15 @@ a, a:hover, a:active, a:focus {
 	}
 }
 
-#modal-como-funciona {
+.modal-slider {
     .modal-dialog {
-        width: 70%;
+        width: 90%;
         height: 90%;
         margin: 0;
+    }
+
+    &[data-type='about'] .modal-dialog {
+        width: 70%;
     }
 
     .modal-content {
@@ -251,7 +255,7 @@ a, a:hover, a:active, a:focus {
             background-image: url('../img/arrow.png');
 
             &.prev {
-                left: -70px;
+                left: -50px;
                 display: none;
                 -webkit-transform: rotate(90deg);
                 -moz-transform: rotate(90deg);
@@ -261,7 +265,7 @@ a, a:hover, a:active, a:focus {
             }
 
             &.next {
-                right: -70px;
+                right: -50px;
                 -webkit-transform: rotate(270deg);
                 -moz-transform: rotate(270deg);
                 -ms-transform: rotate(270deg);
@@ -276,12 +280,17 @@ a, a:hover, a:active, a:focus {
             left: 0;
             right: 0;
 
-            a {
+            .advance {
                 border: 2px solid #fff;
                 border-radius: 50%;
                 width: 10px;
                 height: 10px;
                 display: inline-block;
+                margin-left: 5px;
+
+                &:first-child {
+                    margin-left: 0;
+                }
 
                 &.active {
                     background-color: #fff;

@@ -53,6 +53,7 @@ $(document).ready(function() {
           field.mask(SPMaskBehavior.apply({}, arguments), options);
         }
     };
+    $('.fone-mask').mask(SPMaskBehavior, spOptions);
 
     // Atualizar as abas de mensagens em tempo real
     if(logged && $('.abas-resultados').length) {
@@ -262,9 +263,19 @@ $(document).ready(function() {
         }
     });
 
-    ////////////////////////////// PAGINA COMO FUNCIONA //////////////////////////////
+    ////////////////////////////// ABOUT AND HOW WORKS //////////////////////////////
 
-    if($('.pagina-como-funciona').length) {
+    $(document).on('click', '.open-how-works', function(e) {
+        e.preventDefault();
+
+        $('body').append("<div class='how-works'><a href='/como-funciona/usuario'>Para o usuário</a><a href='/como-funciona/profissional'>Para o profissional</a></div><div class='how-works-overlay' style='position: fixed;z-index: 100;left: 0;top: 0;width: 100%;height: 100%;background-color: rgba(0, 0, 0, .5);'></div>");
+    });
+
+    $(document).on('click', '.how-works-overlay', function() {
+        $('.how-works, .how-works-overlay').remove();
+    });
+
+    if($('.page-slider').length) {
         if(navigator.msMaxTouchPoints) {
             $('#slider').addClass('ms-touch');
         } else {
