@@ -7,7 +7,7 @@
 @extends('mobile.base')
 
 @section('content')
-    <div class="container page-slider">
+    <div class="container page-slider page-about">
         <div class="slider" id="slider">
             <div class="holder">
                 @for($i = 1; $i <= 5; $i++)

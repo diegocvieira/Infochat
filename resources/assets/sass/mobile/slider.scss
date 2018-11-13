@@ -1,4 +1,6 @@
 .page-slider {
+    background-color: #212f7e;
+
     .animate {
         transition: transform 0.3s ease-out;
     }
@@ -23,7 +25,7 @@
     }
 
     .holder {
-        width: 704.1%;
+        width: 704.2%;
         max-height: 100%;
         height: 100%;
         overflow-y: hidden;
@@ -35,14 +37,29 @@
         float: left;
         position: relative;
         overflow: hidden;
+        background-repeat: no-repeat;
+        background-position: bottom;
+        background-size: contain;
 
         img {
-            //z-index: 1;
-            //position: absolute;
-            //left: 0;
-            //bottom: 0;
-            width: 100%;
-            height: 100%;
+            position: absolute;
+            bottom: 0;
+            max-width: 100%;
+            max-height: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
+
+    &.page-about {
+        background-color: #fff;
+
+        .holder {
+            width: 500% !important;
+        }
+
+        .slide-wrapper {
+            width: 20% !important;
         }
     }
 }

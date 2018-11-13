@@ -337,10 +337,11 @@ $(document).ready(function() {
 
                  end: function(event) {
                      // Calculate the distance swiped.
-                     var absMove = Math.abs(this.index*this.slideWidth - this.movex);
+                     var absMove = Math.abs(this.index*this.slideWidth - this.movex),
+                        page = $('.page-slider').hasClass('page-about') ? 4 : 6;
                      // Calculate the index. All other calculations are based on the index.
                      if(absMove > this.slideWidth/2 || this.longTouch === false) {
-                         if(this.movex > this.index*this.slideWidth && this.index < 6) {
+                         if(this.movex > this.index*this.slideWidth && this.index < page) {
                              this.index++;
                          } else if (this.movex < this.index*this.slideWidth && this.index > 0) {
                              this.index--;
