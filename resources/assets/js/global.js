@@ -98,6 +98,9 @@ $(document).ready(function() {
 
         modal.find('.arrow').data('position', 1);
 
+        modal.find('.next').show();
+        modal.find('.prev').hide();
+
         modal.removeData('type');
         modal.attr('data-type', type).modal('show');
 
