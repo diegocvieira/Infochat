@@ -182,7 +182,7 @@ class GlobalController extends Controller
                 $work->status = 1;
                 $work->slug = str_slug($data[0], '-');
 
-                if($request->type == 'phone') {                    
+                if($request->type == 'phone') {
                     $work->phone = '(' . substr($data[1], 0, 2) . ') ' . substr($data[1], 2, -4) . '-' . substr($data[1], -4);
                 }
 
@@ -232,18 +232,20 @@ class GlobalController extends Controller
 
             $email = $work->user->email;
 
-            $client['name'] = Auth::guard('web')->user()->nome;
-            $client['image'] = Auth::guard('web')->user()->imagem;
-            $client['message'] = $request->message;
-            $client['id'] = $logged_user;
+            if($email) {
+                $client['name'] = Auth::guard('web')->user()->nome;
+                $client['image'] = Auth::guard('web')->user()->imagem;
+                $client['message'] = $request->message;
+                $client['id'] = $logged_user;
 
-            $claimed_url = url('/') . '/reivindicar-conta/check/' . app('App\Http\Controllers\ClaimedController')->createToken($email);
-            $work_url = route('show-work', $work->slug);
+                $claimed_url = url('/') . '/reivindicar-conta/check/' . app('App\Http\Controllers\ClaimedController')->createToken($email);
+                $work_url = route('show-work', $work->slug);
 
-            \Mail::send('emails.new_message_claimed', ['client' => $client, 'work_url' => $work_url, 'claimed_url' => $claimed_url], function($q) use($email) {
-                $q->from('no-reply@infochat.com.br', 'Infochat');
-                $q->to($email)->subject('Nova mensagem');
-            });
+                \Mail::send('emails.new_message_claimed', ['client' => $client, 'work_url' => $work_url, 'claimed_url' => $claimed_url], function($q) use($email) {
+                    $q->from('no-reply@infochat.com.br', 'Infochat');
+                    $q->to($email)->subject('Nova mensagem');
+                });
+            }
         }
 
         return redirect('adm/automatic');
@@ -255,6 +257,8 @@ class GlobalController extends Controller
             foreach($request->identifiers as $key_identifier => $identifier) {
                 if($key_image == $key_identifier) {
                     if($request->type == 'phone') {
+                        $identifier = '(' . substr($identifier, 0, 2) . ') ' . substr($identifier, 2, -4) . '-' . substr($identifier, -4);
+
                         $work = Trabalho::where('phone', $identifier)->first();
                     } else {
                         $work = Trabalho::whereHas('user', function($q) use($identifier) {
