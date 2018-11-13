@@ -1,4 +1,4 @@
-.pagina-como-funciona {
+.page-slider {
     .animate {
         transition: transform 0.3s ease-out;
     }
@@ -23,31 +23,49 @@
     }
 
     .holder {
-        width: 500%;
+        width: 704.2%;
         max-height: 100%;
         height: 100%;
         overflow-y: hidden;
     }
 
-    .slide-wrapper {
-        width: 20%;
-        height: 100%;
-        float: left;
-        height: 100%;
-        position: relative;
-        overflow: hidden;
+    &.page-how-works {
+        background-color: #212f7e;
 
-        p {
-            font-size: 20.8px;
-            color: rgb(100, 100, 100);
-            position: absolute;
-            z-index: 2;
+        .slide-wrapper {
+            width: 14.2%;
+            height: 100%;
+            float: left;
+            position: relative;
+            overflow: hidden;
+            background-repeat: no-repeat;
+            background-position: bottom;
+            background-size: contain;
+
+            img {
+                position: absolute;
+                bottom: 0;
+                max-width: 100%;
+                max-height: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+    }
+
+    &.page-about {
+        background-color: #fff;
+
+        .slide-wrapper {
+            width: 20%;
+            height: 100%;
+            float: left;
+            position: relative;
+            overflow: hidden;
         }
 
-        img {
-            z-index: 1;
-            position: absolute;
-            width: 100%;
+        .holder {
+            width: 500% !important;
         }
 
         .deslizar {
@@ -116,41 +134,69 @@
             }
         }
 
-        &.banner2, &.banner3 {
-            p {
-                left: 5%;
-                top: 20%;
-                text-align: left;
-            }
+        .top {
+            float: left;
+            height: 220px;
+            width: 100%;
+            padding: 40px 20px 0 20px;
+        }
 
-            &.banner2 p {
-                top: 50%;
+        .bottom {
+            float: left;
+            height: calc(100% - 220px);
+            width: 100%;
+            position: relative;
+        }
+
+        p {
+            font-size: 20.8px;
+            color: rgb(100, 100, 100);
+            text-align: left;
+        }
+
+        img {
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+            max-height: 100%;
+
+            &.note {
+                width: 60%;
+                left: 50% !important;
+                top: 0 !important;
+                bottom: auto !important;
+                transform: translateX(-50%);
             }
         }
 
-        &.banner1, &.banner5 {
+        .banner2, .banner3 {
+            img {
+                width: 75%;
+                right: 0;
+            }
+        }
+
+        .banner5 {
+            img {
+                width: 70%;
+                right: 0;
+            }
+        }
+
+        .banner1 {
             p {
-                right: 7%;
-                top: 20%;
                 text-align: right;
             }
         }
 
-        &.banner1, &.banner3, &.banner4, &.banner5 {
+        .banner4 {
             img {
-                bottom: 0;
+                bottom: 5%;
             }
-        }
 
-        &.banner2 img {
-            top: 0;
-        }
-
-        &.banner4 p {
-            right: 0;
-            left: 0;
-            top: 20%;
-            text-align: center;
+            p {
+                text-align: center;
+            }
         }
     }
 }

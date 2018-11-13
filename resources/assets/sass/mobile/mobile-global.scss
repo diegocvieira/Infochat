@@ -199,12 +199,39 @@ a, a:hover, a:active, a:focus {
     }
 }
 
+.how-works {
+    border-radius: 5px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 2.5px 4.33px 19px 1px rgba(100, 100, 100, 0.078);
+    position: absolute;
+    left: 2.5%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 95%;
+    z-index: 101;
+
+    a {
+        font-size: 16.6px;
+        color: #000;
+        display: block;
+        padding: 13px 20px;
+
+        &:first-child {
+            padding-top: 30px;
+        }
+
+        &:last-child {
+            padding-bottom: 30px;
+        }
+    }
+}
+
 @import 'top-nav.scss';
 //@import 'aside-categorias.scss';
 @import 'cities.scss';
 @import 'termos.scss';
 @import 'resultados.scss';
-@import 'como-funciona.scss';
+@import 'slider.scss';
 @import 'show-trabalho.scss';
 @import 'recuperar-senha.scss';
 @import 'usuario-config.scss';

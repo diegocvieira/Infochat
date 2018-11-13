@@ -234,7 +234,11 @@ class TrabalhoController extends Controller
             }
         }
 
-        $trabalhos = $trabalhos->groupBy('trabalhos.id')->orderBy('best', 'DESC')->paginate(10);
+        $trabalhos = $trabalhos->groupBy('trabalhos.id')
+            ->orderBy('best', 'DESC')
+            ->orderBy('trabalhos.pageviews', 'DESC')
+            ->orderBy('trabalhos.id', 'DESC')
+            ->paginate(10);
 
         // Gera a URL
         //$url = '/busca/' . $city_slug . '/' . $state_letter_lc;

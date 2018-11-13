@@ -22,7 +22,10 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data) {
                     newMessagesPessoal(data.pessoal);
-                    newMessagesTrabalho(data.trabalho);
+
+                    if($('.abas-resultados').find('a[data-type=trabalho]').length) {
+                        newMessagesTrabalho(data.trabalho);
+                    }
                 }
             });
         }, 20000);
@@ -78,21 +81,54 @@ $(document).ready(function() {
         }
     }
 
-    // Passar imagens do modal nas flechas do teclado
-    $('#modal-como-funciona').on('keydown', function(e) {
-        var position = parseInt($('#modal-como-funciona').find('.position .active').data('position'));
-
-        if(e.which == 39 && position < 5) {
-            $('#modal-como-funciona').find('.next').trigger('click'); // right
-        } else if(e.which == 37 && position > 1) {
-            $('#modal-como-funciona').find('.prev').trigger('click'); // left
-        }
-    });
-    $('#modal-como-funciona').on('click', '.arrow, .advance', function(e) {
+    $('.open-modal-slider').on('click', function(e) {
         e.preventDefault();
 
-        var modal = $('#modal-como-funciona'),
-            position = parseInt($(this).data('position'));
+        var modal = $('.modal-slider'),
+            type = $(this).data('type'),
+            folder = type == 'about' ? 'about-desktop' : 'how-works-desktop/' + type,
+            qtd_img = type == 'about' ? 5 : 7;
+
+        modal.find('img').attr('src', '/img/' + folder + '/1.png');
+
+        modal.find('.position').html('');
+
+        for(var i = 1; i <= qtd_img; i++) {
+            var active = i == 1 ? 'active' : '';
+
+            modal.find('.position').append("<a href='#' data-position='" + i + "' class='advance " + active + "'></a>");
+        }
+
+        modal.find('.arrow').data('position', 1);
+
+        modal.find('.next').show();
+        modal.find('.prev').hide();
+
+        modal.removeData('type');
+        modal.attr('data-type', type).modal('show');
+
+        $('.modal-backdrop').css('opacity', '.9');
+    });
+    // Passar imagens do modal nas flechas do teclado
+    $('.modal-slider').on('keydown', function(e) {
+        var modal = $('.modal-slider'),
+            position = parseInt(modal.find('.position .active').data('position')),
+            qtd_img = modal.data('type') == 'about' ? 5 : 7;
+
+        if(e.which == 39 && position < qtd_img) {
+            modal.find('.next').trigger('click'); // right
+        } else if(e.which == 37 && position > 1) {
+            modal.find('.prev').trigger('click'); // left
+        }
+    });
+    $('.modal-slider').on('click', '.arrow, .advance', function(e) {
+        e.preventDefault();
+
+        var modal = $('.modal-slider'),
+            position = parseInt($(this).data('position')),
+            type = modal.data('type'),
+            qtd_img = type == 'about' ? 5 : 7,
+            folder = type == 'about' ? 'about-desktop' : 'how-works-desktop/' + type;
 
         // Verifica se o click foi nas flechas
         if($(this).hasClass('arrow')) {
@@ -101,7 +137,7 @@ $(document).ready(function() {
         }
 
         // Adiciona a imagem
-        $('#modal-como-funciona').find('img').attr('src', '/img/como-funciona/' + position + '.png');
+        modal.find('img').attr('src', '/img/' + folder + '/' + position + '.png');
 
         // Atualiza a posicao da imagem na flecha
         modal.find('.arrow').data('position', position);
@@ -110,7 +146,7 @@ $(document).ready(function() {
         modal.find('.advance[data-position=' + position + ']').addClass('active');
 
         // Oculta a flecha next se estiver na ultima imagem
-        position == 5 ? modal.find('.next').hide() : modal.find('.next').show();
+        position == qtd_img ? modal.find('.next').hide() : modal.find('.next').show();
         // Oculta a flecha prev se estiver na primeira imagem
         position == 1 ? modal.find('.prev').hide() : modal.find('.prev').show();
     });
@@ -143,6 +179,7 @@ $(document).ready(function() {
           field.mask(SPMaskBehavior.apply({}, arguments), options);
         }
     };
+    $('.fone-mask').mask(SPMaskBehavior, spOptions);
 
     // Fazer validate ignorar campos ocultos
     $.validator.setDefaults({ ignore: "" });
@@ -1643,8 +1680,8 @@ $(document).ready(function() {
 
                 $('.selectpicker').selectpicker('refresh');
 
-                $('#cep').mask('00000-000', {reverse: false, clearIfNotMatch : true});
-                $('.fone-mask').mask(SPMaskBehavior, spOptions);
+                //$('#cep').mask('00000-000', {reverse: false, clearIfNotMatch : true});
+                //$('.fone-mask').mask(SPMaskBehavior, spOptions);
 
                 $('#form-trabalho-config').validate({
                     rules: {

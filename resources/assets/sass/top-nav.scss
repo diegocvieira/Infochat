@@ -215,6 +215,18 @@
             }
         }
 
+        .open-how-works {
+            padding-right: 5px;
+
+            & + ul {
+                width: 180px;
+
+                li a {
+                    padding: 10px 0 10px 20px !important;
+                }
+            }
+        }
+
         .open-nav-logged + ul li:last-child {
             border-top: 1px solid rgb(240, 240, 240);
             margin-top: 5px;
@@ -304,7 +316,7 @@
                 height: 60px;
 
                 &:first-child a {
-                    padding: 10px 5px;
+                    padding: 10px 5px 10px 10px;
                 }
 
                 &.button {

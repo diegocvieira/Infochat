@@ -33,7 +33,7 @@ class CreateTrabalhosTable extends Migration
             $table->string('bairro', 50)->nullable();
             $table->string('cep', 10)->nullable();
             $table->string('complemento', 50)->nullable();
-            $table->string('phone', 45)->nullable();
+            $table->string('phone', 45)->nullable()->unique();
             $table->integer('pageviews')->default(0);
             $table->timestamps();
         });

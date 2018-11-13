@@ -128,22 +128,24 @@ class MessageController extends Controller
                             $client['message'] = $request->message;
                             $client['id'] = $user_logged;
 
-                            if($chat->from_id == $user_logged && !$chat->user_to->claimed) {
-                                $claimed_url = url('/') . '/reivindicar-conta/check/' . app('App\Http\Controllers\ClaimedController')->createToken($email);
-                                $work_url = route('show-work', $chat->user_to->trabalho->slug);
+                            if($email) {
+                                if($chat->from_id == $user_logged && !$chat->user_to->claimed) {
+                                    $claimed_url = url('/') . '/reivindicar-conta/check/' . app('App\Http\Controllers\ClaimedController')->createToken($email);
+                                    $work_url = route('show-work', $chat->user_to->trabalho->slug);
 
-                                Mail::send('emails.new_message_claimed', ['client' => $client, 'work_url' => $work_url, 'claimed_url' => $claimed_url], function($q) use($email) {
-                                    $q->from('no-reply@infochat.com.br', 'Infochat');
-                                    $q->to($email)->subject('Nova mensagem');
-                                });
-                            } else {
-                                Mail::send('emails.new_message', ['client' => $client, 'chat_url' => url('/') . $chat_url], function($q) use($email) {
-                                    $q->from('no-reply@infochat.com.br', 'Infochat');
-                                    $q->to($email)->subject('Nova mensagem');
-                                });
+                                    Mail::send('emails.new_message_claimed', ['client' => $client, 'work_url' => $work_url, 'claimed_url' => $claimed_url], function($q) use($email) {
+                                        $q->from('no-reply@infochat.com.br', 'Infochat');
+                                        $q->to($email)->subject('Nova mensagem');
+                                    });
+                                } else {
+                                    Mail::send('emails.new_message', ['client' => $client, 'chat_url' => url('/') . $chat_url], function($q) use($email) {
+                                        $q->from('no-reply@infochat.com.br', 'Infochat');
+                                        $q->to($email)->subject('Nova mensagem');
+                                    });
+                                }
                             }
 
-                            /*if($chat->from_id == $user_logged) {
+                            if($chat->from_id == $user_logged) {
                                 $count_message = Message::where('chat_id', $chat->id)->where('user_id', $chat->to_id)->count();
 
                                 if($count_message == 0) {
@@ -172,8 +174,8 @@ class MessageController extends Controller
                                     }
                                 }
                             } else {
-                                NoResponse::where('user_id', $chat->from_id)->where('work_id', $user_logged)->delete();
-                            }*/
+                                NoResponse::where('work_id', $user_logged)->delete();
+                            }
                         }
                     } else {
                         $return['status'] = 2;
