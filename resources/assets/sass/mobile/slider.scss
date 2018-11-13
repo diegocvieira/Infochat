@@ -134,22 +134,34 @@
             }
         }
 
+        .top {
+            float: left;
+            height: 220px;
+            width: 100%;
+            padding: 40px 20px 0 20px;
+        }
+
+        .bottom {
+            float: left;
+            height: calc(100% - 220px);
+            width: 100%;
+            position: relative;
+        }
+
         p {
             font-size: 20.8px;
             color: rgb(100, 100, 100);
-            position: absolute;
-            z-index: 2;
-            top: 10%;
+            text-align: left;
         }
 
         img {
-            z-index: 1;
             position: absolute;
             width: 100%;
             bottom: 0;
+            max-height: 100%;
 
             &.note {
-                width: 80%;
+                width: 60%;
                 left: 50% !important;
                 top: 50% !important;
                 bottom: auto !important;
@@ -159,7 +171,7 @@
 
         .banner2, .banner3 {
             img {
-                width: 80%;
+                width: 75%;
                 right: 0;
             }
         }
@@ -169,23 +181,10 @@
                 width: 70%;
                 right: 0;
             }
-
-            p {
-                left: 7%;
-                text-align: left;
-            }
-        }
-
-        .banner2, .banner3 {
-            p {
-                left: 5%;
-                text-align: left;
-            }
         }
 
         .banner1 {
             p {
-                right: 7%;
                 text-align: right;
             }
         }
@@ -196,8 +195,6 @@
             }
 
             p {
-                right: 0;
-                left: 0;
                 text-align: center;
             }
         }
