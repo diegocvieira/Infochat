@@ -1,6 +1,4 @@
 .page-slider {
-    background-color: #212f7e;
-
     .animate {
         transition: transform 0.3s ease-out;
     }
@@ -31,35 +29,177 @@
         overflow-y: hidden;
     }
 
-    .slide-wrapper {
-        width: 14.2%;
-        height: 100%;
-        float: left;
-        position: relative;
-        overflow: hidden;
-        background-repeat: no-repeat;
-        background-position: bottom;
-        background-size: contain;
+    &.page-how-works {
+        background-color: #212f7e;
 
-        img {
-            position: absolute;
-            bottom: 0;
-            max-width: 100%;
-            max-height: 100%;
-            left: 50%;
-            transform: translateX(-50%);
+        .slide-wrapper {
+            width: 14.2%;
+            height: 100%;
+            float: left;
+            position: relative;
+            overflow: hidden;
+            background-repeat: no-repeat;
+            background-position: bottom;
+            background-size: contain;
+
+            img {
+                position: absolute;
+                bottom: 0;
+                max-width: 100%;
+                max-height: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+            }
         }
     }
 
     &.page-about {
         background-color: #fff;
 
+        .slide-wrapper {
+            width: 20%;
+            height: 100%;
+            float: left;
+            position: relative;
+            overflow: hidden;
+        }
+
         .holder {
             width: 500% !important;
         }
 
-        .slide-wrapper {
-            width: 20% !important;
+        .deslizar {
+            background-color: rgba(0, 0, 0, 0.5);
+            position: absolute;
+            left: 50%;
+            bottom: 3%;
+            transform: translateX(-50%);
+            height: 30px;
+            border-radius: 30px;
+            text-align: center;
+            z-index: 2;
+            padding: 0 15px;
+
+            .text {
+                font-size: 14.5px;
+                color: rgb(255, 255, 255);
+                display: inline-block;
+                position: relative;
+                top: -5px;
+            }
+
+            .arrow {
+                width: 25px;
+                height: 25px;
+                position: relative;
+                display: inline-block;
+
+                &:before, &:after {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    top: 3px;
+                    background-repeat: no-repeat;
+                    background-image: url('../../img/arrow.png');
+                    background-size: contain;
+                    width: 100%;
+                    height: 100%;
+                }
+
+                &:after {
+                    left: 7px;
+                }
+
+                &.left {
+                    &:before, &:after {
+                        -webkit-transform: rotate(90deg);
+                        -moz-transform: rotate(90deg);
+                        -ms-transform: rotate(90deg);
+                        -o-transform: rotate(90deg);
+                        transform: rotate(90deg);
+                        background-position: center 7px;
+                    }
+                }
+
+                &.right {
+                    &:before, &:after {
+                        -webkit-transform: rotate(270deg);
+                        -moz-transform: rotate(270deg);
+                        -ms-transform: rotate(270deg);
+                        -o-transform: rotate(270deg);
+                        transform: rotate(270deg);
+                        background-position: center;
+                    }
+                }
+            }
+        }
+
+        p {
+            font-size: 20.8px;
+            color: rgb(100, 100, 100);
+            position: absolute;
+            z-index: 2;
+            top: 10%;
+        }
+
+        img {
+            z-index: 1;
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+
+            &.note {
+                width: 80%;
+                left: 50% !important;
+                top: 50% !important;
+                bottom: auto !important;
+                transform:translate(-50%,-50%);
+            }
+        }
+
+        .banner2, .banner3 {
+            img {
+                width: 80%;
+                right: 0;
+            }
+        }
+
+        .banner5 {
+            img {
+                width: 70%;
+                right: 0;
+            }
+
+            p {
+                left: 7%;
+                text-align: left;
+            }
+        }
+
+        .banner2, .banner3 {
+            p {
+                left: 5%;
+                text-align: left;
+            }
+        }
+
+        .banner1 {
+            p {
+                right: 7%;
+                text-align: right;
+            }
+        }
+
+        .banner4 {
+            img {
+                bottom: 5%;
+            }
+
+            p {
+                right: 0;
+                left: 0;
+                text-align: center;
+            }
         }
     }
 }
