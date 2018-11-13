@@ -22,7 +22,10 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data) {
                     newMessagesPessoal(data.pessoal);
-                    newMessagesTrabalho(data.trabalho);
+
+                    if($('.abas-resultados').find('a[data-type=trabalho]').length) {
+                        newMessagesTrabalho(data.trabalho);
+                    }
                 }
             });
         }, 20000);
