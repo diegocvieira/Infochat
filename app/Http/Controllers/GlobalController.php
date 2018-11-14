@@ -208,13 +208,20 @@ class GlobalController extends Controller
         $tag = $request->tag;
         $logged_user = Auth::guard('web')->user()->id;
 
-        $works = Trabalho::whereHas('tags', function($q) use($tag) {
+        $works = Trabalho::with('tags')->whereHas('tags', function($q) use($tag) {
                 $q->where('tag', $tag);
             })
             ->whereHas('user', function($q) {
                 $q->where('claimed', 0);
-            })
-            ->get();
+            });
+
+        if($request->type == 'phone') {
+            $works = $works->whereNotNull('phone');
+        } else {
+            $works = $works->whereNull('phone');
+        }
+
+        $works = $works->get();
 
         foreach($works as $work) {
             $chat = new \App\Chat;
