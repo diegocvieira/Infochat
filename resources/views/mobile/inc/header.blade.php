@@ -26,22 +26,22 @@
 
     	<link rel='canonical' href='{{ $header_canonical or url()->current() }}' />
 
-    	<meta name='description' content='{{ $header_desc or 'O jeito mais fácil de encontrar e entrar em contato com os profissionais e estabelecimentos da sua cidade, você pode pedir informações e tirar suas dúvidas sem sair de casa.' }}' />
-    	<meta itemprop='name' content='{{ $header_title or 'Infochat' }}'>
+    	<meta name='description' content='{{ $header_desc or "O jeito mais fácil de encontrar e entrar em contato com os profissionais e estabelecimentos da sua cidade, você pode pedir informações e tirar suas dúvidas sem sair de casa." }}' />
+    	<meta itemprop='name' content='{{ $header_title or "Infochat" }}'>
     	<meta itemprop='description' content='{{ $header_desc or "Infochat - O atendimento online da sua cidade" }}'>
-    	<meta itemprop='image' content='{{ $header_image or asset('img/banner.png') }}'>
+    	<meta itemprop='image' content='{{ $header_image or asset("img/banner.png") }}'>
 
     	<meta name='twitter:card' content='summary_large_image'>
-    	<meta name='twitter:title' content='{{ $header_title or 'Infochat' }}'>
-    	<meta name='twitter:description' content='{{ $header_desc or 'v' }}'>
+    	<meta name='twitter:title' content='{{ $header_title or "Infochat" }}'>
+    	<meta name='twitter:description' content='{{ $header_desc or "Infochat - O atendimento online da sua cidade" }}'>
     	<!-- imagens largas para o Twitter Summary Card precisam ter pelo menos 280x150px  -->
-    	<meta name='twitter:image' content='{{ $header_image or asset('img/banner.png')}}'>
+    	<meta name='twitter:image' content='{{ $header_image or asset("img/banner.png")}}'>
 
-    	<meta property='og:title' content='{{ $header_title or 'Infochat' }}' />
+    	<meta property='og:title' content='{{ $header_title or "Infochat" }}' />
     	<meta property='og:type' content='website' />
     	<meta property='og:url' content='{{ url()->current() }}' />
-    	<meta property='og:image' content='{{ $header_image or asset('img/banner.png')}}' />
-    	<meta property='og:description' content='{{ $header_desc or 'Infochat - O atendimento online da sua cidade' }}' />
+    	<meta property='og:image' content='{{ $header_image or asset("img/banner.png")}}' />
+    	<meta property='og:description' content='{{ $header_desc or "Infochat - O atendimento online da sua cidade" }}' />
     	<meta property='og:site_name' content='Infochat' />
 
         <style>
