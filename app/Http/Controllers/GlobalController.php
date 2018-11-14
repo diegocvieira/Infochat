@@ -22,7 +22,7 @@ class GlobalController extends Controller
         if(!Cookie::get('sessao_cidade_slug')) {
             $this->setCidade(4927);
 
-            return redirect()->route('inicial');
+            //return redirect()->route('inicial');
         }
 
         $filtro_ordem = [
