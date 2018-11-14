@@ -20,7 +20,7 @@
 
         <ul>
             <li>
-                <a href="{{ route('cities') }}" class="icon-cidades">{{ Cookie::get('sessao_cidade_title') . '/' . Cookie::get('sessao_estado_letter') }}</a>
+                <a href="{{ route('cities') }}" class="icon-cidades">{{ Cookie::get('sessao_cidade_slug') ? Cookie::get('sessao_cidade_title') . '/' . Cookie::get('sessao_estado_letter') : 'Porto Alegre/RS' }}</a>
             </li>
 
             <li>

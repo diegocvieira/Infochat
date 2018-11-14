@@ -4,7 +4,7 @@
     </a>
 
     <div class="cidades">
-        <div class="cidade-atual">Você está em <span>{{ Cookie::get('sessao_cidade_title') . '/' . Cookie::get('sessao_estado_letter') }}</span></div>
+        <div class="cidade-atual">Você está em <span>{{ Cookie::get('sessao_cidade_slug') ? Cookie::get('sessao_cidade_title') . '/' . Cookie::get('sessao_estado_letter') : 'Porto Alegre/RS' }}</span></div>
 
         {!! Form::open(['action' => 'GlobalController@getCidade', 'method' => 'post', 'id' => 'form-busca-cidade']) !!}
             {!! Form::text('nome_cidade', '', ['placeholder' => 'Digite sua cidade', 'autocomplete' => 'off']) !!}
