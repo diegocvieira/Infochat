@@ -310,29 +310,28 @@
         }*/
 
         input[type=text] {
-            border-radius: 20px;
             background-color: rgb(255, 255, 255);
-            width: calc(100% - 70px);
             height: 40px;
             font-size: 13.7px;
             color: #000;
             float: left;
             border: none;
             padding-left: 20px;
+        }
 
-            &.unlogged {
-                &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-                    color: rgb(122, 162, 244);
-                    opacity: 1; /* Firefox */
-                }
+        .message {
+            width: calc(100% - 70px);
+            border-radius: 20px;
+        }
 
-                &:-ms-input-placeholder { /* Internet Explorer 10-11 */
-                    color: rgb(122, 162, 244);
-                }
+        .name {
+            width: 200px;
+            border-radius: 20px 0 0 20px;
+            border-right: 1px solid rgb(220, 220, 220) !important;
 
-                &::-ms-input-placeholder { /* Microsoft Edge */
-                    color: rgb(122, 162, 244);
-                }
+            &+ .message {
+                width: calc(100% - 270px);
+                border-radius: 0 20px 20px 0;
             }
         }
 

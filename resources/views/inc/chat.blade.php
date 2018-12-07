@@ -57,7 +57,11 @@
         </div>
     @endif*/ ?>
 
-    {!! Form::text('message', null, ['class' => !Auth::guard('web')->check() ? 'unlogged' : '', 'placeholder' => Auth::guard('web')->check() ? 'Envie uma mensagem para começar' : 'Escreva seu nome antes de começar']) !!}
+    @if(!Auth::guard('web')->check())
+        {!! Form::text('name', null, ['placeholder' => 'Nome', 'class' => 'name']) !!}
+    @endif
+
+    {!! Form::text('message', null, ['class' => 'message', 'placeholder' => 'Envie sua mensagem']) !!}
 
     {!! Form::hidden('chat_id', isset($chat_id) ? $chat_id : '') !!}
     {!! Form::hidden('work_user', $tipo == 'trabalho' ? $destinatario->user->id : '') !!}

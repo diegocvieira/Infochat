@@ -80,7 +80,7 @@ class MessageController extends Controller
                         $return['status'] = 1;
                         $return['chat_id'] = $chat_id;
 
-                        if($check) {
+                        /*if($check) {
                             // Name of who send the message
                             $user_from_name = $chat->from_id == $user_logged ? $chat->user_from->nome : $chat->user_to->trabalho->nome;
 
@@ -176,7 +176,7 @@ class MessageController extends Controller
                             } else {
                                 NoResponse::where('work_id', $user_logged)->delete();
                             }
-                        }
+                        }*/
                     } else {
                         $return['status'] = 2;
                     }
@@ -185,12 +185,11 @@ class MessageController extends Controller
                 $return['status'] = 3;
             }
         } else {
-            $request_user = new Request();
             $user_password = microtime(true);
             $user_email = str_slug($request->message, '-') . microtime(true) . '@unlogged.com';
-            $request_user->replace(['nome' => $request->message, 'email' => $user_email, 'password' => $user_password, 'password_confirmation' => $user_password]);
+            $request->replace(['nome' => $request->message, 'email' => $user_email, 'password' => $user_password, 'password_confirmation' => $user_password]);
 
-            $create_user = json_decode(app('App\Http\Controllers\UserController')->create($request_user), true);
+            $create_user = json_decode(app('App\Http\Controllers\UserController')->create($request), true);
 
             $return['status'] = $create_user['status'] == true ? 1 : 3;
 

@@ -967,21 +967,22 @@ $(document).ready(function() {
 
     // Enviar mensagem
     $(document).on('submit', '#form-enviar-msg', function() {
-        var input = $(this).find('input[type=text]');
+        var message = $(this).find('.message'),
+            name = $(this).find('.name');
 
-        if(input.val() && !input.hasClass('sending')) {
+        if(message.val() && !message.hasClass('sending')) {
             var div = $('.chat').find('.mensagens'),
                 date = new Date();
 
-            if(!input.hasClass('unlogged')) {
+            if(!name.length) {
                 $('.chat').find('.sem-mensagens').remove();
 
-                div.append("<div class='row enviada'><div class='msg'><p>" + input.val() + "</p><span>" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + "</span></div></div>");
+                div.append("<div class='row enviada'><div class='msg'><p>" + message.val() + "</p><span>" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + "</span></div></div>");
 
                 div.scrollTop(div[0].scrollHeight);
             }
 
-            input.attr('placeholder', 'Enviando...').addClass('sending');
+            message.attr('placeholder', 'Enviando...').addClass('sending');
 
             $.ajax({
                 url: $(this).attr('action'),
@@ -989,23 +990,19 @@ $(document).ready(function() {
                 dataType: 'json',
                 data: $(this).serialize(),
                 success: function(data) {
-                    input.removeClass('sending');
+                    message.attr('placeholder', 'Digite sua mensagem').removeClass('sending');
 
-                    if(input.hasClass('unlogged')) {
+                    if(name.length) {
                         if(data.status) {
-                            input.attr('placeholder', 'Envie uma mensagem para começar').removeClass('unlogged');
+                            name.remove();
 
                             var li = $('.top-nav').find('nav li[data-type=login]');
                             li.before("<li><a href='/usuario/logout'>Sair</a></li>");
                             li.remove();
                         } else {
-                            input.attr('placeholder', 'Escreva seu nome antes de começar');
-
                             modalAlert('Ocorreu um erro inesperado. Tente novamente.', 'OK');
                         }
                     } else {
-                        input.attr('placeholder', 'Envie uma mensagem...');
-
                         if(data.status != 1) {
                             div.find('.enviada:last').append("<span class='error-msg'>Erro</span>");
 
@@ -1025,7 +1022,7 @@ $(document).ready(function() {
                 }
             });
 
-            input.val('');
+            message.val('');
         }
 
         return false;
