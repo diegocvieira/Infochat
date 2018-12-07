@@ -205,13 +205,3 @@ Route::get('adm/automatic', function() {
 Route::post('adm/automatic-register', 'GlobalController@automaticRegister')->name('automatic-register');
 Route::post('adm/automatic-emails', 'GlobalController@automaticEmails')->name('automatic-emails');
 Route::post('adm/automatic-images', 'GlobalController@automaticImages')->name('automatic-images');
-
-Route::get('teste/teste', function() {
-    $error['message'] = 'teste';
-    $error['file'] = 'teste';
-    $error['line'] = 'teste';
-
-    \Mail::send('emails.phperror', ['error' => $error], function($message) {
-        $message->to('diegovc10@hotmail.com')->subject('GENERAL ERROR: - ' . date('d/m/Y').' ' . date('H:i').'h');
-    });
-});
